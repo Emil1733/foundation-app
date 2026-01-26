@@ -319,6 +319,24 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                             *Hyper-local data based on historical foundation repair permits and USDA soil overlays.
                         </p>
                     </div>
+
+                    {/* MUNICIPAL PERMIT HONEYPOT (Genius Tactic) */}
+                    <div className="mt-8 bg-yellow-50 border border-yellow-200 p-6 rounded-xl flex items-start gap-4">
+                        <div className="bg-yellow-100 p-2 rounded-lg">
+                            <ShieldCheck className="w-6 h-6 text-yellow-700" />
+                        </div>
+                        <div>
+                            <h4 className="font-bold text-yellow-900 text-lg mb-1">
+                                ⚠️ Public Notice: Active Soil Movement in {city}
+                            </h4>
+                            <p className="text-yellow-800 text-sm mb-4">
+                                Our forensic analysts are currently tracking elevated foundation repair permit filings in <strong>{getNeighborhoods(city, '').map(n => n.name).join(', ')}</strong>.
+                            </p>
+                            <p className="text-yellow-800 text-sm">
+                                If you see pier drilling rigs on your street, your home sits on the same active {soil?.map_unit_name || 'soil'} vein.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 {/* FAQ ACCORDION (SEO) */}
