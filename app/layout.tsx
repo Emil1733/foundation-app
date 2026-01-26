@@ -47,6 +47,13 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(brandSchema) }} />
         {children}
+        <footer className="bg-slate-900 border-t border-slate-800 text-slate-500 py-12 px-6 text-center text-sm">
+          <p className="mb-4">
+            Engineering oversight provided by licensed Texas P.E.s. <br className="hidden sm:block" />
+            Credentials available upon request during the Forensic Analysis phase.
+          </p>
+          <p>&copy; {new Date().getFullYear()} The Foundation Risk Registry. All Soil Data sourced from USDA/SSURGO.</p>
+        </footer>
       </body>
     </html>
   );
