@@ -124,7 +124,7 @@ export async function GET(request: Request) {
 
     // 3. Execution Loop
     try {
-        for (const loc of TARGET_ZIPS) {
+        for (const loc of targets) {
             // A. Geocode
             const coords = await getCoords(loc.zip);
             if (!coords) {
