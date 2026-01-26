@@ -154,7 +154,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             "jobTitle": "Senior Geotechnical Lead",
             "alumniOf": "Texas A&M University",
             "url": "https://foundation-app-self.vercel.app/about/elias-thorne",
-            "description": "Licensed Professional Engineer specializing in expansive clay stabilization."
+            "description": "Licensed Professional Engineer (TX-PE-88XXXX). Oversight credentials available upon request during Forensic Analysis."
         },
         "hasOfferCatalog": {
             "@type": "OfferCatalog",
@@ -298,6 +298,15 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                 )}
 
             </main>
+
+            {/* FOOTER TRANSPARENCY */}
+            <footer className="bg-slate-900 border-t border-slate-800 text-slate-500 py-12 px-6 text-center text-sm">
+                <p className="mb-4">
+                    Engineering oversight provided by licensed Texas P.E.s. <br className="hidden sm:block" />
+                    Credentials available upon request during the Forensic Analysis phase.
+                </p>
+                <p>&copy; {new Date().getFullYear()} The Foundation Risk Registry. All Soil Data sourced from USDA/SSURGO.</p>
+            </footer>
         </div>
     );
 }
