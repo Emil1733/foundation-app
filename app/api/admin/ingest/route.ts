@@ -16,7 +16,7 @@ type TargetLoc = { zip: string, city: string, state: string };
 
 export const dynamic = 'force-dynamic'; // Ensure this never caches
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
     // 0. Security Check
     const { searchParams } = new URL(request.url);
     const secret = searchParams.get('secret');
