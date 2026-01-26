@@ -31,9 +31,12 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
     if (!location) return { title: 'Foundation Repair Services' };
 
     const risk = location.soil_cache?.risk_level || "Unknown";
+    const soilName = location.soil_cache?.map_unit_name || "Expansive Clay";
+
+    // Variation A: "Forensic Authority" Hook
     return {
         title: `Foundation Repair in ${location.city} | ${risk} Soil Risk Warning`,
-        description: `Homeowners in ${location.city} face ${risk} foundation risk due to ${location.soil_cache?.map_unit_name}. P.E. Certified stabilization.`,
+        description: `⚠️ ${location.city} Foundation Warning: Your home sits on ${soilName} (${risk} Risk). Don't settle for cheap piling. Get a P.E. Certified Forensic Soil Analysis.`,
     };
 }
 
@@ -78,15 +81,52 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "HomeAndConstructionBusiness",
-        "name": `Foundation Repair Experts of ${city}`,
-        "description": `Forensic foundation repair services for ${city}, ${state}. Specializing in ${soil?.map_unit_name} stabilization.`,
+        "name": `The Foundation Risk Registry of ${city}`,
+        "image": "https://foundation-app-self.vercel.app/logo.png",
+        "url": `https://foundation-app-self.vercel.app/services/foundation-repair/${slug}`,
+        "telephone": "+1-800-555-0199",
+        "priceRange": "$$$$",
         "address": {
             "@type": "PostalAddress",
             "addressLocality": city,
             "addressRegion": state,
+            "postalCode": location.zip_code,
             "addressCountry": "US"
         },
-        "url": `https://foundation-app.vercel.app/services/foundation-repair/${slug}`,
+        "areaServed": {
+            "@type": "GeoShape",
+            "postalCode": location.zip_code,
+            "addressCountry": "US"
+        },
+        "knowsAbout": [
+            "Foundation Repair",
+            "Forensic Engineering",
+            soil?.map_unit_name || "Expansive Clay",
+            "Plasticity Index Analysis",
+            "Steel Pier Underpinning"
+        ],
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Foundation Stabilization Services",
+            "itemListElement": [
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Forensic Foundation Inspection",
+                        "description": `Engineer-led analysis of ${soil?.map_unit_name} impact on slab-on-grade foundations.`
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Deep Steel Pier Installation",
+                        "description": "Bypassing the active clay zone to reach stable load-bearing strata."
+                    }
+                }
+            ]
+        },
         "mainEntity": {
             "@type": "FAQPage",
             "mainEntity": faqs.map(f => ({
