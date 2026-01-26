@@ -218,7 +218,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
             {/* HERO */}
-            <header className="bg-slate-900 text-white py-20 px-6 relative overflow-hidden">
+            <header className="bg-slate-900 text-white py-12 md:py-20 px-6 relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-800 to-slate-950 -z-10" />
                 <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                     <div>
@@ -226,7 +226,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                             <ShieldCheck className="w-4 h-4 text-blue-400" />
                             <span>Geological Authority in {city}, {state}</span>
                         </div>
-                        <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+                        <h1 className="text-3xl md:text-6xl font-extrabold mb-6 leading-tight">
                             Foundation Failure in <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">{city}</span>?
                         </h1>
@@ -291,7 +291,24 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                     {/* NEIGHBORHOOD SOIL RISK TABLE (Phase 2) */}
                     <div className="mt-12 bg-slate-50 rounded-2xl p-8 border border-slate-200">
                         <h3 className="text-xl font-bold text-slate-900 mb-6">Neighborhood Risk Audit: {city}</h3>
-                        <div className="overflow-x-auto">
+
+                        {/* MOBILE CARD VIEW */}
+                        <div className="md:hidden space-y-4">
+                            {getNeighborhoods(city, soil?.risk_level || 'High').map((n, i) => (
+                                <div key={i} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <span className="font-bold text-slate-900">{n.name}</span>
+                                        <span className={`px-2 py-1 rounded text-xs font-bold ${n.risk === 'Severe' ? 'bg-red-100 text-red-700' : n.risk === 'High' ? 'bg-orange-100 text-orange-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                                            {n.risk.toUpperCase()}
+                                        </span>
+                                    </div>
+                                    <p className="text-sm text-slate-600">{n.note}</p>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* DESKTOP TABLE VIEW */}
+                        <div className="hidden md:block overflow-x-auto">
                             <table className="w-full text-sm text-left">
                                 <thead className="text-xs text-slate-500 uppercase bg-slate-100 font-bold">
                                     <tr>
@@ -375,6 +392,12 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             </main>
 
 
+            {/* STICKY MOBILE CTA */}
+            <div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 p-4 z-50">
+                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2">
+                    <Phone className="w-5 h-5" /> Talk to an Engineer
+                </button>
+            </div>
         </div>
     );
 }
