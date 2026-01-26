@@ -2,7 +2,10 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 // 1. Setup Supabase (Using verified Node.js stack)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+let supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+if (supabaseUrl && !supabaseUrl.startsWith('http')) {
+    supabaseUrl = `https://${supabaseUrl}`;
+}
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const adminSecret = process.env.ADMIN_SECRET || 'changeme';
 
