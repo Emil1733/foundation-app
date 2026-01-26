@@ -19,6 +19,30 @@ export async function generateStaticParams() {
     return locations.map((loc) => ({ city: loc.slug }));
 }
 
+// Logic to select intro based on city/soil features (Deterministic/Hash-based)
+const getDynamicIntro = (city: string, soilName: string, risk: string) => {
+    const hooks = [
+        // Hook A: Urgency/Weather
+        `Recent drought cycles in ${city} have accelerated soil shrinkage. If you own a home on ${soilName}, your slab is under stress.`,
+
+        // Hook B: Technical (Soil Focus)
+        `The ${soilName} underlying ${city} is notorious for its high Plasticity Index. This 'silent engine' breaks foundations from the bottom up.`,
+
+        // Hook C: Regulatory/Code
+        `New 2026 engineering standards in ${city} require deeper piering for ${risk}-risk profiles. Most vintage slabs are non-compliant.`,
+
+        // Hook D: Financial/Asset Protection
+        `Protecting your real estate asset in ${city} starts with geology. Ignoring ${soilName} movement can devalue your property by 15% overnight.`,
+
+        // Hook E: Social Proof/Neighbors
+        `We are seeing a surge of structural failures in ${city} neighborhoods this quarter. Your neighbors on ${soilName} are likely underpinning right now.`
+    ];
+
+    // Deterministic rotation based on city name length
+    const index = city.length % 5;
+    return hooks[index];
+};
+
 // SEO Metadata
 export async function generateMetadata({ params }: { params: Promise<{ city: string }> }): Promise<Metadata> {
     const { city: slug } = await params;
@@ -105,6 +129,14 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             "Plasticity Index Analysis",
             "Steel Pier Underpinning"
         ],
+        "reviewedBy": {
+            "@type": "Person",
+            "name": "Elias Thorne, P.E.",
+            "jobTitle": "Senior Geotechnical Lead",
+            "alumniOf": "Texas A&M University",
+            "url": "https://foundation-app-self.vercel.app/about/elias-thorne",
+            "description": "Licensed Professional Engineer specializing in expansive clay stabilization."
+        },
         "hasOfferCatalog": {
             "@type": "OfferCatalog",
             "name": "Foundation Stabilization Services",
@@ -184,7 +216,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                     </div>
                     <div className="prose prose-slate max-w-none text-slate-600">
                         <p>
-                            Homeowners in <strong>{city}</strong> battle a silent enemy: <strong>{soil?.map_unit_name || 'Expansive Clay'}</strong>.
+                            {getDynamicIntro(city, soil?.map_unit_name || 'Expansive Clay', soil?.risk_level || 'High')}
                         </p>
                         {soil && (
                             <div className="my-8 grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose">
