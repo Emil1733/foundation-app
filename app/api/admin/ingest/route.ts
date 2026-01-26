@@ -18,21 +18,42 @@ const TARGET_ZIPS = [
     // Add more zips here for scaling later
 ];
 
+export const dynamic = 'force-dynamic'; // Ensure this never caches
+
 export async function GET(request: Request) {
     // 0. Security Check
     const { searchParams } = new URL(request.url);
     const secret = searchParams.get('secret');
 
+    // Debugging Info (Safe to expose to Admin)
+    const debugInfo = {
+        env_url_raw: process.env.NEXT_PUBLIC_SUPABASE_URL,
+        env_key_exists: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+        secret_received: secret === adminSecret ? 'MATCH' : 'MISMATCH'
+    };
+
     if (secret !== adminSecret) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized', debug: debugInfo }, { status: 401 });
     }
 
     if (!supabaseUrl || !serviceKey) {
-        return NextResponse.json({ error: 'Missing Supabase Config' }, { status: 500 });
+        return NextResponse.json({ error: 'Missing Supabase Config', debug: debugInfo }, { status: 500 });
     }
 
-    const supabase = createClient(supabaseUrl, serviceKey);
+    // Trim and Clean
+    const cleanUrl = supabaseUrl.trim();
+    const cleanKey = serviceKey.trim();
+
+    const supabase = createClient(cleanUrl, cleanKey, {
+        auth: {
+            persistSession: false,
+            autoRefreshToken: false,
+            detectSessionInUrl: false
+        }
+    });
+
     const results = [];
+    results.push({ info: "Config Loaded", url: cleanUrl, key_len: cleanKey.length });
 
     // 1. Helper: Geocode
     async function getCoords(zip: string) {
