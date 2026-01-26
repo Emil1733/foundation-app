@@ -9,14 +9,10 @@ if (supabaseUrl && !supabaseUrl.startsWith('http')) {
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const adminSecret = process.env.ADMIN_SECRET || 'changeme';
 
-// Constants
+// 2. Constants & Types
 const USDA_URL = "https://sdmdataaccess.nrcs.usda.gov/Tabular/post.rest";
-const TARGET_ZIPS = [
-    { zip: '75024', city: 'Plano', state: 'TX' },
-    { zip: '75201', city: 'Dallas', state: 'TX' },
-    { zip: '64130', city: 'Kansas City', state: 'MO' },
-    // Add more zips here for scaling later
-];
+
+type TargetLoc = { zip: string, city: string, state: string };
 
 export const dynamic = 'force-dynamic'; // Ensure this never caches
 
@@ -24,6 +20,21 @@ export async function GET(request: Request) {
     // 0. Security Check
     const { searchParams } = new URL(request.url);
     const secret = searchParams.get('secret');
+
+    // Parse Body
+    let targets: TargetLoc[] = [];
+    try {
+        const body = await request.json();
+        if (body.targets && Array.isArray(body.targets)) {
+            targets = body.targets;
+        }
+    } catch {
+        return NextResponse.json({ error: 'Invalid JSON body. Expected { targets: [{zip, city, state}] }' }, { status: 400 });
+    }
+
+    if (targets.length === 0) {
+        return NextResponse.json({ error: 'No targets provided' }, { status: 400 });
+    }
 
     // Debugging Info (Safe to expose to Admin)
     const debugInfo = {
