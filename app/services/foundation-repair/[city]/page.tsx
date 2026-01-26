@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
 
     // Variation A: "Forensic Authority" Hook
     return {
-        title: `Foundation Repair in ${location.city} | ${risk} Soil Risk Warning`,
+        title: `Forensic Foundation Analysis ${location.city}: ${soilName} Report | FRR`,
         description: `⚠️ ${location.city} Foundation Warning: Your home sits on ${soilName} (${risk} Risk). Don't settle for cheap piling. Get a P.E. Certified Forensic Soil Analysis.`,
     };
 }
