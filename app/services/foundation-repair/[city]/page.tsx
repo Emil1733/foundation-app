@@ -78,13 +78,32 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
     if (error || !location) return notFound();
     const { city, state, soil_cache: soil } = location;
 
-    // 2. Fetch "Nearby" Cities (Spiderweb)
-    // In a real app, use PostGIS 'ST_DWithin'. Here, we grab 6 random others for MVP spiderwebing.
-    const { data: neighbors } = await supabase
+    // 2. Fetch "Nearby" Cities (Spiderweb - Nearest Neighbor Logic)
+    const { data: allLocations } = await supabase
         .from('target_locations')
-        .select('city, slug')
-        .neq('slug', slug)
-        .limit(6);
+        .select('city, slug, latitude, longitude');
+
+    let neighbors: any[] = [];
+
+    if (allLocations && location.latitude && location.longitude) {
+        // Haversine Distance Helper
+        const getDist = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+            const R = 6371; // km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        };
+
+        neighbors = allLocations
+            .filter(l => l.slug !== slug)
+            .map(l => ({ ...l, dist: getDist(location.latitude, location.longitude, l.latitude, l.longitude) }))
+            .sort((a, b) => a.dist - b.dist)
+            .slice(0, 6);
+    }
 
     // 3. Prepare Schema & FAQ
     const faqs = [
