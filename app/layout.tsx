@@ -15,7 +15,8 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "The Foundation Risk Registry | Forensic Soil Analysis",
   description: "Official 2026 Geological Database for residential foundation risk. Check your property against USDA soil maps and plasticity indices.",
-  icons: { icon: '/logo.png' }
+  icons: { icon: '/logo.png' },
+  metadataBase: new URL('https://foundation-app-self.vercel.app'),
 };
 
 export default function RootLayout({

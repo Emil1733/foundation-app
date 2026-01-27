@@ -260,82 +260,95 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                             </div>
                         )}
 
-                        <FoundationDiagram />
-
-                        {/* DYNAMIC ACTION PLAN (Entropy Check) */}
-                        <SoilActionPlan soil={soil} city={city} />
-                    </div>
-
-                    {/* NEIGHBORHOOD SOIL RISK TABLE (Phase 2) */}
-                    <div className="mt-12 bg-slate-50 rounded-2xl p-8 border border-slate-200">
-                        <h3 className="text-xl font-bold text-slate-900 mb-6">Neighborhood Risk Audit: {city}</h3>
-
-                        {/* MOBILE CARD VIEW */}
-                        <div className="md:hidden space-y-4">
-                            {(location.neighborhoods || []).map((n: any, i: number) => (
-                                <div key={i} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <span className="font-bold text-slate-900">{n.name}</span>
-                                        <span className={`px-2 py-1 rounded text-xs font-bold ${n.risk === 'Severe' ? 'bg-red-100 text-red-700' : n.risk === 'High' ? 'bg-orange-100 text-orange-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                                            {n.risk.toUpperCase()}
-                                        </span>
-                                    </div>
-                                    <p className="text-sm text-slate-600">{n.note}</p>
+                        {/* P2 INTERNAL LINK */}
+                        <div className="mt-8 border-t border-slate-100 pt-6">
+                            <Link href={`/learn/${slug}-soil-analysis`} className="group flex items-center justify-between p-4 bg-slate-50 border border-blue-100 rounded-xl hover:bg-blue-50 transition">
+                                <div>
+                                    <span className="block font-bold text-slate-900 group-hover:text-blue-700 transition">View Full Forensic Soil Analysis</span>
+                                    <span className="text-sm text-slate-500">Deep dive into {soil?.map_unit_name || 'local soil'} risks in {city}</span>
                                 </div>
-                            ))}
+                                <div className="bg-white p-2 rounded-full border border-slate-200 group-hover:border-blue-200 shadow-sm">
+                                    <MoveRight className="w-4 h-4 text-blue-500 group-hover:translate-x-1 transition" />
+                                </div>
+                            </Link>
                         </div>
+                    </div>
+                </div>
+                <FoundationDiagram />
 
-                        {/* DESKTOP TABLE VIEW */}
-                        <div className="hidden md:block overflow-x-auto">
-                            <table className="w-full text-sm text-left">
-                                <thead className="text-xs text-slate-500 uppercase bg-slate-100 font-bold">
-                                    <tr>
-                                        <th className="px-4 py-3 rounded-l-lg">Neighborhood</th>
-                                        <th className="px-4 py-3">Geological Note</th>
-                                        <th className="px-4 py-3 rounded-r-lg">Risk Level</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {(location.neighborhoods || []).map((n: any, i: number) => (
-                                        <tr key={i} className="border-b border-slate-200 hover:bg-white transition">
-                                            <td className="px-4 py-4 font-bold text-slate-900">{n.name}</td>
-                                            <td className="px-4 py-4 text-slate-600">{n.note}</td>
-                                            <td className="px-4 py-4">
-                                                <span className={`px-2 py-1 rounded text-xs font-bold ${n.risk === 'Severe' ? 'bg-red-100 text-red-700' : n.risk === 'High' ? 'bg-orange-100 text-orange-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                                                    {n.risk.toUpperCase()}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                        <p className="text-xs text-slate-400 mt-4 italic">
-                            *Hyper-local data based on historical foundation repair permits and USDA soil overlays.
-                        </p>
+                {/* DYNAMIC ACTION PLAN (Entropy Check) */}
+                <SoilActionPlan soil={soil} city={city} />
+
+                {/* NEIGHBORHOOD SOIL RISK TABLE (Phase 2) */}
+                {/* NEIGHBORHOOD SOIL RISK TABLE (Phase 2) */}
+                <div className="mt-12 bg-slate-50 rounded-2xl p-8 border border-slate-200">
+                    <h3 className="text-xl font-bold text-slate-900 mb-6">Neighborhood Risk Audit: {city}</h3>
+
+                    {/* MOBILE CARD VIEW */}
+                    <div className="md:hidden space-y-4">
+                        {(location.neighborhoods || []).map((n: any, i: number) => (
+                            <div key={i} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                                <div className="flex justify-between items-start mb-2">
+                                    <span className="font-bold text-slate-900">{typeof n === 'string' ? n : n.name}</span>
+                                    <span className={`px-2 py-1 rounded text-xs font-bold ${n.risk === 'Severe' ? 'bg-red-100 text-red-700' : (n.risk || 'High') === 'High' ? 'bg-orange-100 text-orange-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                                        {(n.risk || 'High').toUpperCase()}
+                                    </span>
+                                </div>
+                                <p className="text-sm text-slate-600">{n.note || 'Active soil zone detected.'}</p>
+                            </div>
+                        ))}
                     </div>
 
-                    {/* MUNICIPAL PERMIT HONEYPOT (Genius Tactic) */}
-                    <div className="mt-8 bg-yellow-50 border border-yellow-200 p-6 rounded-xl flex items-start gap-4">
-                        <div className="bg-yellow-100 p-2 rounded-lg">
-                            <ShieldCheck className="w-6 h-6 text-yellow-700" />
-                        </div>
-                        <div>
-                            <h4 className="font-bold text-yellow-900 text-lg mb-1">
-                                ⚠️ Public Notice: Active Soil Movement in {city}
-                            </h4>
-                            <p className="text-yellow-800 text-sm mb-4">
-                                Our forensic analysts are currently tracking elevated foundation repair permit filings in <strong>{(location.neighborhoods || []).map((n: any) => n.name).slice(0, 3).join(', ')}</strong>.
-                            </p>
-                            <p className="text-yellow-800 text-sm">
-                                If you see pier drilling rigs on your street, your home sits on the same active {soil?.map_unit_name || 'soil'} vein.
-                            </p>
-                        </div>
+                    {/* DESKTOP TABLE VIEW */}
+                    <div className="hidden md:block overflow-x-auto">
+                        <table className="w-full text-sm text-left">
+                            <thead className="text-xs text-slate-500 uppercase bg-slate-100 font-bold">
+                                <tr>
+                                    <th className="px-4 py-3 rounded-l-lg">Neighborhood</th>
+                                    <th className="px-4 py-3">Geological Note</th>
+                                    <th className="px-4 py-3 rounded-r-lg">Risk Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {(location.neighborhoods || []).map((n: any, i: number) => (
+                                    <tr key={i} className="border-b border-slate-200 hover:bg-white transition">
+                                        <td className="px-4 py-4 font-bold text-slate-900">{typeof n === 'string' ? n : n.name}</td>
+                                        <td className="px-4 py-4 text-slate-600">{n.note || 'Detailed analysis available.'}</td>
+                                        <td className="px-4 py-4">
+                                            <span className={`px-2 py-1 rounded text-xs font-bold ${n.risk === 'Severe' ? 'bg-red-100 text-red-700' : (n.risk || 'High') === 'High' ? 'bg-orange-100 text-orange-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                                                {(n.risk || 'High').toUpperCase()}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    <p className="text-xs text-slate-400 mt-4 italic">
+                        *Hyper-local data based on historical foundation repair permits and USDA soil overlays.
+                    </p>
+                </div>
+
+                {/* MUNICIPAL PERMIT HONEYPOT (Genius Tactic) */}
+                <div className="mt-8 bg-yellow-50 border border-yellow-200 p-6 rounded-xl flex items-start gap-4">
+                    <div className="bg-yellow-100 p-2 rounded-lg">
+                        <ShieldCheck className="w-6 h-6 text-yellow-700" />
+                    </div>
+                    <div>
+                        <h4 className="font-bold text-yellow-900 text-lg mb-1">
+                            ⚠️ Public Notice: Active Soil Movement in {city}
+                        </h4>
+                        <p className="text-yellow-800 text-sm mb-4">
+                            Our forensic analysts are currently tracking elevated foundation repair permit filings in <strong>{(location.neighborhoods || []).map((n: any) => typeof n === 'string' ? n : n.name).slice(0, 3).join(', ')}</strong>.
+                        </p>
+                        <p className="text-yellow-800 text-sm">
+                            If you see pier drilling rigs on your street, your home sits on the same active {soil?.map_unit_name || 'soil'} vein.
+                        </p>
                     </div>
                 </div>
 
                 {/* FAQ ACCORDION (SEO) */}
-                <div className="mb-16">
+                < div className="mb-16 mt-16" >
                     <h3 className="text-2xl font-bold text-slate-900 mb-6">Common Questions in {city}</h3>
                     <div className="space-y-4">
                         {faqs.map((faq, i) => (
@@ -347,35 +360,35 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                             </div>
                         ))}
                     </div>
-                </div>
+                </div >
 
                 {/* SPIDERWEB (NEARBY CITIES) */}
-                {neighbors && neighbors.length > 0 && (
-                    <div className="border-t border-slate-200 pt-12">
-                        <h4 className="font-bold text-slate-900 mb-6">Serving Neighbors Near {city}</h4>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            {neighbors.map(n => (
-                                <Link
-                                    key={n.slug}
-                                    href={`/services/foundation-repair/${n.slug}`}
-                                    className="text-slate-500 hover:text-blue-600 text-sm flex items-center gap-1 transition-colors"
-                                >
-                                    <MapPin className="w-3 h-3" /> {n.city} Foundation Repair
-                                </Link>
-                            ))}
+                {
+                    neighbors && neighbors.length > 0 && (
+                        <div className="border-t border-slate-200 pt-12">
+                            <h4 className="font-bold text-slate-900 mb-6">Serving Neighbors Near {city}</h4>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                {neighbors.map(n => (
+                                    <Link
+                                        key={n.slug}
+                                        href={`/services/foundation-repair/${n.slug}`}
+                                        className="text-slate-500 hover:text-blue-600 text-sm flex items-center gap-1 transition-colors"
+                                    >
+                                        <MapPin className="w-3 h-3" /> {n.city} Foundation Repair
+                                    </Link>
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                )}
-
-            </main>
-
+                    )
+                }
+            </main >
 
             {/* STICKY MOBILE CTA */}
-            <div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 p-4 z-50">
+            < div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 p-4 z-50" >
                 <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2">
                     <Phone className="w-5 h-5" /> Talk to an Engineer
                 </button>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }

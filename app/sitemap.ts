@@ -26,6 +26,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8,
     }));
 
+    // NEW: Programmatic Soil Reports (/learn/...)
+    const articleUrls = locations.map((loc) => ({
+        url: `${BASE_URL}/learn/${loc.slug}-soil-analysis`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.9, // Higher priority as these are our "Gold" content
+    }));
+
     return [
         {
             url: BASE_URL,
@@ -33,6 +41,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             changeFrequency: 'daily',
             priority: 1,
         },
+        {
+            url: `${BASE_URL}/learn`,
+            lastModified: new Date(),
+            changeFrequency: 'daily',
+            priority: 1,
+        },
         ...cityUrls,
+        ...articleUrls,
     ];
 }
