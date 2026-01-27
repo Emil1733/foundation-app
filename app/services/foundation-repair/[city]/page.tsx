@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import SoilRiskWidget from "@/components/SoilRiskWidget";
 import TrustBadges from "@/components/TrustBadges";
 import FoundationDiagram from "@/components/FoundationDiagram";
+import SoilActionPlan from "@/components/SoilActionPlan";
 import { MoveRight, Phone, ShieldCheck, MapPin, Info, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -43,31 +44,6 @@ const getDynamicIntro = (city: string, soilName: string, risk: string) => {
     return hooks[index];
 };
 
-// Logic to fetch neighborhoods (Mock database for Phase 2)
-const getNeighborhoods = (city: string, risk: string) => {
-    // Specific data for key markets
-    if (city === 'Plano') return [
-        { name: "Willow Bend", note: "Expect higher plasticity variance due to the creek bed.", risk: "Severe" },
-        { name: "Legacy West", note: "Commercial fill zones often hide active clay layers.", risk: "High" },
-        { name: "Deerfield", note: "Older slab-on-grade homes showing increased movement.", risk: risk },
-        { name: "Kings Ridge", note: "Proximity to 121 corridor requires deep piering.", risk: "Moderate" }
-    ];
-    if (city === 'Dallas') return [
-        { name: "Preston Hollow", note: "Expansive clay pockets mixed with limestone strata.", risk: "High" },
-        { name: "Lakewood", note: "Rolling hills cause differential settlement.", risk: "Severe" },
-        { name: "Uptown", note: "Urban fill soil issues common in new condos.", risk: "Moderate" },
-        { name: "Lake Highlands", note: "Soil saturation issues near creek tributaries.", risk: risk }
-    ];
-
-    // Generic fallback for other cities
-    return [
-        { name: `${city} North`, note: `Standard ${risk} risk profile for this sector.`, risk: risk },
-        { name: `${city} South`, note: "Historical data indicates slab instability.", risk: risk },
-        { name: `${city} East`, note: "Drainage corrections recommended.", risk: risk },
-        { name: `${city} West`, note: "Monitor for seasonal heave.", risk: risk }
-    ];
-};
-
 // SEO Metadata
 export async function generateMetadata({ params }: { params: Promise<{ city: string }> }): Promise<Metadata> {
     const { city: slug } = await params;
@@ -96,7 +72,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
     // 1. Fetch Main Data
     const { data: location, error } = await supabase
         .from('target_locations')
-        .select(`*, soil_cache (*)`)
+        .select(`*, soil_cache (*), neighborhoods`)
         .eq('slug', slug)
         .single();
 
@@ -284,8 +260,10 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                             </div>
                         )}
 
-                        {/* VISUAL DIAGRAM */}
                         <FoundationDiagram />
+
+                        {/* DYNAMIC ACTION PLAN (Entropy Check) */}
+                        <SoilActionPlan soil={soil} city={city} />
                     </div>
 
                     {/* NEIGHBORHOOD SOIL RISK TABLE (Phase 2) */}
@@ -294,7 +272,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
 
                         {/* MOBILE CARD VIEW */}
                         <div className="md:hidden space-y-4">
-                            {getNeighborhoods(city, soil?.risk_level || 'High').map((n, i) => (
+                            {(location.neighborhoods || []).map((n: any, i: number) => (
                                 <div key={i} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                                     <div className="flex justify-between items-start mb-2">
                                         <span className="font-bold text-slate-900">{n.name}</span>
@@ -318,7 +296,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {getNeighborhoods(city, soil?.risk_level || 'High').map((n, i) => (
+                                    {(location.neighborhoods || []).map((n: any, i: number) => (
                                         <tr key={i} className="border-b border-slate-200 hover:bg-white transition">
                                             <td className="px-4 py-4 font-bold text-slate-900">{n.name}</td>
                                             <td className="px-4 py-4 text-slate-600">{n.note}</td>
@@ -347,7 +325,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                                 ⚠️ Public Notice: Active Soil Movement in {city}
                             </h4>
                             <p className="text-yellow-800 text-sm mb-4">
-                                Our forensic analysts are currently tracking elevated foundation repair permit filings in <strong>{getNeighborhoods(city, '').map(n => n.name).join(', ')}</strong>.
+                                Our forensic analysts are currently tracking elevated foundation repair permit filings in <strong>{(location.neighborhoods || []).map((n: any) => n.name).slice(0, 3).join(', ')}</strong>.
                             </p>
                             <p className="text-yellow-800 text-sm">
                                 If you see pier drilling rigs on your street, your home sits on the same active {soil?.map_unit_name || 'soil'} vein.

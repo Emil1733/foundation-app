@@ -11,6 +11,7 @@ CREATE TABLE target_locations (
     latitude DECIMAL(10, 8) NOT NULL,
     longitude DECIMAL(11, 8) NOT NULL,
     slug TEXT GENERATED ALWAYS AS (lower(replace(city || '-' || state || '-' || zip_code, ' ', '-'))) STORED,
+    neighborhoods JSONB DEFAULT '[]'::JSONB, -- Phase 2.1: Store real neighborhood data
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
