@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realtor Site Simulation</title>
+    <style>
+        body { font-family: sans-serif; padding: 40px; background: #f0f0f0; }
+        .realtor-container { max-w-idth: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .sidebar { width: 350px; float: right; margin-left: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="realtor-container">
+        <h1>Luxury Dallas Real Estate</h1>
+        <p>Welcome to the premier listings for North Texas.</p>
+        
+        <div class="sidebar">
+            <h3>Check Soil Risk</h3>
+            <!-- WIDGET CONTAINER -->
+            <div class="foundation-risk-embed"></div>
+        </div>
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+
+    <!-- EMBED SCRIPT (Pointing to local for test) -->
+    <script>
+        // Overwrite URL for testing
+        var WIDGET_URL = "http://localhost:3000/widget"; 
+    </script>
+    <script src="/embed.js"></script>
+    <script>
+        // Quick hack to force the script to use our overridden URL if the script logic allowed it, 
+        // but since the script has hardcoded const, we might need to modify the script to accept a global var or just rely on the script loading inside the Next.js public folder context which serves it.
+        // Actually, since we are serving this static file likely via Next.js public folder, the relative path /embed.js works. 
+        // But the script inside uses the hardcoded URL. 
+        // Let's rely on the deployed URL for the real script, but for this test we need to be clever or just edit the script temporarily or just trust the hardcoded URL if we want to confirm prod.
+        // For LOCALHOST testing, we should probably update embed.js to be smart about origin or just assume the user will test on localhost:3000.
+        
+        // Let's manually inject for this test file to prove it works without relying on the external script logic if it's hardcoded to prod.
+        var container = document.querySelector('.foundation-risk-embed');
+        var iframe = document.createElement('iframe');
+        iframe.src = "http://localhost:3000/widget";
+        iframe.style.width = "100%";
+        iframe.style.height = "450px";
+        iframe.style.border = "none";
+        container.innerHTML = ''; // Request clear
+        container.appendChild(iframe);
+    </script>
+</body>
+</html>
