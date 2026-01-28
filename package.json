@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "add-city": "node scripts/add-city.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.91.1",

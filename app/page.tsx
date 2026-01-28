@@ -18,30 +18,9 @@ export default async function Home() {
     .limit(24) // Show top 24
     .order('created_at', { ascending: false });
 
-  // 2. Organization Schema (Pillar 3)
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "The Foundation Risk Registry",
-    "url": "https://foundation-app-self.vercel.app",
-    "logo": "https://foundation-app-self.vercel.app/logo.png",
-    "sameAs": [
-      "https://twitter.com/foundationrisk",
-      "https://facebook.com/foundationrisk"
-    ],
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "telephone": "+1-800-555-0199",
-      "contactType": "customer service"
-    }
-  };
-
   return (
     <div className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)]">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+
 
       {/* Hero Section */}
       <main className="flex flex-col items-center justify-center pt-20 pb-12 px-6 bg-white border-b border-slate-100">
