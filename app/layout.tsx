@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "The Foundation Risk Registry | Forensic Soil Analysis",
   description: "Official 2026 Geological Database for residential foundation risk. Check your property against USDA soil maps and plasticity indices.",
   icons: { icon: '/logo.png' },
-  metadataBase: new URL('https://foundation-app-self.vercel.app'),
+  metadataBase: new URL('https://foundationrisk.org'),
 };
 
 export default function RootLayout({
@@ -29,8 +29,8 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "The Foundation Risk Registry",
-    "url": "https://foundation-app-self.vercel.app",
-    "logo": "https://foundation-app-self.vercel.app/logo.png",
+    "url": "https://foundationrisk.org",
+    "logo": "https://foundationrisk.org/logo.png",
     "sameAs": [
       "https://www.nspe.org",
       "https://www.usda.gov"

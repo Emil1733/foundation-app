@@ -7,7 +7,7 @@ const supabase = createClient(
 );
 
 // TODO: Update this to your real custom domain when you buy one.
-const BASE_URL = 'https://foundation-app-self.vercel.app';
+const BASE_URL = 'https://foundationrisk.org';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // 1. Fetch all cities 

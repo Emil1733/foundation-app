@@ -1,6 +1,6 @@
 (function () {
     // Configuration
-    var WIDGET_URL = "https://foundation-app-self.vercel.app/widget"; // Change to localhost:3000 for testing if needed
+    var WIDGET_URL = "https://foundationrisk.org/widget"; // Change to localhost:3000 for testing if needed
     var IFRAME_HEIGHT = "450px";
     var IFRAME_WIDTH = "100%";
 

@@ -126,8 +126,8 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
         "@context": "https://schema.org",
         "@type": "HomeAndConstructionBusiness",
         "name": `The Foundation Risk Registry of ${city}`,
-        "image": "https://foundation-app-self.vercel.app/logo.png",
-        "url": `https://foundation-app-self.vercel.app/services/foundation-repair/${slug}`,
+        "image": "https://foundationrisk.org/logo.png",
+        "url": `https://foundationrisk.org/services/foundation-repair/${slug}`,
         "telephone": "+1-800-555-0199",
         "priceRange": "$$$$",
         "address": {
@@ -154,7 +154,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             "name": "Elias Thorne, P.E.",
             "jobTitle": "Senior Geotechnical Lead",
             "alumniOf": "Texas A&M University",
-            "url": "https://foundation-app-self.vercel.app/about/elias-thorne",
+            "url": "https://foundationrisk.org/about/elias-thorne",
             "description": "Licensed Professional Engineer (TX-PE-88XXXX). Oversight credentials available upon request during Forensic Analysis."
         },
         "hasOfferCatalog": {

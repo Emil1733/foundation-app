@@ -118,13 +118,13 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                             "@type": "ListItem",
                             "position": 1,
                             "name": "Education Hub",
-                            "item": "https://foundation-app-self.vercel.app/learn"
+                            "item": "https://foundationrisk.org/learn"
                         },
                         {
                             "@type": "ListItem",
                             "position": 2,
                             "name": `${cityData.city} Soil Analysis`,
-                            "item": `https://foundation-app-self.vercel.app/learn/${params.slug}`
+                            "item": `https://foundationrisk.org/learn/${params.slug}`
                         }
                     ]
                 },
@@ -136,7 +136,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                     "author": {
                         "@type": "Person",
                         "name": "Elias Thorne, P.E.",
-                        "url": "https://foundation-app-self.vercel.app/about/elias-thorne",
+                        "url": "https://foundationrisk.org/about/elias-thorne",
                         "jobTitle": "Forensic Engineer"
                     },
                     "publisher": {
@@ -144,13 +144,13 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                         "name": "Foundation Stabilization Registry",
                         "logo": {
                             "@type": "ImageObject",
-                            "url": "https://foundation-app-self.vercel.app/logo.png"
+                            "url": "https://foundationrisk.org/logo.png"
                         }
                     },
                     "description": `Forensic engineering analysis of ${soil?.map_unit_name} soil risks in ${cityData.city}. PI: ${pi}. Active monitoring required.`,
                     "mainEntityOfPage": {
                         "@type": "WebPage",
-                        "@id": `https://foundation-app-self.vercel.app/learn/${params.slug}`
+                        "@id": `https://foundationrisk.org/learn/${params.slug}`
                     }
                 }
             ]

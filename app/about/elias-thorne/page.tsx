@@ -18,7 +18,7 @@ export default function EliasThorne() {
                     "@type": "Person",
                     "name": "Elias Thorne, P.E.",
                     "jobTitle": "Senior Geotechnical Lead",
-                    "url": "https://foundation-app-self.vercel.app/about/elias-thorne",
+                    "url": "https://foundationrisk.org/about/elias-thorne",
                     "alumniOf": "Texas A&M University",
                     "knowsAbout": ["Geotechnical Engineering", "Expansive Clay Soils", "Foundation Underpinning", "Forensic Structural Analysis"],
                     "worksFor": {
