@@ -4,6 +4,10 @@ import SoilRiskWidget from "@/components/SoilRiskWidget";
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 
+export const metadata = {
+    robots: 'noindex',
+};
+
 export default function WidgetPage() {
     return (
         <div className="flex flex-col items-center justify-center p-4 min-h-[400px]">
