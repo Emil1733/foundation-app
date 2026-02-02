@@ -1,4 +1,4 @@
-'use client';
+
 
 import SoilRiskWidget from "@/components/SoilRiskWidget";
 import Link from "next/link";
