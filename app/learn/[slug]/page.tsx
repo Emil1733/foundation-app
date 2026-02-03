@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import Link from 'next/link';
-import { ArrowLeft, ShieldAlert, CheckCircle, MapPin, Activity, Info } from 'lucide-react';
+import { ArrowLeft, ShieldAlert, CheckCircle, MapPin, Activity, Info, ShieldCheck } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
 export const revalidate = 3600;
