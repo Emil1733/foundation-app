@@ -4,8 +4,12 @@ import { useState } from 'react';
 import { ShieldCheck, ArrowRight, CheckCircle, AlertTriangle, MapPin, Phone, User, Home } from 'lucide-react';
 import Link from 'next/link';
 
+import { submitLead } from './actions';
+
 export default function BookAnalysisPage() {
     const [step, setStep] = useState(1);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
     const [formData, setFormData] = useState({
         symptoms: [] as string[],
         address: '',
@@ -43,12 +47,46 @@ export default function BookAnalysisPage() {
     const nextStep = () => setStep(s => s + 1);
     const prevStep = () => setStep(s => s - 1);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Here we would typically send to Supabase or API
-        alert('Forensic Request Submitted! (Demo Mode)');
-        // Redirect to success page would happen here
+        setIsSubmitting(true);
+        
+        try {
+            const result = await submitLead(formData);
+            
+            if (result.success) {
+                setIsSuccess(true);
+                // Optional: Redirect or Show Success UI
+            } else {
+                alert('Error: ' + result.error);
+            }
+        } catch (err) {
+            alert('An unexpected error occurred. Please call to confirm.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
+
+    if (isSuccess) {
+        return (
+             <div className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)] flex items-center justify-center p-6">
+                <main className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-green-200 p-8 text-center animate-in zoom-in duration-300">
+                    <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <CheckCircle className="w-10 h-10 text-green-600" />
+                    </div>
+                    <h1 className="text-3xl font-extrabold text-slate-900 mb-4">Analysis Requested</h1>
+                    <p className="text-slate-600 mb-8">
+                        We have received your forensic intake for <span className="font-bold">{formData.address}</span>.
+                        <br /><br />
+                        An engineer will review your soil data match and contact you at <span className="font-bold">{formData.email}</span> shortly.
+                    </p>
+                    <Link href="/" className="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-slate-800 transition">
+                        Return to Registry
+                    </Link>
+                </main>
+             </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)]">
