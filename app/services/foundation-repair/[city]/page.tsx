@@ -203,8 +203,8 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                             <span>Geological Authority in {city}, {state}</span>
                         </div>
                         <h1 className="text-3xl md:text-6xl font-extrabold mb-6 leading-tight">
-                            Foundation Failure in <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">{city}</span>?
+                            Foundation Repair & <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">Soil Analysis in {city}</span>
                         </h1>
                         <p className="text-slate-300 text-lg mb-10 leading-relaxed max-w-lg">
                             It's likely the <strong>{soil?.map_unit_name}</strong>. We stabilize the geology, not just the concrete.
