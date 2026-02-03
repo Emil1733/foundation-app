@@ -170,6 +170,12 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                     </Link>
                 </nav>
 
+                {/* STICKY MOBILE CTA */}
+            <div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 p-4 z-50">
+                <Link href="/book-analysis" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2">
+                    <ShieldCheck className="w-5 h-5" /> Request Forensic Analysis
+                </Link>
+            </div>
                 <article className="max-w-3xl mx-auto py-12 px-6">
                     {/* HEADER */}
                     <header className="mb-12">

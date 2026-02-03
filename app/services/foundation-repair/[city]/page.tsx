@@ -210,9 +210,9 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                             It's likely the <strong>{soil?.map_unit_name}</strong>. We stabilize the geology, not just the concrete.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4">
-                            <button className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition hover:shadow-lg">
-                                <Phone className="w-5 h-5" /> Talk to an Engineer
-                            </button>
+                            <Link href="/book-analysis" className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition hover:shadow-lg">
+                                <ShieldCheck className="w-5 h-5" /> Request Forensic Analysis
+                            </Link>
                         </div>
                     </div>
                     <div className="relative"><SoilRiskWidget /></div>
@@ -385,9 +385,9 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
 
             {/* STICKY MOBILE CTA */}
             < div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 p-4 z-50" >
-                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2">
-                    <Phone className="w-5 h-5" /> Talk to an Engineer
-                </button>
+                <Link href="/book-analysis" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2">
+                    <ShieldCheck className="w-5 h-5" /> Request Forensic Analysis
+                </Link>
             </div >
         </div >
     );

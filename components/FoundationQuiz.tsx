@@ -109,8 +109,8 @@ export default function FoundationQuiz() {
                                 <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
                                 <h2 className="text-2xl font-bold text-red-700 mb-2">High Likelihood of Failure</h2>
                                 <p className="text-red-900 mb-4">Your symptoms indicate active failure in the load-bearing strata.</p>
-                                <Link href="/services/foundation-repair/dallas-tx-75201" className="block w-full bg-red-600 text-white font-bold py-3 rounded-xl hover:bg-red-700 transition">
-                                    Find an Engineer Near You
+                                <Link href="/book-analysis" className="block w-full bg-red-600 text-white font-bold py-3 rounded-xl hover:bg-red-700 transition">
+                                    Request Priority Forensic Analysis
                                 </Link>
                             </div>
                         )}
@@ -120,8 +120,8 @@ export default function FoundationQuiz() {
                                 <HelpCircle className="w-12 h-12 text-orange-500 mx-auto mb-4" />
                                 <h2 className="text-2xl font-bold text-orange-700 mb-2">Monitor Closely</h2>
                                 <p className="text-orange-900 mb-4">Seasonal movement is detected. Implement a moisture management plan.</p>
-                                <Link href="/" className="block w-full bg-orange-600 text-white font-bold py-3 rounded-xl hover:bg-orange-700 transition">
-                                    Download Maintenance Guide
+                                <Link href="/book-analysis" className="block w-full bg-orange-600 text-white font-bold py-3 rounded-xl hover:bg-orange-700 transition">
+                                    Get a Preventative Assessment
                                 </Link>
                             </div>
                         )}
