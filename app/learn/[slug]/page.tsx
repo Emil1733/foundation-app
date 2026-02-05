@@ -6,16 +6,16 @@ import { notFound } from 'next/navigation';
 export const revalidate = 3600;
 
 // 1. Generate All Slugs at Build Time
-// export async function generateStaticParams() {
-//     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-//     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-//     const supabase = createClient(supabaseUrl, supabaseKey);
+export async function generateStaticParams() {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
-//     const { data: locations } = await supabase.from('target_locations').select('slug');
-//     return locations?.map((loc) => ({
-//         slug: `${loc.slug}-soil-analysis`,
-//     })) || [];
-// }
+    const { data: locations } = await supabase.from('target_locations').select('slug');
+    return locations?.map((loc) => ({
+        slug: `${loc.slug}-soil-analysis`,
+    })) || [];
+}
 
 // 2. Fetch Data for Specific Slug
 async function getCityData(slugParam: string) {
@@ -73,6 +73,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         return {
             title: `Why Foundations Fail in ${cityData.city}: ${mapUnit} Analysis`,
             description: `Forensic engineering report on ${mapUnit} soil in ${cityData.city}, ${cityData.state}. Plasticity Index: ${pi}. Risk Assessment and repair protocols.`,
+            alternates: {
+                canonical: `https://foundationrisk.org/learn/${slug}`,
+            },
         };
     } catch (e) {
         console.error('Metadata generation failed:', e);

@@ -62,6 +62,9 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
     return {
         title: `Forensic Foundation Analysis ${location.city}: ${soilName} Report | FRR`,
         description: `⚠️ ${location.city} Foundation Warning: Your home sits on ${soilName} (${risk} Risk). Don't settle for cheap piling. Get a P.E. Certified Forensic Soil Analysis.`,
+        alternates: {
+            canonical: `https://foundationrisk.org/services/foundation-repair/${slug}`,
+        },
     };
 }
 
@@ -186,6 +189,23 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                 "name": f.q,
                 "acceptedAnswer": { "@type": "Answer", "text": f.a }
             }))
+        },
+        "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Service Areas",
+                    "item": "https://foundationrisk.org/locations"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": `${city} Foundation Repair`,
+                    "item": `https://foundationrisk.org/services/foundation-repair/${slug}`
+                }
+            ]
         }
     };
 
