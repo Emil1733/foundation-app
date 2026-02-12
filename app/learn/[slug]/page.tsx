@@ -71,10 +71,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         const pi = soil?.plasticity_index || 'Unknown';
 
         return {
-            title: `Why Foundations Fail in ${cityData.city}: ${mapUnit} Analysis`,
-            description: `Forensic engineering report on ${mapUnit} soil in ${cityData.city}, ${cityData.state}. Plasticity Index: ${pi}. Risk Assessment and repair protocols.`,
+            title: `${cityData.city} Soil Analysis: ${mapUnit} Risks`,
+            description: `Forensic report on ${mapUnit} soil in ${cityData.city}, ${cityData.state}. Plasticity Index: ${pi}. Repair protocols.`,
             alternates: {
-                canonical: `https://foundationrisk.org/learn/${slug}`,
+                canonical: `/learn/${slug}`,
             },
         };
     } catch (e) {
@@ -142,6 +142,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                         "url": "https://foundationrisk.org/about/elias-thorne",
                         "jobTitle": "Forensic Engineer"
                     },
+                    "image": "https://foundationrisk.org/logo.png",
                     "publisher": {
                         "@type": "Organization",
                         "name": "Foundation Stabilization Registry",
@@ -188,24 +189,28 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                         <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
                             The Hidden Threat of <span className="text-blue-700">{soil?.map_unit_name}</span> for Homeowners in {cityData.city}
                         </h1>
-                        <div className="flex items-center gap-6 text-sm text-slate-500 border-l-4 border-slate-200 pl-4">
+                        <div className="flex flex-wrap items-center gap-6 text-sm text-slate-500 border-l-4 border-blue-200 pl-4 py-1">
                             <div>
-                                <span className="block font-bold text-slate-900">Analysis By</span>
-                                Elias Thorne, P.E.
+                                <span className="block text-xs font-bold text-slate-900 uppercase tracking-tighter">Forensic Lead</span>
+                                <span className="text-slate-700">Elias Thorne, P.E.</span>
                             </div>
                             <div>
-                                <span className="block font-bold text-slate-900">Last Updated</span>
-                                {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                                <span className="block text-xs font-bold text-slate-900 uppercase tracking-tighter">Published</span>
+                                <span className="text-slate-700">{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                            </div>
+                            <div>
+                                <span className="block text-xs font-bold text-slate-900 uppercase tracking-tighter">Verified</span>
+                                <span className="text-slate-700">Geological Registry v2026.1</span>
                             </div>
                         </div>
                     </header>
 
                     {/* KEY STATS WIDGET */}
                     <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 mb-12">
-                        <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
-                            <Activity className="w-5 h-5 text-blue-600" />
+                        <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                            <Activity className="w-5 h-5 text-blue-600" aria-hidden="true" />
                             Geological Profile: {cityData.city}, {cityData.state}
-                        </h3>
+                        </h2>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                             <div>
                                 <span className="block text-xs text-slate-500 uppercase font-bold">Soil Type</span>
@@ -213,7 +218,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                             </div>
                             <div>
                                 <span className="block text-xs text-slate-500 uppercase font-bold">Plasticity (PI)</span>
-                                <span className={`font-mono text-xl font-bold ${isHighRisk ? 'text-red-600' : 'text-slate-900'}`}>
+                                <span className={`font-mono text-xl font-bold ${isHighRisk ? 'text-red-700' : 'text-slate-900'}`}>
                                     {pi.toFixed(1)}
                                 </span>
                             </div>
@@ -223,7 +228,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                             </div>
                             <div>
                                 <span className="block text-xs text-slate-500 uppercase font-bold">Risk Class</span>
-                                <span className={`inline-block px-2 py-0.5 rounded text-xs text-white font-bold ${isHighRisk ? 'bg-red-600' : 'bg-green-600'}`}>
+                                <span className={`inline-block px-2 py-0.5 rounded text-xs text-white font-bold ${isHighRisk ? 'bg-red-700' : 'bg-green-700'}`}>
                                     {soil?.risk_level?.toUpperCase()}
                                 </span>
                             </div>

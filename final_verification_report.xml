@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<audit version="0.0.38">
+<site url="http://127.0.0.1:3000" crawled="5" date="2026-02-12T08:28:10.834Z"/>
+<score overall="59" grade="F">
+ <cat name="Security" score="68"/>
+ <cat name="Accessibility" score="90"/>
+ <cat name="Crawlability" score="86"/>
+ <cat name="Performance" score="79"/>
+ <cat name="Content" score="90"/>
+ <cat name="Social Media" score="87"/>
+ <cat name="Core SEO" score="96"/>
+ <cat name="E-E-A-T" score="83"/>
+ <cat name="Links" score="89"/>
+ <cat name="Internationalization" score="100"/>
+ <cat name="Images" score="100"/>
+ <cat name="Legal Compliance" score="100"/>
+ <cat name="Local SEO" score="100"/>
+ <cat name="Mobile" score="100"/>
+ <cat name="Structured Data" score="100"/>
+ <cat name="URL Structure" score="100"/>
+</score>
+<summary passed="424" warnings="65" failed="9"/>
+<issues>
+ <category name="Crawlability" errors="1" warnings="2">
+  <rule id="crawl/sitemap-domain" severity="error" status="fail" docs="https://docs.squirrelscan.com/rules/crawl/sitemap-domain">
+   116 URL(s) point to different domain(s)
+   Items (5/116):
+    - https://foundationrisk.org [host: foundationrisk.org]
+    - https://foundationrisk.org/learn [host: foundationrisk.org]
+    - https://foundationrisk.org/services/foundation-repair/richardson-tx-75080 [host: foundationrisk.org]
+    - https://foundationrisk.org/services/foundation-repair/lewisville-tx-75067 [host: foundationrisk.org]
+    - https://foundationrisk.org/services/foundation-repair/flower-mound-tx-75028 [host: foundationrisk.org]
+  </rule>
+  <rule id="crawl/sitemap-coverage" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/crawl/sitemap-coverage">
+   5 indexable page(s) not in sitemap (100%); 58 sitemap URL(s) were not crawled
+   Items (5/63):
+    - /
+    - /contact
+    - /about
+    - /privacy
+    - /locations
+  </rule>
+ </category>
+ <category name="Core SEO" errors="0" warnings="3">
+  <rule id="core/meta-title" severity="error" status="warn" docs="https://docs.squirrelscan.com/rules/core/meta-title">
+   Title too long
+   Pages (1): /
+   Items (1):
+    - / (The Foundation Risk Registry | Texas Soil &amp; Forens (61 chars))
+  </rule>
+  <rule id="core/meta-description" severity="error" status="warn" docs="https://docs.squirrelscan.com/rules/core/meta-description">
+   Description too short
+   Pages (2): /contact, /privacy
+   Items (2):
+    - /contact (Contact the Foundation Risk Registry for technical (112 chars))
+    - /privacy (Transparency on how we handle your address data an (98 chars))
+  </rule>
+ </category>
+ <category name="Security" errors="5" warnings="3">
+  <rule id="security/https" severity="error" status="fail" docs="https://docs.squirrelscan.com/rules/security/https">
+   Page not served over HTTPS
+   Pages (5): /, /about, /contact, /locations, /privacy
+  </rule>
+  <rule id="security/csp" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/security/csp">
+   CSP allows &apos;unsafe-inline&apos; and &apos;unsafe-eval&apos;; CSP script-src allows wildcard (*)
+  </rule>
+  <rule id="security/form-captcha" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/security/form-captcha">
+   1 public form(s) without CAPTCHA
+   Pages (1): /contact
+   Items (1):
+    - form[0]
+  </rule>
+ </category>
+ <category name="Links" errors="0" warnings="2">
+  <rule id="links/orphan-pages" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/links/orphan-pages">
+   1 orphan page(s) with &lt;2 incoming links
+   Items (1):
+    - /locations
+  </rule>
+  <rule id="links/weak-internal-links" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/links/weak-internal-links">
+   1 page(s) have only 1 internal link
+   Items (1):
+    - /locations
+  </rule>
+ </category>
+ <category name="Content" errors="0" warnings="6">
+  <rule id="content/keyword-stuffing" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/content/keyword-stuffing">
+   1 word(s) may be overused
+   Pages (2): /contact, /privacy
+   Items (2):
+    - registry (&quot;registry&quot; (4.5%)) [count: 6, density: 4.511278195488721]
+    - data (&quot;data&quot; (4.8%)) [count: 11, density: 4.824561403508771]
+  </rule>
+  <rule id="content/word-count" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/content/word-count">
+   Thin content: N words (min N)
+   Pages (4): /about, /contact, /locations, /privacy
+   Items (4):
+    - /contact (Thin content: 151 words (min 300))
+    - /about (Thin content: 229 words (min 300))
+    - /privacy (Thin content: 259 words (min 300))
+    - /locations (Thin content: 164 words (min 300))
+  </rule>
+ </category>
+ <category name="Performance" errors="0" warnings="32">
+  <rule id="perf/js-file-size" severity="error" status="warn" docs="https://docs.squirrelscan.com/rules/perf/js-file-size">
+   3 JS file(s) exceed 250.0 KB
+   Items (3):
+    - /_next/static/chunks/b6490_next_dist_compiled_react-dom_744de890._.js [sizeBytes: 1048531, size: 1024.0 KB, status: 200, contentType: application/javascript; charset=UTF-8] (from: /, /contact, /about, /privacy, /locations)
+    - /_next/static/chunks/b6490_next_dist_compiled_next-devtools_index_dae914b5.js [sizeBytes: 816080, size: 797.0 KB, status: 200, contentType: application/javascript; charset=UTF-8] (from: /, /contact, /about, /privacy, /locations)
+    - /_next/static/chunks/b6490_next_dist_client_9df2fa30._.js [sizeBytes: 636018, size: 621.1 KB, status: 200, contentType: application/javascript; charset=UTF-8] (from: /, /contact, /about, /privacy, /locations)
+  </rule>
+  <rule id="perf/total-byte-weight" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/perf/total-byte-weight">
+   Total tracked resources: 3225KB (heavy page)
+  </rule>
+  <rule id="perf/critical-request-chains" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/perf/critical-request-chains">
+   2 critical request chain(s) found
+   Pages (5): /, /about, /contact, /locations, /privacy
+   Items (2):
+    - CSS: /_next/static/chunks/%5Broot-of-the-server%5D__ecfcf240._.css
+    - JS: /_next/static/chunks/b6490_next_dist_build_polyfills_polyfill-nomodule.js
+  </rule>
+  <rule id="perf/duplicate-js" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/perf/duplicate-js">
+   2 library(s) loaded multiple times
+   Pages (5): /, /about, /contact, /locations, /privacy
+   Items (4):
+    - b6490 (12x)
+    - nicheanalyzer (5x)
+    - b6490 (11x)
+    - nicheanalyzer (3x)
+  </rule>
+  <rule id="perf/unminified-js" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/perf/unminified-js">
+   8 JavaScript file(s) appear unminified
+   Pages (5): /, /about, /contact, /locations, /privacy
+   Items (5):
+    - b6490_next_dist_compiled_react-dom_744de890._.js (1024.0KB, ~259.9KB savings) [reason: high newlines (1.58%), 80 comments, long function names, formatted code, excessive whitespace]
+    - b6490_next_dist_compiled_react-server-dom-turbopack_42e24988._.js (166.2KB, ~53.0KB savings) [reason: high newlines (1.66%), 17 comments, long function names, formatted code, excessive whitespace]
+    - b6490_next_dist_compiled_next-devtools_index_dae914b5.js (797.0KB, ~722.7KB savings) [reason: 80 comments]
+    - b6490_next_dist_compiled_8c9f3d90._.js (142.3KB, ~60.3KB savings) [reason: high newlines (2.00%), 171 comments, long function names, formatted code, excessive whitespace]
+    - b6490_next_dist_client_9df2fa30._.js (621.1KB, ~293.7KB savings) [reason: high newlines (2.00%), 2715 comments, long variable names, long function names, formatted code, excessive whitespace]
+  </rule>
+  <rule id="perf/http2" severity="info" status="warn" docs="https://docs.squirrelscan.com/rules/perf/http2">
+   HTTP/2 requires HTTPS
+   Pages (5): /, /about, /contact, /locations, /privacy
+   Items (5):
+    - / (HTTP/2 requires HTTPS)
+    - /contact (HTTP/2 requires HTTPS)
+    - /about (HTTP/2 requires HTTPS)
+    - /privacy (HTTP/2 requires HTTPS)
+    - /locations (HTTP/2 requires HTTPS)
+  </rule>
+  <rule id="perf/source-maps" severity="info" status="warn" docs="https://docs.squirrelscan.com/rules/perf/source-maps">
+   188 potential source map(s) detected; 1 inline source map(s) found
+   Pages (5): /, /about, /contact, /locations, /privacy
+   Items (5/11):
+    - /_next/static/chunks/b6490_next_dist_compiled_react-dom_744de890._.js.map (from /_next/static/chunks/b6490_next_dist_compiled_react-dom_744de890._.js)
+    - /_next/static/chunks/%22 (from /_next/static/chunks/b6490_next_dist_compiled_react-server-dom-turbopack_42e24988._.js)
+    - /_next/static/chunks/b6490_next_dist_compiled_react-server-dom-turbopack_42e24988._.js.map (from /_next/static/chunks/b6490_next_dist_compiled_react-server-dom-turbopack_42e24988._.js)
+    - /_next/static/chunks/index.js.map (from /_next/static/chunks/b6490_next_dist_aa19bd54._.js)
+    - /_next/static/chunks/b6490_next_dist_compiled_next-devtools_index_dae914b5.js.map (from /_next/static/chunks/b6490_next_dist_compiled_next-devtools_index_dae914b5.js)
+  </rule>
+ </category>
+ <category name="Social Media" errors="0" warnings="5">
+  <rule id="social/og-image-size" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/social/og-image-size">
+   og:image may be too small
+   Pages (5): /, /about, /contact, /locations, /privacy
+  </rule>
+ </category>
+ <category name="Accessibility" errors="3" warnings="10">
+  <rule id="a11y/select-name" severity="error" status="fail" docs="https://docs.squirrelscan.com/rules/a11y/select-name">
+   1 select element(s) without accessible names
+   Pages (1): /contact
+   Items (1):
+    - select
+  </rule>
+  <rule id="a11y/aria-input-field-name" severity="error" status="fail" docs="https://docs.squirrelscan.com/rules/a11y/aria-input-field-name">
+   1 input field(s) without accessible names
+   Pages (1): /contact
+   Items (1):
+    - select
+  </rule>
+  <rule id="a11y/form-labels" severity="error" status="fail" docs="https://docs.squirrelscan.com/rules/a11y/form-labels">
+   3 form input(s) without labels
+   Pages (1): /contact
+   Items (3):
+    - select
+    - email
+    - textarea
+  </rule>
+  <rule id="a11y/color-contrast" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/a11y/color-contrast">
+   N potential color contrast issue(s)
+   Pages (5): /, /about, /contact, /locations, /privacy
+   Items (5/12):
+    - p with class &quot;text-slate-400 text-sm...&quot; may have low contrast
+    - svg with class &quot;lucide lucide-map-pin absolute...&quot; may have low contrast
+    - input with class &quot;w-full pl-10 pr-4 py-2 border ...&quot; may have low contrast
+    - div with class &quot;bg-slate-100 group-hover:bg-bl...&quot; may have low contrast
+    - footer with class &quot;bg-slate-900 border-t border-s...&quot; may have low contrast
+  </rule>
+  <rule id="a11y/heading-order" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/a11y/heading-order">
+   1 heading level skip(s) detected
+   Pages (3): /about, /locations, /privacy
+   Items (2):
+    - H4 after H2
+    - H3 after H1
+  </rule>
+  <rule id="a11y/identical-links-same-purpose" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/a11y/identical-links-same-purpose">
+   N link text(s) lead to different destinations
+   Pages (2): /, /locations
+   Items (5/7):
+    - &quot;edmondok&quot; → 2 different URLs
+    - &quot;dallastx&quot; → 3 different URLs
+    - &quot;friscotx&quot; → 2 different URLs
+    - &quot;edmond&quot; → 2 different URLs
+    - &quot;dallas&quot; → 4 different URLs
+  </rule>
+ </category>
+ <category name="E-E-A-T" errors="0" warnings="2">
+  <rule id="eeat/author-byline" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/eeat/author-byline">
+   No content pages have author attribution
+  </rule>
+  <rule id="eeat/content-dates" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/eeat/content-dates">
+   No content pages have datePublished
+  </rule>
+ </category>
+</issues>
+</audit>

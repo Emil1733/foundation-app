@@ -145,8 +145,10 @@ export default function SoilRiskWidget() {
             <div className="p-6 -mt-6 bg-white rounded-t-xl">
                 <div className="flex gap-2 mb-4">
                     <div className="relative flex-1">
-                        <MapPin className="absolute left-3 top-3 text-slate-400 w-5 h-5" />
+                        <label htmlFor="property-address" className="sr-only">Property Address</label>
+                        <MapPin className="absolute left-3 top-3 text-slate-400 w-5 h-5" aria-hidden="true" />
                         <input
+                            id="property-address"
                             type="text"
                             placeholder="Enter your address..."
                             className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 placeholder:text-slate-400"
@@ -158,15 +160,16 @@ export default function SoilRiskWidget() {
                     <button
                         onClick={checkRisk}
                         disabled={loading}
+                        aria-label={loading ? 'Scanning for soil risk' : 'Search address'}
                         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition disabled:opacity-50 flex items-center gap-2"
                     >
-                        {loading ? 'Scanning...' : <Search className="w-5 h-5" />}
+                        {loading ? 'Scanning...' : <Search className="w-5 h-5" aria-hidden="true" />}
                     </button>
                 </div>
 
                 {error && (
-                    <div className="p-3 bg-red-50 text-red-700 rounded-lg text-sm flex items-center gap-2">
-                        <AlertTriangle className="w-4 h-4" /> {error}
+                    <div className="p-3 bg-red-50 text-red-700 rounded-lg text-sm flex items-center gap-2" role="alert">
+                        <AlertTriangle className="w-4 h-4" aria-hidden="true" /> {error}
                     </div>
                 )}
 
@@ -177,7 +180,7 @@ export default function SoilRiskWidget() {
                             return (
                                 <div>
                                     <div className="flex items-center justify-between mb-4">
-                                        <span className="text-slate-500 font-medium text-sm">Soil Classification</span>
+                                        <h4 className="text-slate-500 font-medium text-sm">Soil Classification</h4>
                                         <span className={clsx("px-3 py-1 rounded-full text-xs font-bold text-white", risk.color)}>
                                             {risk.label} RISK
                                         </span>
@@ -185,7 +188,7 @@ export default function SoilRiskWidget() {
 
                                     <div className="mb-4">
                                         <h3 className="text-lg font-bold text-slate-900 mb-1">{data.map_unit_name}</h3>
-                                        <p className="text-sm text-slate-600">
+                                        <p className="text-sm text-slate-700">
                                             Drainage: {data.drainage_class || 'Unknown'}
                                         </p>
                                     </div>
@@ -209,11 +212,11 @@ export default function SoilRiskWidget() {
                                         onClick={() => setShowModal(true)}
                                         className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition"
                                     >
-                                        📄 Download Official Forensic Report
+                                        <span role="img" aria-label="document">📄</span> Download Official Forensic Report
                                     </button>
 
-                                    <div className="text-xs text-slate-400 border-t pt-3 mt-4 flex items-center gap-1">
-                                        <CheckCircle className="w-3 h-3 text-green-500" />
+                                    <div className="text-xs text-slate-500 border-t pt-3 mt-4 flex items-center gap-1">
+                                        <CheckCircle className="w-3 h-3 text-green-600" aria-hidden="true" />
                                         Data sourced from USDA Soil Survey (SSURGO)
                                     </div>
                                 </div>
@@ -224,28 +227,32 @@ export default function SoilRiskWidget() {
 
                 {/* LEAD CAPTURE MODAL */}
                 {showModal && (
-                    <div className="animate-in zoom-in duration-300 bg-slate-50 p-6 rounded-xl border border-blue-200">
-                        <h3 className="font-bold text-slate-900 mb-2">Final Step: Where should we send the PDF?</h3>
-                        <p className="text-xs text-slate-500 mb-4">
+                    <div className="animate-in zoom-in duration-300 bg-slate-50 p-6 rounded-xl border border-blue-200" role="dialog" aria-labelledby="modal-title">
+                        <h3 id="modal-title" className="font-bold text-slate-900 mb-2">Final Step: Where should we send the PDF?</h3>
+                        <p className="text-xs text-slate-600 mb-4">
                             Your Forensic Analysis contains critical engineering data for {address}.
                         </p>
-                        <input
-                            type="email"
-                            placeholder="engineer@example.com"
-                            className="w-full mb-3 px-4 py-2 border rounded-lg"
-                            value={email}
-                            onChange={e => setEmail(e.target.value)}
-                        />
+                        <div className="mb-3">
+                            <label htmlFor="report-email" className="sr-only">Email Address</label>
+                            <input
+                                id="report-email"
+                                type="email"
+                                placeholder="engineer@example.com"
+                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-900"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                            />
+                        </div>
                         <button
                             onClick={handleDownload}
                             disabled={generating}
-                            className="w-full bg-blue-600 hover:bg-blue-500 text-white py-2 rounded-lg font-bold"
+                            className="w-full bg-blue-600 hover:bg-blue-500 text-white py-2 rounded-lg font-bold transition disabled:opacity-50"
                         >
                             {generating ? 'Generating PDF...' : '🔒 Unlock Report Now'}
                         </button>
                         <button
                             onClick={() => setShowModal(false)}
-                            className="w-full mt-2 text-slate-400 text-xs hover:text-slate-600"
+                            className="w-full mt-2 text-slate-500 text-xs hover:text-slate-700 transition"
                         >
                             Cancel
                         </button>

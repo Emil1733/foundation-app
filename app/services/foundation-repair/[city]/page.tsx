@@ -60,10 +60,10 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
 
     // Variation A: "Forensic Authority" Hook
     return {
-        title: `Forensic Foundation Analysis ${location.city}: ${soilName} Report | FRR`,
-        description: `⚠️ ${location.city} Foundation Warning: Your home sits on ${soilName} (${risk} Risk). Don't settle for cheap piling. Get a P.E. Certified Forensic Soil Analysis.`,
+        title: `${location.city} Foundation Analysis: ${soilName} | FRR`,
+        description: `⚠️ ${location.city} Warning: Home sits on ${soilName} (${risk} Risk). Get a P.E. Certified Forensic Soil Analysis.`,
         alternates: {
-            canonical: `https://foundationrisk.org/services/foundation-repair/${slug}`,
+            canonical: `/services/foundation-repair/${slug}`,
         },
     };
 }
@@ -240,7 +240,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             </header>
 
             {/* MAIN CONTENT */}
-            <main className="max-w-4xl mx-auto py-16 px-6">
+            <main id="main-content" className="max-w-4xl mx-auto py-16 px-6">
 
                 {/* TRUST STACK */}
                 <TrustBadges />

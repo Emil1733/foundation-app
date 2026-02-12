@@ -16,9 +16,10 @@ export default function VisualProofGallery() {
             location: "Interior Drywall (above doors/windows)",
             cause: "Differential Settlement",
             severity: "HIGH",
-            description: "Occurs when one part of the foundation drops while the other remains stable. The 'vector' of the crack points to the settling corner.",
+            description: "Occurs when one part of the foundation drops while the other remains stable. The 'vector' of the crack points to the settling corner. In expansive clay zones, this is often caused by 'corner drop' during dry seasons when the soil shrinks away from the slab perimeter.",
             risk_pi: "> 25",
-            icon: <ArrowUpRight className="w-16 h-16 text-slate-300 stroke-[1]" />
+            icon: <ArrowUpRight className="w-16 h-16 text-slate-300 stroke-[1]" />,
+            technical_note: "Refer to ASCE 7-22 for structural deflection limits."
         },
         stairstep: {
             id: 'stairstep',
@@ -26,13 +27,14 @@ export default function VisualProofGallery() {
             location: "Exterior Brick Veneer",
             cause: "Masonry Bond Failure",
             severity: "MODERATE",
-            description: "Bricks rotate as the beam deflects. If the gap is wider at the top than the bottom, the corner is dropping.",
+            description: "Bricks rotate as the beam deflects. If the gap is wider at the top than the bottom, the corner is dropping. This is a classic forensic signature of a rotating grade beam. If the crack passes through the bricks (shear) rather than the mortar (bond), it indicates a higher rate of movement.",
             risk_pi: "> 15",
             icon: <div className="flex flex-col gap-1 items-center justify-center w-16 h-16 opacity-30">
                 <div className="flex gap-1"><div className="w-4 h-2 bg-slate-400"></div><div className="w-4 h-2 bg-slate-400"></div></div>
                 <div className="flex gap-1 pl-4"><div className="w-4 h-2 bg-slate-400"></div><div className="w-4 h-2 bg-slate-400"></div></div>
                 <div className="flex gap-1 pl-8"><div className="w-4 h-2 bg-slate-400"></div><div className="w-4 h-2 bg-slate-400"></div></div>
-            </div>
+            </div>,
+            technical_note: "Verify mortar type (Type N vs S) for historical masonry forensic analysis."
         },
         horizontal: {
             id: 'horizontal',
@@ -40,9 +42,10 @@ export default function VisualProofGallery() {
             location: "Basement Walls / Stem Walls",
             cause: "Hydrostatic Pressure",
             severity: "CRITICAL",
-            description: "Expansive clay soil pushing laterally against the wall. This is a sign of potential wall collapse.",
+            description: "Expansive clay soil pushing laterally against the wall. This is a sign of potential wall collapse. The lateral load from saturated clay can exceed 100 PSF per foot of depth, far exceeding the design capacity of unreinforced CMU walls. This requires immediate carbon fiber stabilization or steel I-beams.",
             risk_pi: "> 35",
-            icon: <Minus className="w-16 h-16 text-slate-300 stroke-[1]" />
+            icon: <Minus className="w-16 h-16 text-slate-300 stroke-[1]" />,
+            technical_note: "Immediate forensic structural inspection required."
         }
     };
 

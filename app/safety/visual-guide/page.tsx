@@ -34,7 +34,7 @@ export default function VisualGuidePage() {
                 <VisualProofGallery />
 
                 <div className="mt-12 bg-blue-900 rounded-2xl p-8 text-center text-white">
-                    <h3 className="text-2xl font-bold mb-2">Still Unsure?</h3>
+                    <h2 className="text-2xl font-bold mb-2">Still Unsure?</h2>
                     <p className="text-blue-200 mb-6">Take our 60-second diagnostic quiz to get a calculated risk score.</p>
                     <Link href="/quiz" className="inline-block bg-white text-blue-900 font-bold px-8 py-3 rounded-xl hover:bg-blue-50 transition">
                         Start Diagnostic Quiz &rarr;
