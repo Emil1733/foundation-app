@@ -404,8 +404,12 @@ export default async function CityPage({
           </h3>
           <div className="space-y-3 text-blue-100/80 text-sm leading-relaxed">
             <p>
-              {city} sits within the <strong className="text-white">I-35 Expansive Clay Corridor</strong>,
-              one of the most geologically active zones for residential foundation movement in North Texas.
+              {city} sits within the{' '}
+              <strong className="text-white">
+                {state === 'TX' || state === 'OK' ? 'I-35 Expansive Clay Corridor' : 'Midwest Active Clay Belt'}
+              </strong>
+              , one of the most geologically active zones for residential foundation movement in{' '}
+              {state === 'TX' ? 'North Texas' : state === 'OK' ? 'Central Oklahoma' : 'the Missouri region'}. 
               The dominant soil series — <strong className="text-white">{soil?.map_unit_name || 'Expansive Clay'}</strong> —
               is characterized by ultra-high shrink-swell potential. As soil moisture fluctuates seasonally,
               the ground beneath your foundation shifts vertically by several centimeters per cycle, generating
@@ -415,7 +419,7 @@ export default async function CityPage({
               Unlike cosmetic cracks, structural distress in {city} homes almost always traces back to the{' '}
               <strong className="text-white">Plasticity Index (PI)</strong> of the underlying clay. With a PI of{' '}
               {Number(soil?.plasticity_index || 30).toFixed(1)}, the soil is classified as{' '}
-              <strong className="text-white">{soil?.risk_level || 'High'} risk</strong> under ASCE 7 guidelines.
+              <strong className="text-white">{soil?.risk_level || 'High'} risk</strong> under local ASCE structural guidelines.
               Every homeowner in zip code {location.zip_code} should have a baseline forensic{' '}
               <strong className="text-white">foundation evaluation</strong> on record — especially before buying,
               selling, or filing an insurance claim.
@@ -425,7 +429,7 @@ export default async function CityPage({
               {city} by correlating visible symptoms (diagonal cracks, door misalignment, sloping floors) against
               your specific USDA soil map unit. This produces a P.E.-certified report documenting whether
               observed <strong className="text-white">foundation settling</strong> is active or historic —
-              the exact standard used in Texas real estate litigation and structural insurance disputes.
+              the exact standard used in regional real estate litigation and structural insurance disputes.
             </p>
           </div>
           <div className="mt-4 pt-4 border-t border-blue-800 flex items-center gap-2 text-xs text-blue-300">
