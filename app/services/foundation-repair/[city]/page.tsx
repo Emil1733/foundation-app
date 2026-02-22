@@ -73,8 +73,8 @@ export async function generateMetadata({
 
   const zipCode = location.zip_code || "";
   return {
-    title: `Foundation Evaluation & Distress Analysis in ${location.city}${zipCode ? ` (${zipCode})` : ""} | FRR`,
-    description: `⚠️ ${location.city} ${zipCode} sits on ${soilName} (${risk} Risk). P.E.-certified forensic foundation evaluation, distress identification & settling analysis. Get your report.`,
+    title: `Foundation Repair & Evaluation in ${location.city}${zipCode ? ` (${zipCode})` : ""} | FRR`,
+    description: `⚠️ ${location.city} ${zipCode} sits on ${soilName} (${risk} Risk). P.E.-certified forensic foundation repair, evaluation, and distress analysis. Get your report.`,
     alternates: {
       canonical: `https://www.foundationrisk.org/services/foundation-repair/${slug}`,
     },
@@ -277,9 +277,9 @@ export default async function CityPage({
               </span>
             </div>
             <h1 className="text-3xl md:text-6xl font-extrabold mb-6 leading-tight">
-              Foundation Evaluation & <br />
+              Foundation Repair & <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">
-                Distress Analysis in {city}
+                Evaluation in {city}
               </span>
             </h1>
             <p className="text-slate-300 text-lg mb-10 leading-relaxed max-w-lg">
