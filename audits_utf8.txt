@@ -1,0 +1,29 @@
+﻿Recent Audits:
+==========================================================================================
+ID         Date                  Pages   Status      Published
+------------------------------------------------------------------------------------------
+7931a4b7   2/12/2026, 12:45:27 PM67      analyzed    -
+  https://www.foundationrisk.org
+d15fbfd0   2/12/2026, 12:38:52 PM60      analyzed    -
+  http://127.0.0.1:3000
+1518f1e4   2/12/2026, 12:31:37 PM60      analyzed    -
+  http://127.0.0.1:3000
+7122111e   2/12/2026, 12:28:10 PM5       analyzed    -
+  http://127.0.0.1:3000
+5b481dc3   2/12/2026, 12:25:33 PM67      analyzed    -
+  http://localhost:3000
+54cf7f5c   2/12/2026, 12:21:21 PM62      analyzed    -
+  https://www.foundationrisk.org
+0d8d0d82   2/12/2026, 11:55:32 AM62      analyzed    -
+  https://www.foundationrisk.org
+b0703678   2/12/2026, 9:35:11 AM 100     analyzed    -
+  https://www.toppoolremoval.com
+9b2a59ed   2/12/2026, 9:14:45 AM 100     analyzed    -
+  https://www.toppoolremoval.com
+af00a769   2/12/2026, 9:04:05 AM 100     analyzed    -
+  https://www.toppoolremoval.com
+
+Total: 10 audits
+Use "squirrel report <audit-id>" to view a specific audit.
+
+

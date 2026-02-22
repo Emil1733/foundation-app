@@ -151,6 +151,32 @@ export default async function Home() {
                 </Link>
               </div>
 
+              {/* Featured Cities Spotlight */}
+              <div className="mb-10">
+                <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-3">High-Priority Analysis Zones</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {[
+                    { city: 'Lewisville', state: 'TX', zip: '75067', slug: 'lewisville-tx-75067', label: 'Foundation Evaluation' },
+                    { city: 'Frisco', state: 'TX', zip: '75035', slug: 'frisco-tx-75035', label: 'Distress Analysis' },
+                    { city: 'Richardson', state: 'TX', zip: '75080', slug: 'richardson-tx-75080', label: 'Settling Report' },
+                  ].map((city) => (
+                    <Link
+                      key={city.slug}
+                      href={`/services/foundation-repair/${city.slug}`}
+                      className="flex items-center gap-3 p-4 rounded-xl border-2 border-blue-200 bg-blue-50 hover:border-blue-400 hover:bg-blue-100 transition-all group"
+                    >
+                      <div className="bg-blue-600 text-white p-2 rounded-lg group-hover:bg-blue-700 transition">
+                        <MapPin className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-blue-900 text-sm">{city.city}, {city.state} {city.zip}</div>
+                        <div className="text-xs text-blue-600">{city.label} &rarr;</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {cities.map((city) => (
                   <Link

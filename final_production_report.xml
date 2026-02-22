@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<audit version="0.0.38">
+<site url="https://www.foundationrisk.org" crawled="67" date="2026-02-12T08:45:27.064Z"/>
+<score overall="79" grade="C">
+ <cat name="Accessibility" score="97"/>
+ <cat name="Social Media" score="70"/>
+ <cat name="Content" score="91"/>
+ <cat name="Performance" score="97"/>
+ <cat name="Core SEO" score="92"/>
+ <cat name="Security" score="89"/>
+ <cat name="E-E-A-T" score="86"/>
+ <cat name="Links" score="90"/>
+ <cat name="Crawlability" score="97"/>
+ <cat name="Internationalization" score="100"/>
+ <cat name="Images" score="100"/>
+ <cat name="Legal Compliance" score="100"/>
+ <cat name="Local SEO" score="100"/>
+ <cat name="Mobile" score="100"/>
+ <cat name="Structured Data" score="100"/>
+ <cat name="URL Structure" score="100"/>
+</score>
+<summary passed="5670" warnings="525" failed="0"/>
+<issues>
+ <category name="Crawlability" errors="0" warnings="2">
+  <rule id="crawl/sitemap-coverage" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/crawl/sitemap-coverage">
+   67 indexable page(s) not in sitemap (100%); 58 sitemap URL(s) were not crawled
+   Items (5/125):
+    - /
+    - /contact
+    - /about
+    - /privacy
+    - /locations
+  </rule>
+ </category>
+ <category name="Core SEO" errors="0" warnings="67">
+  <rule id="core/meta-title" severity="error" status="warn" docs="https://docs.squirrelscan.com/rules/core/meta-title">
+   Title too long
+   Pages (5/53): /, /learn/allen-tx-75002-soil-analysis, /learn/austin-tx-78704-soil-analysis, /learn/blue-springs-mo-64015-soil-analysis, /learn/dallas-tx-75248-soil-analysis
+   Items (5/53):
+    - / (The Foundation Risk Registry | Texas Soil &amp; Forens (61 chars))
+    - /services/foundation-repair/tulsa-ok-74137 (Tulsa Foundation Analysis: Glenpool loamy fine san (81 chars))
+    - /services/foundation-repair/houston-tx-77024 (Houston Foundation Analysis: Gessner occasionally  (104 chars))
+    - /services/foundation-repair/austin-tx-78704 (Austin Foundation Analysis: Urban land, Austin, an (98 chars))
+    - /services/foundation-repair/san-antonio-tx-78209 (San Antonio Foundation Analysis: Austin silty clay (98 chars))
+  </rule>
+  <rule id="core/meta-description" severity="error" status="warn" docs="https://docs.squirrelscan.com/rules/core/meta-description">
+   Description too short; Description too long
+   Pages (5/14): /contact, /disclaimer, /privacy, /quiz, /terms
+   Items (5/14):
+    - /contact (Contact the Foundation Risk Registry for technical (112 chars))
+    - /privacy (Transparency on how we handle your address data an (98 chars))
+    - /terms (Terms and conditions for using the Foundation Risk (90 chars))
+    - /disclaimer (Important disclaimers regarding USDA soil data, pl (94 chars))
+    - /services/foundation-repair/oklahoma-city-ok-73116 (⚠️ Oklahoma City Warning: Home sits on Urban land  (111 chars))
+  </rule>
+ </category>
+ <category name="Security" errors="0" warnings="4">
+  <rule id="security/csp" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/security/csp">
+   CSP allows &apos;unsafe-inline&apos; and &apos;unsafe-eval&apos;; CSP script-src allows wildcard (*)
+  </rule>
+  <rule id="security/form-captcha" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/security/form-captcha">
+   1 public form(s) without CAPTCHA
+   Pages (1): /contact
+   Items (1):
+    - form[0]
+  </rule>
+  <rule id="security/http-to-https" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/security/http-to-https">
+   20 HTTP URL(s) redirect to HTTPS
+   Items (5/20):
+    - http://www.foundationrisk.org/ (http://www.foundationrisk.org/ → https://www.foundationrisk.org/ (308)) [statusCode: 308, chain: {&quot;sourceUrl&quot;:&quot;http://www.foundationrisk.org/&quot;,&quot;finalUrl&quot;:&quot;https://www.foundationrisk.org/&quot;,&quot;hops&quot;:[{&quot;url&quot;:&quot;http://www.foundationrisk.org/&quot;,&quot;statusCode&quot;:308,&quot;type&quot;:&quot;http&quot;},{&quot;url&quot;:&quot;https://www.foundati…]
+    - http://www.foundationrisk.org/contact (http://www.foundationrisk.org/contact → https://www.foundationrisk.org/contact (308)) [statusCode: 308, chain: {&quot;sourceUrl&quot;:&quot;http://www.foundationrisk.org/contact&quot;,&quot;finalUrl&quot;:&quot;https://www.foundationrisk.org/contact&quot;,&quot;hops&quot;:[{&quot;url&quot;:&quot;http://www.foundationrisk.org/contact&quot;,&quot;statusCode&quot;:308,&quot;type&quot;:&quot;http&quot;},{&quot;url&quot;:…]
+    - http://www.foundationrisk.org/about (http://www.foundationrisk.org/about → https://www.foundationrisk.org/about (308)) [statusCode: 308, chain: {&quot;sourceUrl&quot;:&quot;http://www.foundationrisk.org/about&quot;,&quot;finalUrl&quot;:&quot;https://www.foundationrisk.org/about&quot;,&quot;hops&quot;:[{&quot;url&quot;:&quot;http://www.foundationrisk.org/about&quot;,&quot;statusCode&quot;:308,&quot;type&quot;:&quot;http&quot;},{&quot;url&quot;:&quot;https…]
+    - http://www.foundationrisk.org/privacy (http://www.foundationrisk.org/privacy → https://www.foundationrisk.org/privacy (308)) [statusCode: 308, chain: {&quot;sourceUrl&quot;:&quot;http://www.foundationrisk.org/privacy&quot;,&quot;finalUrl&quot;:&quot;https://www.foundationrisk.org/privacy&quot;,&quot;hops&quot;:[{&quot;url&quot;:&quot;http://www.foundationrisk.org/privacy&quot;,&quot;statusCode&quot;:308,&quot;type&quot;:&quot;http&quot;},{&quot;url&quot;:…]
+    - http://www.foundationrisk.org/locations (http://www.foundationrisk.org/locations → https://www.foundationrisk.org/locations (308)) [statusCode: 308, chain: {&quot;sourceUrl&quot;:&quot;http://www.foundationrisk.org/locations&quot;,&quot;finalUrl&quot;:&quot;https://www.foundationrisk.org/locations&quot;,&quot;hops&quot;:[{&quot;url&quot;:&quot;http://www.foundationrisk.org/locations&quot;,&quot;statusCode&quot;:308,&quot;type&quot;:&quot;http&quot;},{…]
+  </rule>
+ </category>
+ <category name="Links" errors="0" warnings="2">
+  <rule id="links/orphan-pages" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/links/orphan-pages">
+   1 orphan page(s) with &lt;2 incoming links
+   Items (1):
+    - /locations
+  </rule>
+  <rule id="links/weak-internal-links" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/links/weak-internal-links">
+   1 page(s) have only 1 internal link
+   Items (1):
+    - /locations
+  </rule>
+ </category>
+ <category name="Content" errors="0" warnings="71">
+  <rule id="content/keyword-stuffing" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/content/keyword-stuffing">
+   N word(s) may be overused
+   Pages (5/36): /contact, /learn, /privacy, /learn/austin-tx-78704-soil-analysis, /learn/blue-springs-mo-64015-soil-analysis
+   Items (5/26):
+    - data (&quot;data&quot; (4.2%)) [count: 9, density: 4.205607476635514]
+    - registry (&quot;registry&quot; (3.3%)) [count: 7, density: 3.2710280373831773]
+    - your (&quot;your&quot; (3.7%)) [count: 14, density: 3.6939313984168867]
+    - ridge (&quot;ridge&quot; (3.1%)) [count: 16, density: 3.131115459882583]
+    - sector (&quot;sector&quot; (3.1%)) [count: 16, density: 3.131115459882583]
+  </rule>
+  <rule id="content/article-links" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/content/article-links">
+   short article has 0 external links (min 1)
+   Pages (5/28): /learn/allen-tx-75002-soil-analysis, /learn/austin-tx-78704-soil-analysis, /learn/blue-springs-mo-64015-soil-analysis, /learn/dallas-tx-75201-soil-analysis, /learn/dallas-tx-75248-soil-analysis
+   Items (5/28):
+    - /learn/tulsa-ok-74137-soil-analysis (short article has 0 external links (min 1))
+    - /learn/oklahoma-city-ok-73116-soil-analysis (short article has 0 external links (min 1))
+    - /learn/houston-tx-77024-soil-analysis (short article has 0 external links (min 1))
+    - /learn/austin-tx-78704-soil-analysis (short article has 0 external links (min 1))
+    - /learn/san-antonio-tx-78209-soil-analysis (short article has 0 external links (min 1))
+  </rule>
+  <rule id="content/word-count" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/content/word-count">
+   Thin content: N words (min N)
+   Pages (5/7): /book-analysis, /contact, /disclaimer, /locations, /quiz
+   Items (5/7):
+    - /contact (Thin content: 239 words (min 300))
+    - /locations (Thin content: 259 words (min 300))
+    - /terms (Thin content: 297 words (min 300))
+    - /disclaimer (Thin content: 241 words (min 300))
+    - /book-analysis (Thin content: 114 words (min 300))
+  </rule>
+ </category>
+ <category name="Performance" errors="0" warnings="68">
+  <rule id="perf/ttfb" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/perf/ttfb">
+   Slow server response (611ms)
+   Pages (1): /locations
+   Items (1):
+    - /locations (Slow server response (611ms))
+  </rule>
+  <rule id="perf/critical-request-chains" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/perf/critical-request-chains">
+   2 critical request chain(s) found
+   Pages (5/67): /, /about, /book-analysis, /contact, /disclaimer
+   Items (2):
+    - CSS: /_next/static/chunks/e717b6d9e9dc1208.css
+    - JS: /_next/static/chunks/a6dad97d9634a72d.js
+  </rule>
+ </category>
+ <category name="Social Media" errors="0" warnings="124">
+  <rule id="social/og-image-size" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/social/og-image-size">
+   og:image may be too small
+   Pages (5/67): /, /about, /book-analysis, /contact, /disclaimer
+  </rule>
+  <rule id="social/og-url-match" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/social/og-url-match">
+   og:url does not match canonical URL
+   Pages (5/57): /quiz, /learn/allen-tx-75002-soil-analysis, /learn/austin-tx-78704-soil-analysis, /learn/blue-springs-mo-64015-soil-analysis, /learn/dallas-tx-75201-soil-analysis
+  </rule>
+ </category>
+ <category name="Accessibility" errors="0" warnings="185">
+  <rule id="a11y/color-contrast" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/a11y/color-contrast">
+   N potential color contrast issue(s)
+   Pages (5/67): /, /about, /book-analysis, /contact, /disclaimer
+   Items (5/29):
+    - p with class &quot;text-slate-400 text-sm...&quot; may have low contrast
+    - svg with class &quot;lucide lucide-map-pin absolute...&quot; may have low contrast
+    - input with class &quot;w-full pl-10 pr-4 py-2 border ...&quot; may have low contrast
+    - div with class &quot;bg-slate-100 group-hover:bg-bl...&quot; may have low contrast
+    - footer with class &quot;bg-slate-900 border-t border-s...&quot; may have low contrast
+  </rule>
+  <rule id="a11y/landmark-one-main" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/a11y/landmark-one-main">
+   Page has no main landmark
+   Pages (5/29): /quiz, /learn/allen-tx-75002-soil-analysis, /learn/austin-tx-78704-soil-analysis, /learn/blue-springs-mo-64015-soil-analysis, /learn/dallas-tx-75201-soil-analysis
+  </rule>
+  <rule id="a11y/heading-order" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/a11y/heading-order">
+   1 heading level skip(s) detected
+   Pages (5/34): /disclaimer, /locations, /privacy, /quiz, /terms
+   Items (2):
+    - H3 after H1
+    - H4 after H2
+  </rule>
+  <rule id="a11y/identical-links-same-purpose" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/a11y/identical-links-same-purpose">
+   N link text(s) lead to different destinations
+   Pages (5/26): /, /locations, /services/foundation-repair/allen-tx-75002, /services/foundation-repair/austin-tx-78704, /services/foundation-repair/blue-springs-mo-64015
+   Items (5/13):
+    - &quot;edmondok&quot; → 2 different URLs
+    - &quot;dallastx&quot; → 3 different URLs
+    - &quot;friscotx&quot; → 2 different URLs
+    - &quot;edmond&quot; → 2 different URLs
+    - &quot;dallas&quot; → 4 different URLs
+  </rule>
+  <rule id="a11y/landmark-regions" severity="info" status="warn" docs="https://docs.squirrelscan.com/rules/a11y/landmark-regions">
+   No &lt;main&gt; landmark found
+   Pages (5/29): /quiz, /learn/allen-tx-75002-soil-analysis, /learn/austin-tx-78704-soil-analysis, /learn/blue-springs-mo-64015-soil-analysis, /learn/dallas-tx-75201-soil-analysis
+  </rule>
+ </category>
+ <category name="E-E-A-T" errors="0" warnings="2">
+  <rule id="eeat/author-byline" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/eeat/author-byline">
+   No content pages have author attribution
+  </rule>
+  <rule id="eeat/content-dates" severity="warning" status="warn" docs="https://docs.squirrelscan.com/rules/eeat/content-dates">
+   No content pages have datePublished
+  </rule>
+ </category>
+</issues>
+</audit>

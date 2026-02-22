@@ -83,6 +83,27 @@ export default async function LocationsMap() {
             </header>
 
             <main className="max-w-4xl mx-auto py-12 px-6">
+                {/* Featured DFW Cities */}
+                <div className="mb-14 p-6 bg-blue-50 border border-blue-200 rounded-2xl">
+                    <h2 className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-4">Featured Analysis Zones — DFW Metroplex</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        {[
+                            { city: 'Lewisville', state: 'TX', zip: '75067', slug: 'lewisville-tx-75067', label: 'Foundation Evaluation & Distress Analysis' },
+                            { city: 'Frisco', state: 'TX', zip: '75035', slug: 'frisco-tx-75035', label: 'Expansive Clay Soil Report' },
+                            { city: 'Richardson', state: 'TX', zip: '75080', slug: 'richardson-tx-75080', label: 'Foundation Settling Analysis' },
+                        ].map((loc) => (
+                            <Link
+                                key={loc.slug}
+                                href={`/services/foundation-repair/${loc.slug}`}
+                                className="flex flex-col gap-1 p-4 bg-white border border-blue-200 rounded-xl hover:border-blue-400 hover:shadow-md transition group"
+                            >
+                                <span className="font-bold text-slate-900 group-hover:text-blue-700">{loc.city}, {loc.state} {loc.zip}</span>
+                                <span className="text-xs text-blue-600">{loc.label} &rarr;</span>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+
                 {Object.keys(byState).sort().map(state => (
                     <div key={state} className="mb-12">
                         <h2 className="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-4 mb-6">
