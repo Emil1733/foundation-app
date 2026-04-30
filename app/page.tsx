@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import SoilRiskWidget from "@/components/SoilRiskWidget";
 import Link from 'next/link';
 import { MapPin, ArrowRight } from 'lucide-react';
+import PartnerLogos from "@/components/PartnerLogos";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -24,12 +25,8 @@ export default async function Home() {
     .order('created_at', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)]">
-
-
-      {/* Hero Section */}
-      <main id="main-content" className="flex flex-col items-center">
-        <section className="w-full flex flex-col items-center justify-center pt-20 pb-12 px-6 bg-white border-b border-slate-100">
+    <div className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)] flex flex-col items-center">
+        <section className="w-full flex flex-col items-center justify-center pb-8 px-6 bg-white border-b border-slate-100">
           <div className="max-w-4xl w-full text-center space-y-6 mb-12">
             <div className="inline-block bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
               🇺🇸 Serving Texas, Oklahoma & Missouri
@@ -48,6 +45,8 @@ export default async function Home() {
             <SoilRiskWidget />
           </div>
         </section>
+
+        <PartnerLogos />
 
         {/* Trust Signals */}
         <section className="w-full py-16 px-6 bg-slate-50">
@@ -197,7 +196,6 @@ export default async function Home() {
             </div>
           </section>
         )}
-      </main>
     </div>
   );
 }

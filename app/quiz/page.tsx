@@ -3,8 +3,8 @@ import { ShieldCheck, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = {
-    title: "Foundation Risk Assessment Quiz | FRR",
-    description: "Diagnose foundation cracks in 60 seconds with our forensic engineering quiz.",
+    title: "Forensic Foundation Diagnostic Tool | 60-Second Check",
+    description: "Official diagnostic tool to identify foundation failure risk using forensic engineering parameters.",
     alternates: {
         canonical: '/quiz',
     },
@@ -24,7 +24,7 @@ export default function QuizPage() {
             {
                 "@type": "ListItem",
                 "position": 2,
-                "name": "Diagnostic Quiz",
+                "name": "Forensic Diagnostic Tool",
                 "item": "https://foundationrisk.org/quiz"
             }
         ]
@@ -46,7 +46,7 @@ export default function QuizPage() {
                     </div>
                 </div>
                 <h1 className="text-3xl font-extrabold text-slate-900">
-                    Do I Need Piers?
+                    Foundation Risk Assessment
                 </h1>
                 <p className="mt-2 text-sm text-slate-700">
                     Answer 3 forensic questions to determine your Risk Level.

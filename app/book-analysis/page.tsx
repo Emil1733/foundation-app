@@ -1,12 +1,15 @@
 'use client';
 
-import { useState } from 'react';
-import { ShieldCheck, ArrowRight, CheckCircle, AlertTriangle, MapPin, Phone, User, Home } from 'lucide-react';
+import { Suspense, useState, useEffect } from 'react';
+import { ShieldCheck, ArrowRight, CheckCircle, AlertTriangle, MapPin, Phone, User, Home, Search } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 import { submitLead } from './actions';
 
-export default function BookAnalysisPage() {
+function IntakeForm() {
+    const searchParams = useSearchParams();
+    
     const [step, setStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -28,12 +31,32 @@ export default function BookAnalysisPage() {
 
     const symptomsList = [
         { id: 'cracks_wall', label: 'Diagonal Wall Cracks', icon: '🏚️' },
-        { id: 'doors_sticking', label: 'Doors Won\'t Close', icon: '🚪' },
+        { id: 'doors', label: 'Doors Won\'t Close', icon: '🚪' },
         { id: 'gaps_trim', label: 'Gaps in Trim/molding', icon: '📏' },
-        { id: 'brick_cracks', label: 'Exterior Brick Cracks', icon: '🧱' },
-        { id: 'uneven_floor', label: 'Sloping Floors', icon: '📉' },
+        { id: 'stair-step', label: 'Exterior Brick Cracks', icon: '🧱' },
+        { id: 'horizontal', label: 'Horizontal Wall Cracks', icon: '📉' },
+        { id: 'hairline', label: 'Hairline Cracks', icon: '⚡' },
         { id: 'pre_purchase', label: 'Buying/Selling Home', icon: '🤝' },
     ];
+
+    // Pre-fill from URL parameters (passed from the Tools)
+    useEffect(() => {
+        const addressParam = searchParams.get('address');
+        const symptomParam = searchParams.get('symptom');
+        
+        if (addressParam || symptomParam) {
+            setFormData(prev => ({
+                ...prev,
+                address: addressParam || prev.address,
+                symptoms: symptomParam ? [...prev.symptoms, symptomParam] : prev.symptoms
+            }));
+            
+            // If they provided an address, jump them to step 2 automatically!
+            if (addressParam) {
+                setStep(2);
+            }
+        }
+    }, [searchParams]);
 
     const handleSymptomToggle = (id: string) => {
         setFormData(prev => ({
@@ -295,5 +318,13 @@ export default function BookAnalysisPage() {
                 </div>
             </main>
         </div>
+    );
+}
+
+export default function BookAnalysisPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-50"><div className="animate-pulse flex flex-col items-center"><Search className="w-12 h-12 text-blue-500 mb-4" /><p className="text-slate-500 font-bold tracking-widest uppercase">Initializing Intake Protocol...</p></div></div>}>
+            <IntakeForm />
+        </Suspense>
     );
 }

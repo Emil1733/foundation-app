@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -83,8 +84,17 @@ export default function RootLayout({
         >
           Skip to Content
         </a>
+        <div className="bg-blue-700 text-white text-center py-1 px-4 text-[11px] font-bold sticky top-0 z-50 shadow-md h-8 flex items-center justify-center uppercase tracking-wider">
+          <span className="hidden sm:inline">⚠️ 2026 Geological Update: </span>
+          <Link href="/book-analysis" className="ml-1 underline decoration-blue-300 hover:text-blue-100">
+            Download Soil Risk Registry (PDF)
+          </Link>
+        </div>
+        <Navbar />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(brandSchema) }} />
-        {children}
+        <div className="pt-24">
+          {children}
+        </div>
         <footer className="bg-slate-900 border-t border-slate-800 text-slate-400 py-12 px-6 text-center text-sm">
           <div className="max-w-3xl mx-auto">
             <nav className="flex flex-wrap justify-center gap-6 mb-8">

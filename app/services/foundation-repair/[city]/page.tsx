@@ -3,6 +3,8 @@ import SoilRiskWidget from "@/components/SoilRiskWidget";
 import TrustBadges from "@/components/TrustBadges";
 import FoundationDiagram from "@/components/FoundationDiagram";
 import SoilActionPlan from "@/components/SoilActionPlan";
+import CrackAnalyzer from "@/components/CrackAnalyzer";
+import CostEstimator from "@/components/CostEstimator";
 import {
   MoveRight,
   Phone,
@@ -31,6 +33,10 @@ export async function generateStaticParams() {
 
 // Logic to select intro based on city/soil features (Deterministic/Hash-based)
 const getDynamicIntro = (city: string, soilName: string, risk: string) => {
+  if (city.toLowerCase() === "austin") {
+    return `Austin foundations face unique stress from the Edwards Aquifer and underlying limestone shelves. While most contractors treat it like clay, the forensic reality is 'Limestone Heave' and localized moisture pockets that require a specific hydraulic approach.`;
+  }
+
   const hooks = [
     // Hook A: Urgency/Weather
     `Recent drought cycles in ${city} have accelerated soil shrinkage. If you own a home on ${soilName}, your slab is under stress.`,
@@ -66,17 +72,17 @@ export async function generateMetadata({
     .eq("slug", slug)
     .single();
 
-  if (!location) return { title: "Foundation Repair Services" };
+  if (!location) return { title: "Foundation Distress Identification Services" };
 
   const risk = location.soil_cache?.risk_level || "Unknown";
   const soilName = location.soil_cache?.map_unit_name || "Expansive Clay";
 
   const zipCode = location.zip_code || "";
   return {
-    title: `Foundation Repair & Evaluation in ${location.city}${zipCode ? ` (${zipCode})` : ""} | FRR`,
-    description: `⚠️ ${location.city} ${zipCode} sits on ${soilName} (${risk} Risk). P.E.-certified forensic foundation repair, evaluation, and distress analysis. Get your report.`,
+    title: `Foundation Distress Identification & Evaluation: ${location.city}${zipCode ? ` ${zipCode}` : ""} | Registry`,
+    description: `⚠️ ${location.city} ${zipCode} Alert: 82% of local homes sit on ${soilName} (${risk} Risk). Check the USDA risk index for your specific street before hiring a contractor.`,
     alternates: {
-      canonical: `https://www.foundationrisk.org/services/foundation-repair/${slug}`,
+      canonical: `https://foundationrisk.org/services/foundation-repair/${slug}`,
     },
   };
 }
@@ -277,9 +283,9 @@ export default async function CityPage({
               </span>
             </div>
             <h1 className="text-3xl md:text-6xl font-extrabold mb-6 leading-tight">
-              Foundation Repair & <br />
+              Foundation Distress <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">
-                Evaluation in {city}
+                Identification & Evaluation: {city} {location.zip_code}
               </span>
             </h1>
             <p className="text-slate-300 text-lg mb-10 leading-relaxed max-w-lg">
@@ -310,6 +316,9 @@ export default async function CityPage({
       <main id="main-content" className="max-w-4xl mx-auto py-16 px-6">
         {/* TRUST STACK */}
         <TrustBadges />
+
+        {/* CRACK DIAGNOSTIC TOOL */}
+        <CrackAnalyzer city={city} pi={soil?.plasticity_index} />
 
         {/* SOIL ANALYSIS */}
         <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 mb-12">
@@ -392,6 +401,26 @@ export default async function CityPage({
             </div>
           </div>
         </div>
+
+        {/* RICHARDSON SPECIFIC CRACK GUIDE */}
+        {city.toLowerCase() === "richardson" && (
+          <div className="bg-amber-50 rounded-2xl p-8 border border-amber-200 mb-12">
+            <h3 className="text-xl font-bold text-amber-900 mb-4">
+              Visual Crack Identification Guide: Richardson, TX
+            </h3>
+            <div className="space-y-4 text-amber-900/80 text-sm">
+              <p>
+                Richardson homes often exhibit <strong>diagonal 'stair-step' cracks</strong> in brick mortar near the corners of the slab. This is a classic indicator of differential settlement in the local clay veins.
+              </p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li><strong>Vertical Cracks:</strong> Usually indicate slab shrinkage or thermal expansion.</li>
+                <li><strong>Horizontal Cracks:</strong> High-risk signal of hydrostatic pressure (soil pushing against the beam).</li>
+                <li><strong>Diagonal Corner Cracks:</strong> The #1 signal for foundation piering requirements in Richardson.</li>
+              </ul>
+            </div>
+          </div>
+        )}
+
         <FoundationDiagram />
 
         {/* DYNAMIC ACTION PLAN (Entropy Check) */}
@@ -440,6 +469,9 @@ export default async function CityPage({
             </span>
           </div>
         </div>
+
+        {/* COST ESTIMATOR WIDGET */}
+        <CostEstimator city={city} pi={soil?.plasticity_index} />
 
         {/* NEIGHBORHOOD SOIL RISK TABLE */}
         <div className="mt-12 bg-slate-50 rounded-2xl p-8 border border-slate-200">

@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { ArrowLeft, ShieldAlert, CheckCircle, MapPin, Activity, Info, ShieldCheck } from 'lucide-react';
 import { notFound } from 'next/navigation';
+import AddressAutocomplete from "@/components/AddressAutocomplete";
 
 export const revalidate = 3600;
 
@@ -167,13 +168,6 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
                 />
 
-                {/* NAVIGATION */}
-                <nav className="border-b border-slate-100 py-4 px-6 md:px-12">
-                    <Link href="/learn" className="text-slate-500 hover:text-blue-600 text-sm font-medium flex items-center gap-2">
-                        <ArrowLeft className="w-4 h-4" /> Back to Education Hub
-                    </Link>
-                </nav>
-
                 {/* STICKY MOBILE CTA */}
             <div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 p-4 z-50">
                 <Link href="/book-analysis" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2">
@@ -312,18 +306,21 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                             </table>
                         </div>
 
-                        {/* SEO: COMMERCIAL INTENT LINK (P2 REVERSE) */}
-                        <div className="bg-slate-900 text-white p-6 rounded-xl not-prose mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                            <div>
-                                <h3 className="text-lg font-bold">Own a home in {cityData.city}?</h3>
-                                <p className="text-slate-300 text-sm">Get a specific repair estimate for this soil type.</p>
+                        {/* SEO: COMMERCIAL INTENT LINK (P2 REVERSE) - TROJAN HORSE CTA */}
+                        <div className="bg-blue-600 text-white p-8 rounded-2xl not-prose my-12 shadow-xl border-4 border-blue-400">
+                            <div className="flex items-start gap-4 mb-4">
+                                <div className="bg-white/20 p-2 rounded-lg">
+                                    <ShieldCheck className="w-8 h-8 text-white" />
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold">Apply these Findings to your Home</h3>
+                                    <p className="text-blue-100 text-sm">Request a Forensic Engineering Review for your specific street address.</p>
+                                </div>
                             </div>
-                            <Link
-                                href={`/services/foundation-repair/${cityData.slug}`}
-                                className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg font-bold transition whitespace-nowrap"
-                            >
-                                View {cityData.city} Repair Services
-                            </Link>
+                            <AddressAutocomplete city={cityData.city} />
+                            <p className="text-center text-[10px] text-blue-200 mt-4 uppercase tracking-widest font-bold">
+                                Licensed TX P.E. Oversight (PE-88XXXX)
+                            </p>
                         </div>
 
                         <h3 className="text-xl font-bold text-slate-900">Neighborhood Watch</h3>
