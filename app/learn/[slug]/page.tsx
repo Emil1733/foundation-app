@@ -72,8 +72,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         const pi = soil?.plasticity_index || 'Unknown';
 
         return {
-            title: `${cityData.city} Soil Analysis: ${mapUnit} Risks`,
-            description: `Forensic report on ${mapUnit} soil in ${cityData.city}, ${cityData.state}. Plasticity Index: ${pi}. Repair protocols.`,
+            title: `${cityData.city} Foundation Warning: ${mapUnit} Soil Risk Analysis`,
+            description: `Is your foundation at risk? Our forensic analysis of ${mapUnit} in ${cityData.city} shows a Plasticity Index of ${pi}. See how this soil destroys slabs and the exact engineering protocols to stop it.`,
             alternates: {
                 canonical: `/learn/${slug}`,
             },

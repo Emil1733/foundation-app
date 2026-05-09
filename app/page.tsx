@@ -10,8 +10,8 @@ const supabase = createClient(
 );
 
 export const metadata = {
-  title: "The Foundation Risk Registry | Texas Soil & Forensic Analysis",
-  description: "Official USDA-linked soil registry for foundation risk. Check your Plasticity Index and Linear Extensibility before you repair.",
+  title: "The Foundation Risk Registry | Forensic Evaluation & Soil Analysis",
+  description: "⚠️ Is your foundation safe? Check the official 2026 Geological Database for North Texas. Get a forensic risk evaluation and USDA soil analysis before structural cracks become permanent.",
 };
 
 export const revalidate = 3600; // ISR: Rebuild homepage every hour
@@ -37,7 +37,7 @@ export default async function Home() {
             </h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
               Most foundation repairs fail because they ignore the geological root cause.
-              Check your soil's <strong>Plasticity Index</strong> instantly.
+              <strong> Stop structural damage</strong> with a forensic risk evaluation today.
             </p>
           </div>
 

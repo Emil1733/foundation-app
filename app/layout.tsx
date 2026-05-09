@@ -15,16 +15,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The Foundation Risk Registry | Forensic Soil Analysis",
-  description: "Official 2026 Geological Database for residential foundation risk. Check your property against USDA soil maps and plasticity indices.",
+  title: "The Foundation Risk Registry | Forensic Evaluation & Soil Analysis",
+  description: "⚠️ Is your foundation safe? Check the official 2026 Geological Database for North Texas. Get a forensic risk evaluation and USDA soil analysis before structural cracks become permanent.",
   icons: { icon: '/logo.png' },
   metadataBase: new URL('https://foundationrisk.org'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: "The Foundation Risk Registry | Forensic Soil Analysis",
-    description: "Official 2026 Geological Database for residential foundation risk.",
+    title: "The Foundation Risk Registry | Forensic Evaluation & Soil Analysis",
+    description: "⚠️ Is your foundation safe? Check the official 2026 Geological Database for North Texas.",
     url: 'https://foundationrisk.org',
     siteName: 'Foundation Risk Registry',
     images: [
@@ -39,8 +39,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "The Foundation Risk Registry | Forensic Soil Analysis",
-    description: "Official 2026 Geological Database for residential foundation risk.",
+    title: "The Foundation Risk Registry | Forensic Evaluation & Soil Analysis",
+    description: "⚠️ Is your foundation safe? Check the official 2026 Geological Database for North Texas.",
     images: ['/logo.png'],
   },
 };

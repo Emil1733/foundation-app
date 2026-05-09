@@ -87,7 +87,7 @@ export default function Navbar() {
             className="group flex items-center gap-2 bg-slate-900 text-white px-6 py-2.5 rounded-full font-bold text-[10px] uppercase tracking-widest hover:bg-blue-600 transition-all duration-500 shadow-[0_10px_20px_rgba(15,23,42,0.15)] hover:shadow-[0_10px_25px_rgba(37,99,235,0.3)] hover:-translate-y-0.5 active:translate-y-0"
           >
             <Search className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
-            Analyze Risk
+            Get Forensic Eval
           </Link>
         </div>
 
@@ -125,7 +125,7 @@ export default function Navbar() {
                 className="mt-8 bg-slate-900 text-white p-5 rounded-2xl text-base font-bold text-center shadow-xl flex items-center justify-center gap-2"
               >
                 <Search className="w-4 h-4" />
-                Analyze My Property
+                Get Forensic Evaluation
               </Link>
            </div>
         </div>

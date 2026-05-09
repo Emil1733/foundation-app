@@ -79,8 +79,8 @@ export async function generateMetadata({
 
   const zipCode = location.zip_code || "";
   return {
-    title: `Foundation Distress Identification & Evaluation: ${location.city}${zipCode ? ` ${zipCode}` : ""} | Registry`,
-    description: `⚠️ ${location.city} ${zipCode} Alert: 82% of local homes sit on ${soilName} (${risk} Risk). Check the USDA risk index for your specific street before hiring a contractor.`,
+    title: `Stop Foundation Damage in ${location.city}: Forensic Evaluation & Risk Registry`,
+    description: `⚠️ CRITICAL: Foundations in ${location.city} are failing at record rates due to ${soilName} expansion. Get a Free Forensic Evaluation and USDA Soil Risk Analysis today before repair costs skyrocket.`,
     alternates: {
       canonical: `https://foundationrisk.org/services/foundation-repair/${slug}`,
     },
