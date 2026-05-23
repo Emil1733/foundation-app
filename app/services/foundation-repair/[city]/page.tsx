@@ -79,7 +79,7 @@ export async function generateMetadata({
 
   const zipCode = location.zip_code || "";
   return {
-    title: `Stop Foundation Damage in ${location.city}: Forensic Evaluation & Risk Registry`,
+    title: `Stop Foundation Damage in ${location.city}: Foundation Distress Identification & Free Evaluation`,
     description: `⚠️ CRITICAL: Foundations in ${location.city} are failing at record rates due to ${soilName} expansion. Get a Free Forensic Evaluation and USDA Soil Risk Analysis today before repair costs skyrocket.`,
     alternates: {
       canonical: `https://foundationrisk.org/services/foundation-repair/${slug}`,
@@ -567,6 +567,30 @@ export default async function CityPage({
               If you see pier drilling rigs on your street, your home sits on
               the same active {soil?.map_unit_name || "soil"} vein.
             </p>
+          </div>
+        </div>
+
+        {/* LINK TO SOIL ANALYSIS (PageRank Pass & Indexing) */}
+        <div className="my-12 bg-blue-50 border border-blue-200 rounded-2xl p-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-100 rounded-full blur-2xl opacity-50 -mr-10 -mt-10"></div>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+            <div>
+              <span className="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                Geological Library
+              </span>
+              <h3 className="text-xl font-bold text-slate-900 mt-3 mb-2">
+                Soil Hazard Analysis for {city}
+              </h3>
+              <p className="text-slate-600 text-sm max-w-xl">
+                Read the engineering report on local soil composition ({soil?.map_unit_name || "Expansive Clay"}) with custom plasticity indexes and how they impact residential foundations.
+              </p>
+            </div>
+            <Link
+              href={`/learn/${slug}-soil-analysis`}
+              className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-6 py-3 rounded-xl transition shadow-md hover:shadow-lg inline-flex items-center gap-2 whitespace-nowrap self-start md:self-center"
+            >
+              Read Soil Report <MoveRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
 
