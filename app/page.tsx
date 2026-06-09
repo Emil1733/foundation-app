@@ -1,13 +1,8 @@
-import { createClient } from '@supabase/supabase-js';
 import SoilRiskWidget from "@/components/SoilRiskWidget";
 import Link from 'next/link';
 import { MapPin, ArrowRight } from 'lucide-react';
 import PartnerLogos from "@/components/PartnerLogos";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { supabase } from '@/lib/supabase';
 
 export const metadata = {
   title: "The Foundation Risk Registry | Forensic Evaluation & Soil Analysis",
@@ -138,6 +133,49 @@ export default async function Home() {
             </div>
           </div>
         </section>
+
+        {/* Geological Library Grid (PageRank Pass & Indexing Recovery) */}
+        {cities && cities.length > 0 && (
+          <section className="w-full py-20 px-6 bg-white border-t border-slate-200">
+            <div className="max-w-6xl mx-auto">
+              <div className="flex items-center justify-between mb-10">
+                <div>
+                  <h2 className="text-3xl font-bold text-slate-900">Geological Library & Soil Reports</h2>
+                  <p className="text-slate-500 text-sm mt-1">Read the forensic soil analysis reports for your local area.</p>
+                </div>
+                <Link href="/learn" className="text-blue-600 font-semibold flex items-center gap-2 hover:underline">
+                  View Education Library <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {cities.slice(0, 6).map((city) => (
+                  <Link
+                    key={`${city.slug}-soil`}
+                    href={`/learn/${city.slug}-soil-analysis`}
+                    prefetch={false}
+                    className="group bg-slate-50 rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-md hover:border-blue-300 transition-all flex flex-col justify-between"
+                  >
+                    <div>
+                      <span className="bg-blue-50 text-blue-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                        Geological Report
+                      </span>
+                      <h3 className="text-lg font-bold text-slate-900 mt-3 group-hover:text-blue-600 transition-colors">
+                        Why Foundations Fail in {city.city}, {city.state}
+                      </h3>
+                      <p className="text-slate-500 text-xs mt-2 line-clamp-2">
+                        Engineering breakdown of expansive soil active zones, regional plasticity indexes, and foundation settlement hazards in the {city.city} area.
+                      </p>
+                    </div>
+                    <div className="text-blue-600 text-sm font-semibold mt-4 flex items-center gap-1">
+                      Read Soil Analysis &rarr;
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Service Area Grid (Pillar 4: Link Graph) */}
         {cities && cities.length > 0 && (

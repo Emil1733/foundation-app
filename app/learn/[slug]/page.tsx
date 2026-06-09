@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 import { ArrowLeft, ShieldAlert, CheckCircle, MapPin, Activity, Info, ShieldCheck } from 'lucide-react';
 import { notFound } from 'next/navigation';
@@ -8,10 +8,6 @@ export const revalidate = 3600;
 
 // 1. Generate All Slugs at Build Time
 export async function generateStaticParams() {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
     const { data: locations } = await supabase.from('target_locations').select('slug');
     return locations?.map((loc) => ({
         slug: `${loc.slug}-soil-analysis`,
@@ -24,10 +20,6 @@ async function getCityData(slugParam: string) {
 
     // Extract "plano-tx-75024" from "plano-tx-75024-soil-analysis"
     const citySlug = slugParam.replace('-soil-analysis', '');
-
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Step 1: Get Location Data
     const { data: location, error: locError } = await supabase
@@ -152,7 +144,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                             "url": "https://foundationrisk.org/logo.png"
                         }
                     },
-                    "description": `Forensic engineering analysis of ${soil?.map_unit_name} soil risks in ${cityData.city}. PI: ${pi}. Active monitoring required.`,
+                    "description": `Forensic engineering analysis of ${soil?.map_unit_name || 'Expansive Clay'} soil risks in ${cityData.city}. PI: ${isNaN(pi) || pi === 0 ? 'Unknown' : pi.toFixed(0)}. Active monitoring required.`,
                     "mainEntityOfPage": {
                         "@type": "WebPage",
                         "@id": `https://foundationrisk.org/learn/${params.slug}`

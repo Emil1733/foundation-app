@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase";
 import SoilRiskWidget from "@/components/SoilRiskWidget";
 import TrustBadges from "@/components/TrustBadges";
 import FoundationDiagram from "@/components/FoundationDiagram";
@@ -16,11 +16,6 @@ import {
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-
-// Setup Supabase
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 // SSG: Build pages for all cities
 export async function generateStaticParams() {
@@ -587,6 +582,7 @@ export default async function CityPage({
             </div>
             <Link
               href={`/learn/${slug}-soil-analysis`}
+              prefetch={false}
               className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-6 py-3 rounded-xl transition shadow-md hover:shadow-lg inline-flex items-center gap-2 whitespace-nowrap self-start md:self-center"
             >
               Read Soil Report <MoveRight className="w-4 h-4" />
@@ -625,6 +621,7 @@ export default async function CityPage({
                 <Link
                   key={n.slug}
                   href={`/services/foundation-repair/${n.slug}`}
+                  prefetch={false}
                   className="text-slate-500 hover:text-blue-600 text-sm flex items-center gap-1 transition-colors"
                 >
                   <MapPin className="w-3 h-3" /> {n.city} Foundation Repair
