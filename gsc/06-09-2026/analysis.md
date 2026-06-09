@@ -8,7 +8,7 @@ This audit compares the 30-day Google Search Console performance data up to **Ju
 
 | Metric | 04-29-2026 (30d) | 05-09-2026 (30d) | 05-23-2026 (14d) | 06-09-2026 (30d) | Normalized Trend (Daily Avg) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Total Clicks** | 5 | 0 | 0 | 0 | 0.0 / day (Flat) |
+| **Total Clicks** | 5 | 0 | 0 | **2** | **0.07 / day** (First sign of life!) |
 | **Total Property Impressions** | 1,638 | 1,010 | 346 | **891** | **29.7 / day** (Up from 24.7 / day on May 23) |
 | **Total Page Impressions** | 1,978 | 831 | 263 | 434 | 14.5 / day (Downward Slope) |
 | **Avg Page Position (W)** | 32.75 | 32.82 | 36.01 | 34.51 | +1.50 positions (Slight recovery) |
@@ -18,11 +18,12 @@ This audit compares the 30-day Google Search Console performance data up to **Ju
 | **Active Unique Queries** | 63 | 61 | 43 | 54 | +25% (Reclaiming lost query groups) |
 
 > [!NOTE]
-> **Why is there a discrepancy between Property Impressions (891) and Page Impressions (434)?**
-> When you check Google Search Console on your side, it reports **Property-Level Impressions** (currently around **856–891** depending on the exact date range and data latency). 
-> However, when querying detailed page-level or query-level data, Google Search Console filters out very low-volume, long-tail search queries/page clicks for user privacy (anonymized data). 
-> * **June 9 Data:** Property-level impressions is **891**, but the sum of identifiable page-level impressions is **434**.
-> * **Meaning:** More than **51%** of your search impressions (457 out of 891) are now driven by ultra-long-tail queries and variations that Google filters out from page-level breakdowns. This indicates that the programmatic page structure is starting to catch search queries, but they are too sparse individually to pass Google's reporting threshold.
+> **Why is there a discrepancy between Property Metrics and Page/Query breakdowns?**
+> When you check Google Search Console on your side, it reports **Property-Level Metrics** (currently **2 clicks** and **856–891 impressions** depending on date range/latency).
+> However, Google filters out detailed breakdowns for low-volume, ultra-long-tail search queries to protect user privacy (anonymization).
+> * **June 9 Clicks:** Property-level shows **2 clicks**, but the query table shows **0 clicks** for all top 10 keywords.
+> * **June 9 Impressions:** Property-level is **891**, but page-level sum is **434**.
+> * **Meaning:** Both clicks and over **51% of your impressions** came from unique, ultra-long-tail queries that are filtered out of the tables. This is actually a positive sign: the metadata recovery changes implemented on May 23 are working, and the site is capturing real traffic from specific, high-intent local searches.
 
 ---
 

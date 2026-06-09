@@ -14,6 +14,7 @@ def analyze_period(pages_data, queries_data, date_data=None):
 
     # Property summary
     total_property_impressions = sum(d.get('impressions', 0) for d in date_data) if date_data else 0
+    total_property_clicks = sum(d.get('clicks', 0) for d in date_data) if date_data else 0
 
     # Pages summary
     total_clicks_pages = sum(p.get('clicks', 0) for p in pages_data)
@@ -30,7 +31,7 @@ def analyze_period(pages_data, queries_data, date_data=None):
     unique_queries = len(queries_data)
 
     return {
-        'clicks': total_clicks_pages,
+        'clicks': total_property_clicks,
         'impressions': total_impressions_pages,
         'property_impressions': total_property_impressions,
         'avg_position': avg_pos_pages,
