@@ -15,6 +15,7 @@ def analyze_period(pages_data, queries_data, date_data=None):
     # Property summary
     total_property_impressions = sum(d.get('impressions', 0) for d in date_data) if date_data else 0
     total_property_clicks = sum(d.get('clicks', 0) for d in date_data) if date_data else 0
+    property_avg_pos = sum(d.get('position', 0) * d.get('impressions', 0) for d in date_data) / total_property_impressions if total_property_impressions > 0 else 0
 
     # Pages summary
     total_clicks_pages = sum(p.get('clicks', 0) for p in pages_data)
@@ -34,6 +35,7 @@ def analyze_period(pages_data, queries_data, date_data=None):
         'clicks': total_property_clicks,
         'impressions': total_impressions_pages,
         'property_impressions': total_property_impressions,
+        'property_avg_position': property_avg_pos,
         'avg_position': avg_pos_pages,
         'unique_pages': unique_pages,
         'unique_queries': unique_queries,
@@ -70,6 +72,7 @@ def main():
     metrics = [
         ('clicks', 'Total Clicks'),
         ('property_impressions', 'Total Property Impressions'),
+        ('property_avg_position', 'Avg Property Position (W)'),
         ('impressions', 'Total Page Impressions'),
         ('avg_position', 'Avg Page Position (W)'),
         ('unique_pages', 'Active Unique Pages'),
