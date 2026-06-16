@@ -6,7 +6,7 @@ from googleapiclient.discovery import build
 # Correct paths relative to foundation-app/scripts
 KEY_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'gsc-credentials.json'))
 SITE_URL = 'sc-domain:foundationrisk.org'
-OUTPUT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'gsc', '06-09-2026'))
+OUTPUT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'gsc', '06-16-2026'))
 
 def pull_gsc():
     if not os.path.exists(OUTPUT_DIR):
@@ -17,8 +17,8 @@ def pull_gsc():
     service = build('searchconsole', 'v1', credentials=credentials)
 
     # Last 30 days roughly
-    end_date = '2026-06-09'
-    start_date = '2026-05-10'
+    end_date = '2026-06-16'
+    start_date = '2026-05-17'
 
     # USA only filter
     filters = {
