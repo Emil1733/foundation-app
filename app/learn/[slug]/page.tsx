@@ -4,7 +4,7 @@ import { ArrowLeft, ShieldAlert, CheckCircle, MapPin, Activity, Info, ShieldChec
 import { notFound } from 'next/navigation';
 import AddressAutocomplete from "@/components/AddressAutocomplete";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // ISR: Rebuild every 24 hours
 
 // 1. Generate All Slugs at Build Time
 export async function generateStaticParams() {

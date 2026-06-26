@@ -9,7 +9,7 @@ export const metadata = {
   description: "⚠️ Is your foundation safe? Check the official 2026 Geological Database for North Texas. Get a forensic risk evaluation and USDA soil analysis before structural cracks become permanent.",
 };
 
-export const revalidate = 3600; // ISR: Rebuild homepage every hour
+export const revalidate = 86400; // ISR: Rebuild homepage every 24 hours
 
 export default async function Home() {
   // 1. Fetch Popular Service Areas for Internal Linking

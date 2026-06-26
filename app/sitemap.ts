@@ -18,7 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         url: `${BASE_URL}/services/foundation-repair/${loc.slug}`,
         lastModified: new Date(loc.created_at),
         changeFrequency: 'weekly' as const,
-        priority: 0.8,
+        priority: 0.9, // Direct homepage links
     }));
 
     // NEW: Programmatic Soil Reports (/learn/...)
@@ -26,7 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         url: `${BASE_URL}/learn/${loc.slug}-soil-analysis`,
         lastModified: new Date(),
         changeFrequency: 'weekly' as const,
-        priority: 0.9, // Higher priority as these are our "Gold" content
+        priority: 0.8, // Deeper educational content
     }));
 
     return [
