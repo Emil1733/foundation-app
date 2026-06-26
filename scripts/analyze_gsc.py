@@ -51,6 +51,7 @@ def main():
         '05-23-2026': ('05-23-2026/performance_page.json', '05-23-2026/performance_query.json', '05-23-2026/performance_date.json'),
         '06-09-2026': ('06-09-2026/performance_page.json', '06-09-2026/performance_query.json', '06-09-2026/performance_date.json'),
         '06-16-2026': ('06-16-2026/performance_page.json', '06-16-2026/performance_query.json', '06-16-2026/performance_date.json'),
+        '06-26-2026': ('06-26-2026/performance_page.json', '06-26-2026/performance_query.json', '06-26-2026/performance_date.json'),
     }
 
     results = {}
@@ -68,8 +69,8 @@ def main():
         }
 
     print("\n=== GLOBAL STATISTICS COMPARISON ===")
-    print(f"{'Metric':<25} | {'04-29 (30d)':<12} | {'05-09 (30d)':<12} | {'05-23 (14d)':<12} | {'06-09 (30d)':<12} | {'06-16 (30d)':<12}")
-    print("-" * 110)
+    print(f"{'Metric':<25} | {'04-29 (30d)':<12} | {'05-09 (30d)':<12} | {'05-23 (14d)':<12} | {'06-09 (30d)':<12} | {'06-16 (30d)':<12} | {'06-26 (30d)':<12}")
+    print("-" * 125)
     metrics = [
         ('clicks', 'Total Clicks'),
         ('property_impressions', 'Total Property Impressions'),
@@ -87,7 +88,8 @@ def main():
         v3 = f"{results['05-23-2026']['stats'].get(key, 0):.2f}" if isinstance(results['05-23-2026']['stats'].get(key, 0), float) else str(results['05-23-2026']['stats'].get(key, 0))
         v4 = f"{results['06-09-2026']['stats'].get(key, 0):.2f}" if isinstance(results['06-09-2026']['stats'].get(key, 0), float) else str(results['06-09-2026']['stats'].get(key, 0))
         v5 = f"{results['06-16-2026']['stats'].get(key, 0):.2f}" if isinstance(results['06-16-2026']['stats'].get(key, 0), float) else str(results['06-16-2026']['stats'].get(key, 0))
-        print(f"{name:<25} | {v1:<12} | {v2:<12} | {v3:<12} | {v4:<12} | {v5:<12}")
+        v6 = f"{results['06-26-2026']['stats'].get(key, 0):.2f}" if isinstance(results['06-26-2026']['stats'].get(key, 0), float) else str(results['06-26-2026']['stats'].get(key, 0))
+        print(f"{name:<25} | {v1:<12} | {v2:<12} | {v3:<12} | {v4:<12} | {v5:<12} | {v6:<12}")
 
     # Track target queries
     target_queries = [
@@ -104,21 +106,21 @@ def main():
     ]
 
     print("\n=== TARGET QUERIES COMPARISON (Impressions / Position) ===")
-    print(f"{'Query':<55} | {'04-29':<12} | {'05-09':<12} | {'05-23':<12} | {'06-09':<12} | {'06-16':<12}")
-    print("-" * 125)
+    print(f"{'Query':<55} | {'04-29':<12} | {'05-09':<12} | {'05-23':<12} | {'06-09':<12} | {'06-16':<12} | {'06-26':<12}")
+    print("-" * 140)
     for q_name in target_queries:
         cells = []
-        for period in ['04-29-2026', '05-09-2026', '05-23-2026', '06-09-2026', '06-16-2026']:
+        for period in ['04-29-2026', '05-09-2026', '05-23-2026', '06-09-2026', '06-16-2026', '06-26-2026']:
             q_info = results[period]['queries'].get(q_name)
             if q_info:
                 cells.append(f"{q_info['impressions']} imp/{q_info['position']:.1f}")
             else:
                 cells.append("N/A")
-        print(f"{q_name:<55} | {cells[0]:<12} | {cells[1]:<12} | {cells[2]:<12} | {cells[3]:<12} | {cells[4]:<12}")
+        print(f"{q_name:<55} | {cells[0]:<12} | {cells[1]:<12} | {cells[2]:<12} | {cells[3]:<12} | {cells[4]:<12} | {cells[5]:<12}")
 
     # Check learn pages vs services pages
     print("\n=== PAGE GROUP ANALYSIS ===")
-    for label in ['04-29-2026', '05-09-2026', '05-23-2026', '06-09-2026', '06-16-2026']:
+    for label in ['04-29-2026', '05-09-2026', '05-23-2026', '06-09-2026', '06-16-2026', '06-26-2026']:
         pages_dict = results[label]['pages']
         learn_pages = [p for url, p in pages_dict.items() if '/learn/' in url]
         service_pages = [p for url, p in pages_dict.items() if '/services/' in url]

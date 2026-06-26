@@ -15,18 +15,20 @@ def main():
     p_05_23 = get_pages(os.path.join(base_dir, '05-23-2026/performance_page.json'))
     p_06_09 = get_pages(os.path.join(base_dir, '06-09-2026/performance_page.json'))
     p_06_16 = get_pages(os.path.join(base_dir, '06-16-2026/performance_page.json'))
+    p_06_26 = get_pages(os.path.join(base_dir, '06-26-2026/performance_page.json'))
     
-    all_pages = set(p_04_29.keys()) | set(p_05_09.keys()) | set(p_05_23.keys()) | set(p_06_09.keys()) | set(p_06_16.keys())
+    all_pages = set(p_04_29.keys()) | set(p_05_09.keys()) | set(p_05_23.keys()) | set(p_06_09.keys()) | set(p_06_16.keys()) | set(p_06_26.keys())
     
-    print(f"{'URL':<80} | {'04-29':<8} | {'05-09':<8} | {'05-23':<8} | {'06-09':<8} | {'06-16':<8}")
-    print("-" * 130)
+    print(f"{'URL':<80} | {'04-29':<8} | {'05-09':<8} | {'05-23':<8} | {'06-09':<8} | {'06-16':<8} | {'06-26':<8}")
+    print("-" * 140)
     for url in sorted(all_pages):
         imp_04_29 = p_04_29.get(url, {}).get('impressions', '-')
         imp_05_09 = p_05_09.get(url, {}).get('impressions', '-')
         imp_05_23 = p_05_23.get(url, {}).get('impressions', '-')
         imp_06_09 = p_06_09.get(url, {}).get('impressions', '-')
         imp_06_16 = p_06_16.get(url, {}).get('impressions', '-')
-        print(f"{url:<80} | {imp_04_29:<8} | {imp_05_09:<8} | {imp_05_23:<8} | {imp_06_09:<8} | {imp_06_16:<8}")
+        imp_06_26 = p_06_26.get(url, {}).get('impressions', '-')
+        print(f"{url:<80} | {imp_04_29:<8} | {imp_05_09:<8} | {imp_05_23:<8} | {imp_06_09:<8} | {imp_06_16:<8} | {imp_06_26:<8}")
 
 if __name__ == '__main__':
     main()

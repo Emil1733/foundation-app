@@ -3,7 +3,7 @@ import json
 
 def main():
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'gsc'))
-    files = ['04-29-2026/performance_page.json', '05-09-2026/performance_page.json', '05-23-2026/performance_page.json', '06-09-2026/performance_page.json', '06-16-2026/performance_page.json']
+    files = ['04-29-2026/performance_page.json', '05-09-2026/performance_page.json', '05-23-2026/performance_page.json', '06-09-2026/performance_page.json', '06-16-2026/performance_page.json', '06-26-2026/performance_page.json']
     
     for filename in files:
         path = os.path.join(base_dir, filename)
