@@ -122,7 +122,7 @@ async function run() {
                 zip_code: loc.zip,
                 latitude: coords.lat,
                 longitude: coords.lon
-            }, { onConflict: 'zip_code' })
+            }, { onConflict: 'slug' })
             .select()
             .single();
 

@@ -206,7 +206,7 @@ async function run() {
             latitude: coords.lat,
             longitude: coords.lon,
             neighborhoods: neighborhoods // Uses Real Data now
-        }, { onConflict: 'zip_code' })
+        }, { onConflict: 'slug' })
         .select()
         .single();
 

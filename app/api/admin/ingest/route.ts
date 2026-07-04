@@ -152,7 +152,7 @@ export async function POST(request: Request) {
                     zip_code: loc.zip,
                     latitude: coords.lat,
                     longitude: coords.lon
-                }, { onConflict: 'zip_code' })
+                }, { onConflict: 'slug' })
                 .select()
                 .single();
 
