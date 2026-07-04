@@ -338,6 +338,32 @@ export default async function CityPage({
                 soil?.risk_level || "High",
               )}
             </p>
+            {location.city_profile && (
+              <p className="mt-4 leading-relaxed bg-slate-100 p-5 rounded-xl border-l-4 border-blue-500 text-slate-700">
+                <strong>{city} Geological Profile:</strong> {location.city_profile}
+              </p>
+            )}
+            
+            {/* NEIGHBORHOOD RISK GRID */}
+            {location.neighborhoods && location.neighborhoods.length > 0 && (
+              <div className="mt-8 mb-4 not-prose">
+                <h3 className="text-lg font-bold text-slate-900 mb-4">Neighborhood Risk Profile</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {location.neighborhoods.map((n: any, i: number) => (
+                    <div key={i} className="bg-white border border-slate-200 p-3 rounded-lg shadow-sm">
+                      <div className="flex justify-between items-start mb-1">
+                        <span className="font-semibold text-slate-800 text-sm truncate pr-2">{n.name}</span>
+                        <span className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded ${n.risk === 'Severe' ? 'bg-red-100 text-red-700' : n.risk === 'High' ? 'bg-orange-100 text-orange-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                          {n.risk}
+                        </span>
+                      </div>
+                      {n.note && <p className="text-xs text-slate-500 line-clamp-2">{n.note}</p>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
             {soil && (
               <div className="my-8 grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose">
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
