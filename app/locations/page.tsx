@@ -1,135 +1,90 @@
 import { createClient } from '@supabase/supabase-js';
 import Link from 'next/link';
-import { MapPin } from 'lucide-react';
+import { MapPin, ShieldAlert } from 'lucide-react';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export const metadata = {
-    title: "Service Area Directory | Foundation Risk Registry",
-    description: "Explore our forensic engineering service areas across Texas, Oklahoma, and Missouri. Geological profiles for every zip code.",
+    title: "Texas Foundation Repair Service Areas | Foundation Risk Registry",
+    description: "Explore our forensic engineering service areas across Texas. We provide permanent foundation repair solutions in Dallas, Houston, Austin, and surrounding regions.",
 };
 
-export const revalidate = 3600; // ISR every hour
+export const revalidate = 3600;
 
 export default async function LocationsMap() {
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": "https://foundationrisk.org"
-            },
-            {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Service Area Directory",
-                "item": "https://foundationrisk.org/locations"
-            }
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://foundationrisk.org" },
+            { "@type": "ListItem", "position": 2, "name": "Texas Service Areas", "item": "https://foundationrisk.org/locations" }
         ]
     };
 
     const { data: locations } = await supabase
         .from('target_locations')
         .select('city, state, slug')
+        .eq('state', 'TX')
         .order('city');
 
     if (!locations) return <div>Loading...</div>;
 
-    // Group by State
-    const byState = locations.reduce((acc, loc) => {
-        if (!acc[loc.state]) acc[loc.state] = [];
-        acc[loc.state].push(loc);
-        return acc;
-    }, {} as Record<string, typeof locations>);
+    const houstonCities = ['Houston', 'Katy', 'Cypress', 'Sugar Land', 'Pearland', 'Spring', 'League City', 'Conroe', 'Tomball'];
+    const dallasCities = ['Dallas', 'Fort Worth', 'Frisco', 'McKinney', 'Plano', 'Allen', 'Rockwall', 'Flower Mound', 'Lewisville', 'Richardson', 'Garland', 'Irving', 'Mesquite', 'The Colony'];
+    const austinCities = ['Austin', 'Round Rock', 'Cedar Park', 'Pflugerville', 'Georgetown', 'Kyle'];
+
+    const clusters = {
+        'Houston Metro': locations.filter(loc => houstonCities.includes(loc.city)),
+        'Dallas - Fort Worth': locations.filter(loc => dallasCities.includes(loc.city)),
+        'Austin Metro': locations.filter(loc => austinCities.includes(loc.city)),
+        'Additional Texas Markets': locations.filter(loc => !houstonCities.includes(loc.city) && !dallasCities.includes(loc.city) && !austinCities.includes(loc.city))
+    };
 
     return (
-        <div className="min-h-screen bg-white">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
-            <header className="bg-slate-900 text-white py-12 px-6">
-                <div className="max-w-4xl mx-auto">
-                    <h1 className="text-3xl font-bold mb-4">Forensic Service Area Directory</h1>
-                    <p className="text-slate-400 leading-relaxed mb-6">
-                        Complete index of all foundation repair zones monitored by our forensic analysis network. Each location listed represents a unique geological profile where the <strong>Plasticity Index (PI)</strong> and <strong>Linear Extensibility</strong> have been audited against USDA/SSURGO datasets for structural risk.
-                    </p>
-                    <div className="grid md:grid-cols-2 gap-8 mb-8">
-                        <div className="bg-slate-800/50 p-6 rounded-xl border border-slate-700">
-                            <h3 className="text-sm font-bold text-blue-400 uppercase tracking-widest mb-2">Regional Risk Dynamics</h3>
-                            <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                                Foundation movement is highly localized. Properties in North Dallas might sit on Austin Chalk, while those in Houston deal with high-shrinkage Beaumont Clay. Our directory helps you identify the specific failure modes associated with your local soil series.
-                            </p>
-                            <p className="text-xs text-slate-400 leading-relaxed">
-                                We monitor three primary "corridors of failure": The I-35 Clay Belt, the Blackland Prairie, and the Gulf Coast Transgressive Sequence. Each requires a different forensic approach to stabilization.
-                            </p>
-                        </div>
-                        <div className="bg-slate-800/50 p-6 rounded-xl border border-slate-700">
-                            <h3 className="text-sm font-bold text-blue-400 uppercase tracking-widest mb-2">Data Integrity Standards</h3>
-                            <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                                Our data is refreshed quarterly using direct pulls from the Web Soil Survey (WSS). We prioritize "representative values" for PI and LEP to ensure that our risk forecasts account for the most common geological strata within a given map unit.
-                            </p>
-                            <p className="text-xs text-slate-400 leading-relaxed">
-                                This directory is intended for forensic reference only. If your specific zip code is not listed, our team may still have borehole data available in our offline archives.
-                            </p>
-                        </div>
+        <div className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)]">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+            
+            <header className="bg-slate-900 text-white py-16 px-6 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-800 to-slate-950 -z-10" />
+                <div className="max-w-5xl mx-auto text-center">
+                    <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 px-4 py-1.5 rounded-full text-blue-200 text-sm font-semibold mb-8 backdrop-blur-sm">
+                        <ShieldAlert className="w-4 h-4 text-blue-400" />
+                        <span>Statewide Geological Authority</span>
                     </div>
+                    <h1 className="text-4xl md:text-5xl font-extrabold mb-6">Texas Foundation Repair Coverage</h1>
+                    <p className="text-slate-300 text-lg leading-relaxed max-w-2xl mx-auto">
+                        Texas contains some of the most destructive expansive clay soils in the United States. We provide forensic evaluation and permanent steel pier stabilization across the major metroplexes. Select your city below to view local soil risks.
+                    </p>
                 </div>
             </header>
 
-            <main className="max-w-4xl mx-auto py-12 px-6">
-                {/* Featured DFW Cities */}
-                <div className="mb-14 p-6 bg-blue-50 border border-blue-200 rounded-2xl">
-                    <h2 className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-4">Featured Analysis Zones — DFW Metroplex</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        {[
-                            { city: 'Lewisville', state: 'TX', zip: '75067', slug: 'lewisville-tx-75067', label: 'Foundation Evaluation & Distress Analysis' },
-                            { city: 'Frisco', state: 'TX', zip: '75035', slug: 'frisco-tx-75035', label: 'Expansive Clay Soil Report' },
-                            { city: 'Richardson', state: 'TX', zip: '75080', slug: 'richardson-tx-75080', label: 'Foundation Settling Analysis' },
-                        ].map((loc) => (
-                            <Link
-                                key={loc.slug}
-                                href={`/services/foundation-repair/${loc.slug}`}
-                                className="flex flex-col gap-1 p-4 bg-white border border-blue-200 rounded-xl hover:border-blue-400 hover:shadow-md transition group"
-                            >
-                                <span className="font-bold text-slate-900 group-hover:text-blue-700">{loc.city}, {loc.state} {loc.zip}</span>
-                                <span className="text-xs text-blue-600">{loc.label} &rarr;</span>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-
-                {Object.keys(byState).sort().map(state => (
-                    <div key={state} className="mb-12">
-                        <h2 className="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-4 mb-6">
-                            {state}
-                        </h2>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            {byState[state].map((loc) => (
-                                <Link
-                                    key={loc.slug}
-                                    href={`/services/foundation-repair/${loc.slug}`}
-                                    className="flex items-center gap-2 text-slate-600 hover:text-blue-600 transition-colors p-2 rounded hover:bg-slate-50"
-                                >
-                                    <MapPin className="w-4 h-4 text-slate-400" />
-                                    <span className="text-sm font-medium">{loc.city}</span>
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-                ))}
-
-                <div className="mt-20 p-8 bg-slate-50 rounded-xl border border-slate-200 text-center">
-                    <h3 className="font-bold text-slate-900 mb-2">Don't see your city?</h3>
-                    <p className="text-slate-500 text-sm mb-4">Our engineers are constantly expanding the soil risk registry.</p>
-                    <Link href="/" className="text-blue-600 font-bold hover:underline">
-                        Request coverage for your zip code &rarr;
-                    </Link>
+            <main className="max-w-5xl mx-auto py-16 px-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    {Object.entries(clusters).map(([region, cities]) => {
+                        if (cities.length === 0) return null;
+                        return (
+                            <div key={region} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                                <h2 className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-4 mb-4">
+                                    {region}
+                                </h2>
+                                <ul className="space-y-3">
+                                    {cities.map(loc => (
+                                        <li key={loc.slug}>
+                                            <Link
+                                                href={`/services/foundation-repair/${loc.slug}`}
+                                                className="flex items-center gap-2 text-slate-600 hover:text-blue-600 font-medium transition group"
+                                            >
+                                                <MapPin className="w-4 h-4 text-blue-400 group-hover:text-blue-600 transition" />
+                                                {loc.city}, TX
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )
+                    })}
                 </div>
             </main>
         </div>
