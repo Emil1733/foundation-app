@@ -20,7 +20,8 @@ function IntakeForm() {
         name: '',
         email: '',
         phone: '',
-        notes: ''
+        notes: '',
+        tcpaConsent: false
     });
 
     const steps = [
@@ -294,8 +295,23 @@ function IntakeForm() {
                                         />
                                     </div>
                                     <p className="text-xs text-slate-400 mt-2 flex items-center gap-1">
-                                        <ShieldCheck className="w-3 h-3" /> We do not sell your data. Engineers use this number only to verify address details.
+                                        <ShieldCheck className="w-3 h-3" /> Secure data transmission.
                                     </p>
+                                </div>
+                                
+                                <div>
+                                    <label className="flex items-start gap-3 p-4 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 transition">
+                                        <input 
+                                            type="checkbox" 
+                                            required
+                                            className="mt-1 w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
+                                            checked={formData.tcpaConsent}
+                                            onChange={(e) => setFormData({...formData, tcpaConsent: e.target.checked})}
+                                        />
+                                        <span className="text-[11px] text-slate-500 leading-relaxed">
+                                            <strong>TCPA Consent:</strong> By checking this box, I agree to receive text messages and phone calls (including via automated technology) from Foundation Risk Registry and its authorized local engineering partners at the number provided. Consent is not a condition of purchase. Msg & data rates may apply.
+                                        </span>
+                                    </label>
                                 </div>
                             </div>
 
@@ -303,7 +319,8 @@ function IntakeForm() {
                                 <button type="button" onClick={prevStep} className="text-slate-500 font-bold px-4 py-2 hover:text-slate-700">Back</button>
                                 <button
                                     type="submit"
-                                    className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg hover:shadow-green-200 w-full justify-center"
+                                    disabled={!formData.tcpaConsent}
+                                    className="bg-green-600 hover:bg-green-700 disabled:bg-slate-300 text-white px-8 py-4 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg hover:shadow-green-200 w-full justify-center"
                                 >
                                     Get My Forensic Analysis
                                 </button>

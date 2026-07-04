@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Shield, MapPin, BookOpen, Search, Menu, X } from "lucide-react";
+import { Shield, MapPin, BookOpen, Search, Menu, X, Phone } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function Navbar() {
@@ -61,8 +61,8 @@ export default function Navbar() {
         </Link>
 
         {/* DESKTOP NAV: REFINED & SPACED */}
-        <div className="hidden lg:flex items-center gap-10">
-          <div className="flex items-center gap-8 border-r border-slate-100 pr-10">
+        <div className="hidden lg:flex items-center gap-6">
+          <div className="flex items-center gap-8 border-r border-slate-100 pr-6">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
@@ -82,13 +82,15 @@ export default function Navbar() {
             })}
           </div>
           
-          <Link
-            href="/book-analysis"
-            className="group flex items-center gap-2 bg-slate-900 text-white px-6 py-2.5 rounded-full font-bold text-[10px] uppercase tracking-widest hover:bg-blue-600 transition-all duration-500 shadow-[0_10px_20px_rgba(15,23,42,0.15)] hover:shadow-[0_10px_25px_rgba(37,99,235,0.3)] hover:-translate-y-0.5 active:translate-y-0"
-          >
-            <Search className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
-            Get Forensic Eval
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/book-analysis"
+              className="group flex items-center gap-2 bg-slate-900 text-white px-6 py-2.5 rounded-full font-bold text-[10px] uppercase tracking-widest hover:bg-blue-600 transition-all duration-500 shadow-[0_10px_20px_rgba(15,23,42,0.15)] hover:shadow-[0_10px_25px_rgba(37,99,235,0.3)] hover:-translate-y-0.5 active:translate-y-0"
+            >
+              <Search className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+              Get Forensic Eval
+            </Link>
+          </div>
         </div>
 
         {/* Mobile menu button */}
@@ -122,7 +124,7 @@ export default function Navbar() {
               <Link
                 href="/book-analysis"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="mt-8 bg-slate-900 text-white p-5 rounded-2xl text-base font-bold text-center shadow-xl flex items-center justify-center gap-2"
+                className="mt-4 bg-slate-900 text-white p-5 rounded-2xl text-base font-bold text-center shadow-xl flex items-center justify-center gap-2"
               >
                 <Search className="w-4 h-4" />
                 Get Forensic Evaluation

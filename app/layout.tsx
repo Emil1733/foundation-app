@@ -139,13 +139,13 @@ export default function RootLayout({
               <Link href="/contact" className="hover:text-white transition group">
                 <span className="text-slate-400 group-hover:text-white">Contact</span>
               </Link>
-              <Link href="/privacy" className="hover:text-white transition group">
+              <Link href="/privacy" rel="nofollow" className="hover:text-white transition group">
                 <span className="text-slate-400 group-hover:text-white">Privacy Policy</span>
               </Link>
-              <Link href="/terms" className="hover:text-white transition group">
+              <Link href="/terms" rel="nofollow" className="hover:text-white transition group">
                 <span className="text-slate-400 group-hover:text-white">Terms of Service</span>
               </Link>
-              <Link href="/disclaimer" className="hover:text-white transition group">
+              <Link href="/disclaimer" rel="nofollow" className="hover:text-white transition group">
                 <span className="text-slate-400 group-hover:text-white">Data Disclaimer</span>
               </Link>
             </nav>

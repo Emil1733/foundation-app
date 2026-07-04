@@ -171,76 +171,79 @@ export default async function CityPage({
     },
   ];
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "HomeAndConstructionBusiness",
-    name: `The Foundation Risk Registry of ${city}`,
-    image: "https://www.foundationrisk.org/logo.png",
-    url: `https://www.foundationrisk.org/services/foundation-repair/${slug}`,
-    telephone: "+1-800-555-0199",
-    priceRange: "$$$$",
-    datePublished: "2026-01-15",
-    dateModified: new Date().toISOString().split("T")[0],
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: city,
-      addressRegion: state,
-      postalCode: location.zip_code,
-      addressCountry: "US",
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "HomeAndConstructionBusiness",
+      name: `Foundation Repair ${city} - The Risk Registry`,
+      image: "https://www.foundationrisk.org/logo.png",
+      url: `https://www.foundationrisk.org/services/foundation-repair/${slug}`,
+      telephone: "+1-800-555-0199",
+      priceRange: "$$$$",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: city,
+        addressRegion: state,
+        postalCode: location.zip_code,
+        addressCountry: "US",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: location.latitude,
+        longitude: location.longitude,
+      },
+      areaServed: {
+        "@type": "GeoShape",
+        postalCode: location.zip_code,
+        addressCountry: "US",
+      }
     },
-    areaServed: {
-      "@type": "GeoShape",
-      postalCode: location.zip_code,
-      addressCountry: "US",
-    },
-    knowsAbout: [
-      "Foundation Repair",
-      "Forensic Engineering",
-      soil?.map_unit_name || "Expansive Clay",
-      "Plasticity Index Analysis",
-      "Steel Pier Underpinning",
-    ],
-    reviewedBy: {
-      "@type": "Person",
-      name: "Elias Thorne, P.E.",
-      jobTitle: "Senior Geotechnical Lead",
-      alumniOf: "Texas A&M University",
-      url: "https://foundationrisk.org/about/elias-thorne",
-      description:
-        "Licensed Professional Engineer (TX-PE-88XXXX). Oversight credentials available upon request during Forensic Analysis.",
-    },
-    hasOfferCatalog: {
-      "@type": "OfferCatalog",
-      name: "Foundation Stabilization Services",
-      itemListElement: [
-        {
-          "@type": "Offer",
-          itemOffered: {
-            "@type": "Service",
-            name: "Forensic Foundation Inspection",
-            description: `Engineer-led analysis of ${soil?.map_unit_name} impact on slab-on-grade foundations.`,
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: `Foundation Repair in ${city}, ${state}`,
+      serviceType: "Foundation Repair",
+      provider: {
+        "@type": "HomeAndConstructionBusiness",
+        name: "The Foundation Risk Registry",
+      },
+      areaServed: {
+        "@type": "City",
+        name: city,
+      },
+      description: `Permanent foundation repair and forensic engineering for homes in ${city}, TX affected by ${soil?.map_unit_name}.`,
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Foundation Stabilization Services",
+        itemListElement: [
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Forensic Foundation Inspection",
+            },
           },
-        },
-        {
-          "@type": "Offer",
-          itemOffered: {
-            "@type": "Service",
-            name: "Deep Steel Pier Installation",
-            description:
-              "Bypassing the active clay zone to reach stable load-bearing strata.",
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Deep Steel Pier Installation",
+            },
           },
-        },
-      ],
+        ],
+      }
     },
-    mainEntity: {
+    {
+      "@context": "https://schema.org",
       "@type": "FAQPage",
       mainEntity: faqs.map((f) => ({
         "@type": "Question",
         name: f.q,
         acceptedAnswer: { "@type": "Answer", text: f.a },
-      })),
+      }))
     },
-    breadcrumb: {
+    {
+      "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
         {
@@ -256,8 +259,8 @@ export default async function CityPage({
           item: `https://www.foundationrisk.org/services/foundation-repair/${slug}`,
         },
       ],
-    },
-  };
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)]">
@@ -299,6 +302,28 @@ export default async function CityPage({
               >
                 <ShieldCheck className="w-5 h-5" /> Request Forensic Analysis
               </Link>
+            </div>
+            
+            {/* HERO TRUST BADGES */}
+            <div className="mt-8 pt-6 border-t border-slate-700/50 flex flex-wrap items-center gap-6">
+              <div className="flex items-center gap-2 text-slate-300">
+                <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center border border-blue-500/30">
+                  <span className="text-blue-400 font-extrabold text-[11px]">A+</span>
+                </div>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">BBB Accredited</span>
+              </div>
+              <div className="flex items-center gap-2 text-slate-300">
+                <div className="w-8 h-8 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-500/30">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                </div>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Licensed TX P.E.</span>
+              </div>
+              <div className="flex items-center gap-2 text-slate-300">
+                <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center border border-blue-500/30">
+                  <ShieldCheck className="w-4 h-4 text-blue-400" />
+                </div>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Lifetime Warranty</span>
+              </div>
             </div>
           </div>
           <div className="relative">
