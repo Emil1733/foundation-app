@@ -96,7 +96,42 @@ export default function RootLayout({
           {children}
         </div>
         <footer className="bg-slate-900 border-t border-slate-800 text-slate-400 py-12 px-6 text-center text-sm">
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-5xl mx-auto">
+            {/* SEO Internal Linking Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-left mb-10 border-b border-slate-800 pb-10">
+              <div>
+                <h4 className="text-white font-bold mb-4">Dallas Metro</h4>
+                <ul className="space-y-2 text-slate-400">
+                  <li><Link href="/services/foundation-repair/dallas-tx" className="hover:text-white transition">Dallas Foundation Repair</Link></li>
+                  <li><Link href="/services/foundation-repair/fort-worth-tx" className="hover:text-white transition">Fort Worth</Link></li>
+                  <li><Link href="/services/foundation-repair/frisco-tx" className="hover:text-white transition">Frisco</Link></li>
+                  <li><Link href="/services/foundation-repair/plano-tx" className="hover:text-white transition">Plano</Link></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4">Houston Metro</h4>
+                <ul className="space-y-2 text-slate-400">
+                  <li><Link href="/services/foundation-repair/houston-tx" className="hover:text-white transition">Houston Foundation Repair</Link></li>
+                  <li><Link href="/services/foundation-repair/katy-tx" className="hover:text-white transition">Katy</Link></li>
+                  <li><Link href="/services/foundation-repair/sugar-land-tx" className="hover:text-white transition">Sugar Land</Link></li>
+                  <li><Link href="/services/foundation-repair/cypress-tx" className="hover:text-white transition">Cypress</Link></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4">Austin Metro</h4>
+                <ul className="space-y-2 text-slate-400">
+                  <li><Link href="/services/foundation-repair/austin-tx" className="hover:text-white transition">Austin Foundation Repair</Link></li>
+                  <li><Link href="/services/foundation-repair/round-rock-tx" className="hover:text-white transition">Round Rock</Link></li>
+                  <li><Link href="/services/foundation-repair/cedar-park-tx" className="hover:text-white transition">Cedar Park</Link></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4">Coverage Hub</h4>
+                <ul className="space-y-2 text-slate-400">
+                  <li><Link href="/locations" className="hover:text-white transition text-blue-400 font-medium">View All Texas Locations &rarr;</Link></li>
+                </ul>
+              </div>
+            </div>
             <nav className="flex flex-wrap justify-center gap-6 mb-8">
               <Link href="/about" className="hover:text-white transition group">
                 <span className="text-slate-400 group-hover:text-white">About Us</span>
