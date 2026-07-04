@@ -74,8 +74,8 @@ export async function generateMetadata({
 
   const zipCode = location.zip_code || "";
   return {
-    title: `Stop Foundation Damage in ${location.city}: Foundation Distress Identification & Free Evaluation`,
-    description: `⚠️ CRITICAL: Foundations in ${location.city} are failing at record rates due to ${soilName} expansion. Get a Free Forensic Evaluation and USDA Soil Risk Analysis today before repair costs skyrocket.`,
+    title: `Foundation Repair ${location.city}, TX | Free Foundation Evaluation`,
+    description: `Top-rated foundation repair in ${location.city}, TX. Is ${soilName} damaging your home? Get a free structural evaluation and permanent steel pier solutions.`,
     alternates: {
       canonical: `https://foundationrisk.org/services/foundation-repair/${slug}`,
     },
@@ -277,20 +277,20 @@ export default async function CityPage({
                 Geological Authority in {city}, {state}
               </span>
             </div>
-            <h1 className="text-3xl md:text-6xl font-extrabold mb-6 leading-tight">
-              Foundation Distress <br />
+            <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+              Expert Foundation Repair <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">
-                Identification & Evaluation: {city} {location.zip_code}
+                in {city}, {state}
               </span>
             </h1>
             <p className="text-slate-300 text-lg mb-10 leading-relaxed max-w-lg">
               Serving{" "}
               <strong>
-                {city}, {state} ({location.zip_code})
+                {city}, {state}
               </strong>
               . Our forensic engineers identify foundation distress caused by{" "}
-              <strong>{soil?.map_unit_name}</strong> — settling, cracking, and
-              structural failure rooted in your soil, not just your concrete.
+              <strong>{soil?.map_unit_name}</strong> — stopping settling, cracking, and
+              structural failure permanently.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
