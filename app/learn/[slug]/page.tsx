@@ -67,7 +67,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             title: `${cityData.city} Foundation Settling Warning: ${mapUnit} Soil Risk Analysis`,
             description: `Is your foundation at risk? Our forensic analysis of ${mapUnit} in ${cityData.city} shows a Plasticity Index of ${pi}. See how this soil destroys slabs and the exact engineering protocols to stop it.`,
             alternates: {
-                canonical: `/learn/${slug}`,
+                canonical: `https://foundationrisk.org/learn/${slug}`,
             },
         };
     } catch (e) {
@@ -102,6 +102,39 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
         // LOGIC: DYNAMIC ADVICE BASED ON PI
         const isHighRisk = pi > 25;
         const isModerate = pi > 15 && pi <= 25;
+        const citySlug = params.slug.replace('-soil-analysis', '');
+
+        // 2. Fetch "Nearby" Cities (Spiderweb - Nearest Neighbor Logic)
+        const { data: allLocations } = await supabase
+            .from("target_locations")
+            .select("city, slug, latitude, longitude");
+
+        let neighbors: any[] = [];
+
+        if (allLocations && cityData.latitude && cityData.longitude) {
+            const getDist = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+                const R = 6371; // km
+                const dLat = ((lat2 - lat1) * Math.PI) / 180;
+                const dLon = ((lon2 - lon1) * Math.PI) / 180;
+                const a =
+                    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos((lat1 * Math.PI) / 180) *
+                    Math.cos((lat2 * Math.PI) / 180) *
+                    Math.sin(dLon / 2) *
+                    Math.sin(dLon / 2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                return R * c;
+            };
+
+            neighbors = allLocations
+                .filter((l) => l.slug !== citySlug)
+                .map((l) => ({
+                    ...l,
+                    dist: getDist(cityData.latitude, cityData.longitude, l.latitude, l.longitude),
+                }))
+                .sort((a, b) => a.dist - b.dist)
+                .slice(0, 6);
+        }
 
         // SCHEMA.ORG JSON-LD (E-E-A-T & BREADCRUMBS)
         const jsonLd = {
@@ -113,12 +146,18 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                         {
                             "@type": "ListItem",
                             "position": 1,
-                            "name": "Education Hub",
-                            "item": "https://foundationrisk.org/learn"
+                            "name": "Service Areas",
+                            "item": "https://foundationrisk.org/locations"
                         },
                         {
                             "@type": "ListItem",
                             "position": 2,
+                            "name": `${cityData.city} Foundation Repair`,
+                            "item": `https://foundationrisk.org/services/foundation-repair/${citySlug}`
+                        },
+                        {
+                            "@type": "ListItem",
+                            "position": 3,
                             "name": `${cityData.city} Soil Analysis`,
                             "item": `https://foundationrisk.org/learn/${params.slug}`
                         }
@@ -163,7 +202,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                 {/* STICKY MOBILE CTA */}
             <div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 p-4 z-50">
                 <Link href="/book-analysis" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2">
-                    <ShieldCheck className="w-5 h-5" /> Request Forensic Analysis
+                    <ShieldCheck className="w-5 h-5" /> Get a Free Inspection
                 </Link>
             </div>
                 <article className="max-w-3xl mx-auto py-12 px-6">
@@ -235,7 +274,8 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                         <h2 className="text-2xl font-bold text-slate-900 mt-8">Why {cityData.city} Foundations Fail</h2>
                         <p>
                             If you live in {neighborhoodNames.slice(0, 3).join(', ')}, or {neighborhoodNames[3] || 'surrounding areas'},
-                            your home is interacting with this critical geology. Unlike stable sandy loams, {soil?.component_name} clay moves.
+                            your home is interacting with this critical geology. Unlike stable sandy loams, {soil?.component_name} clay moves. 
+                            Because of this severe movement, homeowners experiencing active structural settlement should immediately consult our <Link href={`/services/foundation-repair/${citySlug}`} className="text-blue-600 hover:underline font-semibold">{cityData.city} Foundation Repair</Link> engineering team.
                         </p>
                         <p>
                             The defining metric is the <strong>Plasticity Index (PI) of {pi.toFixed(1)}</strong>.
@@ -306,7 +346,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                                 </div>
                                 <div>
                                     <h3 className="text-xl font-bold">Apply these Findings to your Home</h3>
-                                    <p className="text-blue-100 text-sm">Request a Forensic Engineering Review for your specific street address.</p>
+                                    <p className="text-blue-100 text-sm">Request a Free Foundation Inspection for your specific street address.</p>
                                 </div>
                             </div>
                             <AddressAutocomplete city={cityData.city} />
@@ -326,6 +366,27 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                                 </span>
                             ))}
                         </div>
+
+                        {/* SPIDERWEB (NEARBY CITIES) */}
+                        {neighbors && neighbors.length > 0 && (
+                            <div className="mt-12 mb-8 border-t border-slate-200 pt-10 not-prose">
+                                <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                                    <MapPin className="w-5 h-5 text-blue-600" /> Nearby Regional Soil Reports
+                                </h3>
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    {neighbors.map((n) => (
+                                        <Link
+                                            key={n.slug}
+                                            href={`/learn/${n.slug}-soil-analysis`}
+                                            prefetch={false}
+                                            className="text-slate-500 hover:text-blue-600 text-sm flex items-center gap-2 transition-colors border border-slate-100 p-3 rounded-lg hover:border-blue-100 hover:bg-blue-50"
+                                        >
+                                            <Activity className="w-4 h-4 text-slate-300" /> {n.city} Soil Data
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* CTA FOOTER */}

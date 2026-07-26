@@ -24,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // NEW: Programmatic Soil Reports (/learn/...)
     const articleUrls = locations.map((loc) => ({
         url: `${BASE_URL}/learn/${loc.slug}-soil-analysis`,
-        lastModified: new Date(),
+        lastModified: new Date(loc.created_at),
         changeFrequency: 'weekly' as const,
         priority: 0.8, // Deeper educational content
     }));

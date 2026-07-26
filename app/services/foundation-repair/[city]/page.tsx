@@ -74,8 +74,8 @@ export async function generateMetadata({
 
   const zipCode = location.zip_code || "";
   return {
-    title: `Foundation Repair ${location.city}, TX | Free Foundation Evaluation`,
-    description: `Top-rated foundation repair in ${location.city}, TX. Is ${soilName} damaging your home? Get a free structural evaluation and permanent steel pier solutions.`,
+    title: `${location.city} Foundation Repair | Forensic Engineers & Soil Analysis`,
+    description: `Expert foundation repair in ${location.city}, TX. Is ${soilName} settling your home? Consult our forensic engineers for a scientific structural evaluation.`,
     alternates: {
       canonical: `https://foundationrisk.org/services/foundation-repair/${slug}`,
     },
@@ -281,7 +281,7 @@ export default async function CityPage({
               </span>
             </div>
             <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-              Expert Foundation Repair <br />
+              Forensic Foundation Repair & Engineering{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">
                 in {city}, {state}
               </span>
@@ -300,7 +300,7 @@ export default async function CityPage({
                 href="/book-analysis"
                 className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition hover:shadow-lg"
               >
-                <ShieldCheck className="w-5 h-5" /> Request Forensic Analysis
+                <ShieldCheck className="w-5 h-5" /> Get a Free Foundation Inspection
               </Link>
             </div>
             
@@ -433,7 +433,7 @@ export default async function CityPage({
               >
                 <div>
                   <span className="block font-bold text-slate-900 group-hover:text-blue-700 transition">
-                    View Full Forensic Soil Analysis
+                    View Local Soil Risk Report
                   </span>
                   <span className="text-sm text-slate-500">
                     Deep dive into {soil?.map_unit_name || "local soil"} risks
@@ -689,7 +689,7 @@ export default async function CityPage({
           href="/book-analysis"
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2"
         >
-          <ShieldCheck className="w-5 h-5" /> Request Forensic Analysis
+          <ShieldCheck className="w-5 h-5" /> Get a Free Inspection
         </Link>
       </div>
     </div>

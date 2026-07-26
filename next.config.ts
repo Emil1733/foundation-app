@@ -4,6 +4,15 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: 'c:/Users/tevat/nicheanalyzer/foundation-app',
   },
+  async redirects() {
+    return [
+      {
+        source: '/services/foundation-repair/:city([\\w-]+)-\\d{5}',
+        destination: '/services/foundation-repair/:city',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
