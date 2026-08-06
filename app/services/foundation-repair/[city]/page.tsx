@@ -17,6 +17,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
+export const revalidate = 0; // Force Next.js to bypass the aggressive cache
+
 // SSG: Build pages for all cities
 export async function generateStaticParams() {
   const { data: locations } = await supabase
@@ -270,9 +272,9 @@ export default async function CityPage({
       />
 
       {/* HERO */}
-      <header className="bg-slate-900 text-white py-12 md:py-20 px-6 relative overflow-hidden">
+      <header className="bg-slate-900 text-white py-8 md:py-12 px-6 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-800 to-slate-950 -z-10" />
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           <div>
             <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 px-4 py-1.5 rounded-full text-blue-200 text-sm font-semibold mb-8 backdrop-blur-sm">
               <ShieldCheck className="w-4 h-4 text-blue-400" />
@@ -286,7 +288,7 @@ export default async function CityPage({
                 in {city}, {state}
               </span>
             </h1>
-            <p className="text-slate-300 text-lg mb-10 leading-relaxed max-w-lg">
+            <p className="text-slate-300 text-lg mb-6 leading-relaxed max-w-lg">
               Serving{" "}
               <strong>
                 {city}, {state}
@@ -305,7 +307,7 @@ export default async function CityPage({
             </div>
             
             {/* HERO TRUST BADGES */}
-            <div className="mt-8 pt-6 border-t border-slate-700/50 flex flex-wrap items-center gap-6">
+            <div className="mt-6 pt-6 border-t border-slate-700/50 flex flex-wrap items-center gap-6">
               <div className="flex items-center gap-2 text-slate-300">
                 <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center border border-blue-500/30">
                   <span className="text-blue-400 font-extrabold text-[11px]">A+</span>
@@ -316,7 +318,7 @@ export default async function CityPage({
                 <div className="w-8 h-8 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-500/30">
                   <ShieldCheck className="w-4 h-4 text-emerald-400" />
                 </div>
-                <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Licensed TX P.E.</span>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Licensed {state} P.E.</span>
               </div>
               <div className="flex items-center gap-2 text-slate-300">
                 <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center border border-blue-500/30">

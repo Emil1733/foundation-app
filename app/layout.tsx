@@ -132,7 +132,7 @@ export default function RootLayout({
                   <li><Link href="/services/foundation-repair/lewisville-tx" className="hover:text-white transition">Lewisville</Link></li>
                   <li><Link href="/services/foundation-repair/denton-tx" className="hover:text-white transition">Denton</Link></li>
                   <li><Link href="/services/foundation-repair/roanoke-tx" className="hover:text-white transition">Roanoke</Link></li>
-                  <li><Link href="/locations" className="hover:text-white transition text-blue-400 font-medium pt-2 block">View All Texas Locations &rarr;</Link></li>
+                  <li><Link href="/locations" className="hover:text-white transition text-blue-400 font-medium pt-2 block">View All Service Locations &rarr;</Link></li>
                 </ul>
               </div>
             </div>
@@ -154,17 +154,17 @@ export default function RootLayout({
               </Link>
             </nav>
             <p className="mb-4 text-slate-400">
-              <strong>E-E-A-T Compliance:</strong> Engineering oversight provided by licensed Texas P.E.s. <br className="hidden sm:block" />
+              <strong>E-E-A-T Compliance:</strong> Engineering oversight provided by licensed structural P.E.s. <br className="hidden sm:block" />
               This registry is an independent geological database and is not affiliated with any specific foundation repair contractor. 
               <br className="hidden sm:block" />
-              Geotechnical credentials and P.E. licenses (TX-PE-88XXXX) are available upon request during the Forensic Analysis phase.
+              Geotechnical credentials and P.E. licenses (e.g., TX-PE-88XXXX) are available upon request during the Forensic Analysis phase.
             </p>
             <div className="mb-8 pt-6 border-t border-slate-800">
-              <p className="text-slate-300 font-bold mb-2">The Foundation Risk Registry Headquarters</p>
+              <p className="text-slate-300 font-bold mb-2">The Foundation Risk Registry National Headquarters</p>
               <p className="text-slate-500">
                 1401 Lavaca St, Austin, TX 78701<br />
                 Phone: <a href="tel:+1-800-555-0199" className="hover:text-blue-400 transition">+1-800-555-0199</a><br />
-                <em>Serving all major Texas metropolitan areas.</em>
+                <em>Serving all major U.S. metropolitan areas in high-risk soil zones.</em>
               </p>
             </div>
             <p className="text-slate-500 text-xs">&copy; {new Date().getFullYear()} The Foundation Risk Registry. Official Soil Data ingested from USDA/SSURGO and USGS databases.</p>

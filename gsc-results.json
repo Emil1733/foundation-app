@@ -1,13 +1,13 @@
 {
-  "dateRange": "2026-06-23 to 2026-07-23",
+  "dateRange": "2026-07-05 to 2026-08-04",
   "overall": {
     "keys": [
       "usa"
     ],
-    "clicks": 4,
-    "impressions": 1397,
-    "ctr": 0.002863278453829635,
-    "position": 20.432355046528276
+    "clicks": 12,
+    "impressions": 2670,
+    "ctr": 0.0044943820224719105,
+    "position": 22.929588014981274
   },
   "topQueries": [
     {
@@ -33,36 +33,36 @@
         "abilene foundation"
       ],
       "clicks": 0,
-      "impressions": 1,
+      "impressions": 4,
       "ctr": 0,
-      "position": 26
+      "position": 24.75
     },
     {
       "keys": [
         "abilene foundation repair"
       ],
       "clicks": 0,
-      "impressions": 4,
+      "impressions": 9,
       "ctr": 0,
-      "position": 39.75
+      "position": 28.666666666666668
     },
     {
       "keys": [
         "abilene foundation repair abilene tx"
       ],
       "clicks": 0,
-      "impressions": 2,
+      "impressions": 9,
       "ctr": 0,
-      "position": 32
+      "position": 18.555555555555557
     },
     {
       "keys": [
         "affordable foundation repair solutions abilene, tx"
       ],
       "clicks": 0,
-      "impressions": 1,
+      "impressions": 4,
       "ctr": 0,
-      "position": 31
+      "position": 20.75
     },
     {
       "keys": [
@@ -87,108 +87,108 @@
         "allen tx foundation crack repair"
       ],
       "clicks": 0,
-      "impressions": 3,
+      "impressions": 1,
       "ctr": 0,
-      "position": 62.666666666666664
+      "position": 46
     },
     {
       "keys": [
         "allen tx foundation repair"
       ],
       "clicks": 0,
-      "impressions": 9,
+      "impressions": 3,
       "ctr": 0,
-      "position": 9.444444444444445
-    },
-    {
-      "keys": [
-        "allen tx foundation repair company"
-      ],
-      "clicks": 0,
-      "impressions": 1,
-      "ctr": 0,
-      "position": 96
+      "position": 9.333333333333334
     },
     {
       "keys": [
         "austin foundation inspection"
       ],
       "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 42
+    },
+    {
+      "keys": [
+        "basement repair near me"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 8
+    },
+    {
+      "keys": [
+        "basement stabilization abilene, tx"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 50
+    },
+    {
+      "keys": [
+        "baytown foundation repair"
+      ],
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0,
+      "position": 14
+    },
+    {
+      "keys": [
+        "best foundation repair near me"
+      ],
+      "clicks": 0,
       "impressions": 3,
       "ctr": 0,
-      "position": 46.333333333333336
+      "position": 10
     },
     {
       "keys": [
         "big country foundation repair"
       ],
       "clicks": 0,
-      "impressions": 10,
+      "impressions": 23,
       "ctr": 0,
-      "position": 18.3
+      "position": 18.82608695652174
     },
     {
       "keys": [
-        "cedar park foundation repair"
+        "carrollton foundation crack repair"
       ],
       "clicks": 0,
-      "impressions": 5,
+      "impressions": 4,
       "ctr": 0,
-      "position": 32.4
+      "position": 12.25
     },
     {
       "keys": [
-        "commercial foundation inspections in lewisville, tx"
+        "carrollton foundation repair"
       ],
       "clicks": 0,
-      "impressions": 3,
+      "impressions": 13,
       "ctr": 0,
-      "position": 46.333333333333336
+      "position": 47.38461538461539
     },
     {
       "keys": [
-        "east texas foundation repair"
-      ],
-      "clicks": 0,
-      "impressions": 1,
-      "ctr": 0,
-      "position": 47
-    },
-    {
-      "keys": [
-        "engineer foundation report"
+        "carrollton house foundation repair"
       ],
       "clicks": 0,
       "impressions": 1,
       "ctr": 0,
-      "position": 78
+      "position": 72
     },
     {
       "keys": [
-        "engineered foundation repair system abilene, tx"
+        "carrollton tx foundation crack repair"
       ],
       "clicks": 0,
-      "impressions": 5,
+      "impressions": 4,
       "ctr": 0,
-      "position": 11.4
-    },
-    {
-      "keys": [
-        "expansive soil remediation fort worth"
-      ],
-      "clicks": 0,
-      "impressions": 3,
-      "ctr": 0,
-      "position": 16.333333333333336
-    },
-    {
-      "keys": [
-        "expert foundation repair near me abilene, tx"
-      ],
-      "clicks": 0,
-      "impressions": 3,
-      "ctr": 0,
-      "position": 13.666666666666666
+      "position": 15.25
     }
   ]
 }
