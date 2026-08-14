@@ -4,13 +4,16 @@ import { supabase } from '@/lib/supabase';
 // TODO: Update this to your real custom domain when you buy one.
 const BASE_URL = 'https://foundationrisk.org';
 
+export const revalidate = 0; // CRITICAL: Force Next.js to dynamically render the sitemap so new cities appear instantly
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // 1. Fetch all cities 
     // We limit to 50,000 as that is the standard sitemap limit per file.
     // If we grow larger, we will need sitemap indices.
     const { data: locations } = await supabase
         .from('target_locations')
-        .select('slug, created_at');
+        .select('slug, created_at')
+        .limit(50000); // CRITICAL: Supabase defaults to 1,000 rows without this limit!
 
     if (!locations) return [];
 

@@ -1,15 +1,24 @@
 {
-  "dateRange": "2026-07-05 to 2026-08-04",
+  "dateRange": "2026-07-13 to 2026-08-12",
   "overall": {
     "keys": [
       "usa"
     ],
-    "clicks": 12,
-    "impressions": 2670,
-    "ctr": 0.0044943820224719105,
-    "position": 22.929588014981274
+    "clicks": 14,
+    "impressions": 4235,
+    "ctr": 0.003305785123966942,
+    "position": 19.339079102715466
   },
   "topQueries": [
+    {
+      "keys": [
+        "\"charles clay\""
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 39
+    },
     {
       "keys": [
         "75063"
@@ -42,18 +51,18 @@
         "abilene foundation repair"
       ],
       "clicks": 0,
-      "impressions": 9,
+      "impressions": 10,
       "ctr": 0,
-      "position": 28.666666666666668
+      "position": 27.1
     },
     {
       "keys": [
         "abilene foundation repair abilene tx"
       ],
       "clicks": 0,
-      "impressions": 9,
+      "impressions": 10,
       "ctr": 0,
-      "position": 18.555555555555557
+      "position": 18.1
     },
     {
       "keys": [
@@ -66,24 +75,6 @@
     },
     {
       "keys": [
-        "allen foundation repair"
-      ],
-      "clicks": 0,
-      "impressions": 3,
-      "ctr": 0,
-      "position": 10.666666666666666
-    },
-    {
-      "keys": [
-        "allen foundation repair companies"
-      ],
-      "clicks": 0,
-      "impressions": 1,
-      "ctr": 0,
-      "position": 52
-    },
-    {
-      "keys": [
         "allen tx foundation crack repair"
       ],
       "clicks": 0,
@@ -93,21 +84,12 @@
     },
     {
       "keys": [
-        "allen tx foundation repair"
-      ],
-      "clicks": 0,
-      "impressions": 3,
-      "ctr": 0,
-      "position": 9.333333333333334
-    },
-    {
-      "keys": [
-        "austin foundation inspection"
+        "austin foundation problems"
       ],
       "clicks": 0,
       "impressions": 1,
       "ctr": 0,
-      "position": 42
+      "position": 30
     },
     {
       "keys": [
@@ -132,9 +114,18 @@
         "baytown foundation repair"
       ],
       "clicks": 0,
-      "impressions": 6,
+      "impressions": 10,
       "ctr": 0,
-      "position": 14
+      "position": 13.1
+    },
+    {
+      "keys": [
+        "bedford foundation repair"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 11
     },
     {
       "keys": [
@@ -150,45 +141,54 @@
         "big country foundation repair"
       ],
       "clicks": 0,
-      "impressions": 23,
+      "impressions": 24,
       "ctr": 0,
-      "position": 18.82608695652174
+      "position": 18.791666666666668
+    },
+    {
+      "keys": [
+        "buda foundation repair"
+      ],
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0,
+      "position": 13.75
+    },
+    {
+      "keys": [
+        "buda texas foundation repair company"
+      ],
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 14
     },
     {
       "keys": [
         "carrollton foundation crack repair"
       ],
       "clicks": 0,
-      "impressions": 4,
+      "impressions": 17,
       "ctr": 0,
-      "position": 12.25
+      "position": 12.117647058823529
     },
     {
       "keys": [
         "carrollton foundation repair"
       ],
       "clicks": 0,
-      "impressions": 13,
+      "impressions": 39,
       "ctr": 0,
-      "position": 47.38461538461539
+      "position": 26.307692307692307
     },
     {
       "keys": [
-        "carrollton house foundation repair"
+        "carrollton foundation repair company"
       ],
       "clicks": 0,
-      "impressions": 1,
+      "impressions": 5,
       "ctr": 0,
-      "position": 72
-    },
-    {
-      "keys": [
-        "carrollton tx foundation crack repair"
-      ],
-      "clicks": 0,
-      "impressions": 4,
-      "ctr": 0,
-      "position": 15.25
+      "position": 18
     }
   ]
 }

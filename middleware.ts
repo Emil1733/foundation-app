@@ -2,32 +2,43 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const hostname = request.headers.get('host');
+    const { pathname } = request.nextUrl;
 
-  // If the host starts with www, redirect to non-www
-  if (hostname?.startsWith('www.')) {
-    const newHostname = hostname.replace('www.', '');
-    const url = request.nextUrl.clone();
-    
-    // Construct the new URL (forcing https as well for security/SEO)
-    const newUrl = `https://${newHostname}${url.pathname}${url.search}`;
-    
-    return NextResponse.redirect(newUrl, 301);
-  }
+    // Only apply this to the service area pages for now (and explicitly testing with dallas-tx or atlanta-ga)
+    if (pathname.startsWith('/services/foundation-repair/')) {
+        const slug = pathname.split('/').pop();
+        
+        // SAFE TESTING MODE: Only activate for these two cities
+        if (slug !== 'dallas-tx' && slug !== 'atlanta-ga') {
+            return NextResponse.next();
+        }
 
-  return NextResponse.next();
+        const acceptHeader = request.headers.get('accept') || '';
+
+        // If it's an AI Agent (requesting JSON or Markdown)
+        if (acceptHeader.includes('application/json') || acceptHeader.includes('text/markdown')) {
+            // Rewrite the request to our hidden API endpoint instead of the React page
+            const agentUrl = new URL(`/api/agent/soil-data`, request.url);
+            
+            // Rewrite internally (the URL doesn't change for the client)
+            const response = NextResponse.rewrite(agentUrl);
+            
+            // CRITICAL: Add the Vary header for SEO compliance
+            response.headers.set('Vary', 'Accept');
+            response.headers.set('x-agent-slug', slug || '');
+            return response;
+        }
+
+        // If it's a Human (HTML), just pass it through normally
+        const response = NextResponse.next();
+        response.headers.set('Vary', 'Accept');
+        return response;
+    }
+
+    return NextResponse.next();
 }
 
-// Only run on document requests, not assets or APIs
+// Ensure the middleware only runs on specific paths to save edge compute
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
-  ],
+    matcher: '/services/foundation-repair/:path*',
 };

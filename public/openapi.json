@@ -1,0 +1,106 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Foundation Risk Registry Agent API",
+    "description": "API for autonomous AI agents to check local geological soil risks and book forensic foundation repair consultations.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://foundationrisk.org"
+    }
+  ],
+  "paths": {
+    "/api/agent/soil-data": {
+      "get": {
+        "summary": "Retrieve geological soil data for a specific city.",
+        "operationId": "getSoilData",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "query",
+            "description": "The URL slug of the city (e.g., dallas-tx).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of soil data and diagnostic.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "city": { "type": "string" },
+                    "state": { "type": "string" },
+                    "soil_type": { "type": "string" },
+                    "plasticity_index": { "type": "number" },
+                    "risk_level": { "type": "string" },
+                    "diagnostic": { "type": "string" },
+                    "agent_booking_endpoint": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agent/book": {
+      "post": {
+        "summary": "Autonomously book a forensic engineering consultation.",
+        "operationId": "bookConsultation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The full name of the homeowner."
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "The contact phone number of the homeowner."
+                  },
+                  "city": {
+                    "type": "string",
+                    "description": "The city where the property is located."
+                  },
+                  "soil_symptoms": {
+                    "type": "string",
+                    "description": "A description of the foundation issues (e.g., cracking, bowing)."
+                  }
+                },
+                "required": ["name", "phone", "city"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consultation successfully booked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" },
+                    "lead_id": { "type": "string" },
+                    "confirmation_code": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

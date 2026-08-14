@@ -72,6 +72,23 @@ export default function RootLayout({
       "telephone": "+1-800-555-0199",
       "contactType": "customer service",
       "areaServed": "US"
+    },
+    "potentialAction": {
+      "@type": "QuoteAction",
+      "name": "Book Forensic Engineering Evaluation",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://foundationrisk.org/api/agent/book",
+        "inLanguage": "en-US",
+        "actionPlatform": [
+          "http://schema.org/DesktopWebPlatform",
+          "http://schema.org/MobileWebPlatform"
+        ]
+      },
+      "result": {
+        "@type": "Reservation",
+        "name": "Forensic Engineering Evaluation"
+      }
     }
   };
 

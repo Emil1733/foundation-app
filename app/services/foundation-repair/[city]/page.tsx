@@ -76,8 +76,8 @@ export async function generateMetadata({
 
   const zipCode = location.zip_code || "";
   return {
-    title: `${location.city} Foundation Repair | Forensic Engineers & Soil Analysis`,
-    description: `Expert foundation repair in ${location.city}, TX. Is ${soilName} settling your home? Consult our forensic engineers for a scientific structural evaluation.`,
+    title: `${location.city} Foundation Repair | Forensic Engineers`,
+    description: `Expert foundation repair in ${location.city}, ${location.state}. Is ${soilName} settling your home? Consult our forensic engineers for a scientific structural evaluation.`,
     alternates: {
       canonical: `https://foundationrisk.org/services/foundation-repair/${slug}`,
     },
@@ -168,7 +168,7 @@ export default async function CityPage({
       a: `Foundation distress identification in ${city} focuses on three key signals: (1) Diagonal cracks at door/window corners, indicating differential settlement; (2) Visible gaps between walls and ceiling/floor, indicating clay heave; (3) Sticking doors or sloping floors, indicating active soil movement under the slab. Because ${city} sits on ${soil?.map_unit_name || 'high-plasticity soils'}, these symptoms often worsen during drought-to-rain cycles.`,
     },
     {
-      q: `What causes foundation settling in ${city}, TX?`,
+      q: `What causes foundation settling in ${city}, ${state}?`,
       a: `Foundation settling in ${city} is primarily caused by moisture-driven volume change in the underlying soil — specifically the ${soil?.map_unit_name || 'expansive clay'}. During droughts, the clay shrinks and the slab drops. During rain seasons, the clay swells and lifts. With a Plasticity Index of ${soil?.plasticity_index || 30}+, this cycle causes cumulative structural fatigue that eventually requires piering or leveling to correct.`,
     },
   ];
@@ -213,7 +213,7 @@ export default async function CityPage({
         "@type": "City",
         name: city,
       },
-      description: `Permanent foundation repair and forensic engineering for homes in ${city}, TX affected by ${soil?.map_unit_name}.`,
+      description: `Permanent foundation repair and forensic engineering for homes in ${city}, ${state} affected by ${soil?.map_unit_name}.`,
       hasOfferCatalog: {
         "@type": "OfferCatalog",
         name: "Foundation Stabilization Services",
