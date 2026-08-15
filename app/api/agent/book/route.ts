@@ -5,29 +5,9 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!; // We use the service key to bypass RLS for inserts
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Simple in-memory rate limiter (Works well for warm serverless functions)
-const rateLimitMap = new Map<string, { count: number, resetTime: number }>();
-const MAX_BOOKINGS_PER_HOUR = 3;
-
 export async function POST(request: Request) {
     try {
-        // --- 1. SPAM DEFENSE (RATE LIMITING) ---
-        const ip = request.headers.get('x-forwarded-for') || 'unknown_ip';
-        const now = Date.now();
-        const clientData = rateLimitMap.get(ip);
-
-        if (clientData && now < clientData.resetTime) {
-            if (clientData.count >= MAX_BOOKINGS_PER_HOUR) {
-                console.warn(`🛑 [SPAM BLOCKED] IP ${ip} exceeded ${MAX_BOOKINGS_PER_HOUR} bookings/hr.`);
-                return NextResponse.json({ error: "Rate limit exceeded. Please try again later." }, { status: 429 });
-            }
-            clientData.count += 1;
-        } else {
-            // Reset or initialize the counter (1 hour from now)
-            rateLimitMap.set(ip, { count: 1, resetTime: now + 3600000 });
-        }
-
-        // --- 2. PARSE PAYLOAD ---
+        // --- 1. PARSE PAYLOAD ---
         const body = await request.json();
         const { name, phone, city, soil_symptoms } = body;
 
@@ -36,6 +16,24 @@ export async function POST(request: Request) {
                 { error: "Missing required fields (name, phone, city)" }, 
                 { status: 400 }
             );
+        }
+
+        // --- 2. SPAM DEFENSE (STATEFUL DB RATE LIMITING) ---
+        // Instead of using an in-memory Map (which resets on every Vercel Edge instance),
+        // we use the actual database as our shared global state.
+        const oneHourAgo = new Date(Date.now() - 3600000).toISOString();
+        
+        const { count, error: countError } = await supabase
+            .from('ai_agent_leads')
+            .select('*', { count: 'exact', head: true })
+            .eq('phone', phone)
+            .gte('created_at', oneHourAgo);
+
+        if (countError) {
+            console.error("Rate Limit DB Error:", countError);
+        } else if (count !== null && count >= 2) {
+            console.warn(`🛑 [SPAM BLOCKED] Phone ${phone} submitted too many times.`);
+            return NextResponse.json({ error: "Duplicate lead detected. Please try again later." }, { status: 429 });
         }
 
         const userAgent = request.headers.get('user-agent') || 'Unknown_Agent';
