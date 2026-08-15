@@ -7,15 +7,28 @@ const BASE_URL = 'https://foundationrisk.org';
 export const revalidate = 0; // CRITICAL: Force Next.js to dynamically render the sitemap so new cities appear instantly
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    // 1. Fetch all cities 
-    // We limit to 50,000 as that is the standard sitemap limit per file.
-    // If we grow larger, we will need sitemap indices.
-    const { data: locations } = await supabase
-        .from('target_locations')
-        .select('slug, created_at')
-        .limit(50000); // CRITICAL: Supabase defaults to 1,000 rows without this limit!
+    // 1. Fetch all cities using a pagination loop to bypass the Supabase 1,000 row hard limit
+    let locations: any[] = [];
+    let from = 0;
+    const step = 1000;
+    let hasMore = true;
 
-    if (!locations) return [];
+    while (hasMore) {
+        const { data, error } = await supabase
+            .from('target_locations')
+            .select('slug, created_at')
+            .range(from, from + step - 1);
+
+        if (error || !data || data.length === 0) {
+            hasMore = false;
+        } else {
+            locations = locations.concat(data);
+            if (data.length < step) hasMore = false; // We reached the end
+            from += step;
+        }
+    }
+
+    if (locations.length === 0) return [];
 
     const cityUrls = locations.map((loc) => ({
         url: `${BASE_URL}/services/foundation-repair/${loc.slug}`,
