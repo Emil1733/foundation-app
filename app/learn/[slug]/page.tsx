@@ -6,12 +6,9 @@ import AddressAutocomplete from "@/components/AddressAutocomplete";
 
 export const revalidate = 86400; // ISR: Rebuild every 24 hours
 
-// 1. Generate All Slugs at Build Time
+// 1. Build pages on-demand instead of at build time to prevent Vercel timeout
 export async function generateStaticParams() {
-    const { data: locations } = await supabase.from('target_locations').select('slug');
-    return locations?.map((loc) => ({
-        slug: `${loc.slug}-soil-analysis`,
-    })) || [];
+    return []; // Return empty array to force ISR on-demand generation
 }
 
 // 2. Fetch Data for Specific Slug

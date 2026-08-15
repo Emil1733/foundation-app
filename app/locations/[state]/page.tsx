@@ -33,6 +33,9 @@ export async function generateMetadata({ params }: { params: Promise<{ state: st
     return {
         title: `${fullStateName} Foundation Repair Service Areas | Foundation Risk Registry`,
         description: `Explore all our forensic foundation repair service areas in ${fullStateName}. We diagnose and permanently repair settlement issues caused by active soil zones.`,
+        alternates: {
+            canonical: `https://foundationrisk.org/locations/${state.toLowerCase()}`,
+        },
     };
 }
 

@@ -19,13 +19,9 @@ import { Metadata } from "next";
 
 export const revalidate = 604800; // ISR: Cache for 1 week to protect Vercel compute and Supabase DB
 
-// SSG: Build pages for all cities
+// SSG: Build pages on-demand instead of at build time to prevent Vercel timeout
 export async function generateStaticParams() {
-  const { data: locations } = await supabase
-    .from("target_locations")
-    .select("slug");
-  if (!locations) return [];
-  return locations.map((loc) => ({ city: loc.slug }));
+  return []; // Return empty array to force ISR on-demand generation
 }
 
 // Logic to select intro based on city/soil features (Deterministic/Hash-based)

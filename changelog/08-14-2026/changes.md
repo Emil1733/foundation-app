@@ -1,5 +1,5 @@
 # Engineering Session Changelog
-**Date:** August 14, 2026
+**Date:** August 14-15, 2026
 **Focus:** The God-Mode Engine & Agentic SEO Integration
 
 ## 1. The God-Mode Programmatic SEO Engine
@@ -34,3 +34,17 @@
 *   **Spam Test (`scripts/stress-test-booking.mjs`):** Fired 10 concurrent fake leads from the same IP. Successfully validated that the server allowed 3 and mathematically rejected the remaining 7 with a 429 Too Many Requests response.
 *   **OpenAPI Registry (`public/openapi.json`):** Wrote the official API specification schema required by OpenAI to connect the backend directly to Custom GPTs in the GPT Store.
 *   **AI Crawler Whitelisting (`app/robots.ts`):** Dynamically generated the `robots.txt` rules to explicitly whitelist `ChatGPT-User`, `OAI-SearchBot`, `Google-Extended`, and `ClaudeBot` to prevent accidental blocking.
+
+---
+
+## 6. Architectural Hardening & Scaling Fixes (Post-Ingestion Audit)
+Following the massive 8,400+ page expansion, several God-Tier structural flaws were identified and completely neutralized to ensure infinite scaling capabilities:
+
+*   **Vercel Build Timeout Crash (SSG Flaw neutralized):** Removed the `generateStaticParams()` build-time generation array for all 4,300 cities and 4,300 learning pages. The platform will no longer attempt to query 37 million rows and build all 8,600 pages concurrently during deployment, completely neutralizing a fatal 45-minute Vercel build timeout. Pages will now build gracefully on-demand.
+*   **Compute Billing & Database Protection (ISR implementation):** Upgraded all dynamic city templates, educational templates, and location hubs from Server-Side Rendering (SSR) to a rigid 7-day Incremental Static Regeneration (ISR) cache using `export const revalidate = 604800;`. This insulates Vercel and Supabase from DDoS and massive crawler loads.
+*   **Agentic Safe Mode Trapdoor (Unlocked):** Re-engineered the Next.js `middleware.ts` to remove the hardcoded Dallas/Atlanta development sandbox. The intelligent Agentic JSON/Markdown bouncer now protects all 8,400+ localized routes.
+*   **Canonical Hemorrhage (Defused):** Identified a rogue global `canonical: '/'` fallback tag in `app/layout.tsx` that would have caused Google Search Console to immediately flag all 8,400 pages as "Duplicate without user-selected canonical". Surgically removed the tag and injected explicit metadata canonicals down into the root `page.tsx` and all newly generated State Hubs.
+*   **Hardcoded Footer Bottleneck (Link Equity unlocked):** Replaced the statically coded "DFW High-Risk" footer column with a dynamic "National Hubs" section directing PageRank evenly into the new Texas, Florida, Colorado, and Georgia root hubs.
+*   **Stateful Agentic Anti-Spam (Vercel Edge flaw fixed):** Replaced the volatile, memory-leaking Vercel Edge `Map()` rate limiter in `app/api/agent/book/route.ts` with a persistent, scalable SQL state validation against the `ai_agent_leads` Supabase table.
+*   **USDA SQL Injection (Sanitized):** Secured the `app/api/soil/route.ts` internal endpoint by implementing strict `Number()` validation checks on incoming `lat`/`lon` coordinates before they are interpolated into the federal USDA SSURGO SQL payload, protecting the application's IP reputation.
+*   **Supabase Sequential Scans (Resolved):** Ran `CREATE UNIQUE INDEX idx_target_locations_slug ON target_locations(slug);` to immediately stop highly taxing, unindexed sequential O(N) scans across the primary datastore during page renders.

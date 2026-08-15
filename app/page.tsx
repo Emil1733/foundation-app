@@ -7,6 +7,9 @@ import { supabase } from '@/lib/supabase';
 export const metadata = {
   title: "The Foundation Risk Registry | Forensic Evaluation & Soil Analysis",
   description: "⚠️ Is your foundation safe? Check the official 2026 Geological Database for North Texas. Get a forensic risk evaluation and USDA soil analysis before structural cracks become permanent.",
+  alternates: {
+    canonical: 'https://foundationrisk.org',
+  },
 };
 
 export const revalidate = 86400; // ISR: Rebuild homepage every 24 hours

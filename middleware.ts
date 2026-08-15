@@ -4,15 +4,9 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // Only apply this to the service area pages for now (and explicitly testing with dallas-tx or atlanta-ga)
-    if (pathname.startsWith('/services/foundation-repair/')) {
+    // Apply Content Negotiation (Agentic Web Trap) to both Service and Learn pages
+    if (pathname.startsWith('/services/foundation-repair/') || pathname.startsWith('/learn/')) {
         const slug = pathname.split('/').pop();
-        
-        // SAFE TESTING MODE: Only activate for these two cities
-        if (slug !== 'dallas-tx' && slug !== 'atlanta-ga') {
-            return NextResponse.next();
-        }
-
         const acceptHeader = request.headers.get('accept') || '';
 
         // If it's an AI Agent (requesting JSON or Markdown)
@@ -40,5 +34,8 @@ export function middleware(request: NextRequest) {
 
 // Ensure the middleware only runs on specific paths to save edge compute
 export const config = {
-    matcher: '/services/foundation-repair/:path*',
+    matcher: [
+        '/services/foundation-repair/:path*',
+        '/learn/:path*'
+    ],
 };

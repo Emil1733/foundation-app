@@ -19,9 +19,6 @@ export const metadata: Metadata = {
   description: "⚠️ Is your foundation safe? Check the official 2026 Geological Database for North Texas. Get a forensic risk evaluation and USDA soil analysis before structural cracks become permanent.",
   icons: { icon: '/logo.png' },
   metadataBase: new URL('https://foundationrisk.org'),
-  alternates: {
-    canonical: '/',
-  },
   openGraph: {
     title: "The Foundation Risk Registry | Forensic Evaluation & Soil Analysis",
     description: "⚠️ Is your foundation safe? Check the official 2026 Geological Database for North Texas.",
@@ -143,13 +140,13 @@ export default function RootLayout({
                 </ul>
               </div>
               <div>
-                <h4 className="text-white font-bold mb-4">DFW High-Risk</h4>
+                <h4 className="text-white font-bold mb-4">National Hubs</h4>
                 <ul className="space-y-2 text-slate-400">
-                  <li><Link href="/services/foundation-repair/carrollton-tx" className="hover:text-white transition">Carrollton</Link></li>
-                  <li><Link href="/services/foundation-repair/lewisville-tx" className="hover:text-white transition">Lewisville</Link></li>
-                  <li><Link href="/services/foundation-repair/denton-tx" className="hover:text-white transition">Denton</Link></li>
-                  <li><Link href="/services/foundation-repair/roanoke-tx" className="hover:text-white transition">Roanoke</Link></li>
-                  <li><Link href="/locations" className="hover:text-white transition text-blue-400 font-medium pt-2 block">View All Service Locations &rarr;</Link></li>
+                  <li><Link href="/locations/texas" className="hover:text-white transition">Texas Geological Data</Link></li>
+                  <li><Link href="/locations/florida" className="hover:text-white transition">Florida Geological Data</Link></li>
+                  <li><Link href="/locations/colorado" className="hover:text-white transition">Colorado Geological Data</Link></li>
+                  <li><Link href="/locations/georgia" className="hover:text-white transition">Georgia Geological Data</Link></li>
+                  <li><Link href="/locations" className="hover:text-white transition text-blue-400 font-medium pt-2 block">View All States &rarr;</Link></li>
                 </ul>
               </div>
             </div>

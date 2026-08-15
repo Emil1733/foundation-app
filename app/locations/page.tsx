@@ -9,6 +9,9 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 export const metadata = {
     title: "National Foundation Repair Service Areas | Foundation Risk Registry",
     description: "Explore our forensic engineering service areas across the United States. We provide permanent foundation repair solutions in high-risk soil zones nationwide.",
+    alternates: {
+        canonical: 'https://foundationrisk.org/locations',
+    },
 };
 
 export const revalidate = 604800; // ISR: Cache for 1 week to protect Vercel compute and Supabase DB

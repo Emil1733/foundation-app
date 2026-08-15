@@ -11,6 +11,13 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Missing lat/lon" }, { status: 400 });
         }
 
+        const safeLat = Number(lat);
+        const safeLon = Number(lon);
+
+        if (isNaN(safeLat) || isNaN(safeLon)) {
+            return NextResponse.json({ error: "Invalid coordinates" }, { status: 400 });
+        }
+
         // SQL Query to get Soil Map Unit + Shrink-Swell (LEP) + Liquid Limit (PI)
         // Same query as verified in verify_usda_api.py
         const query = `
@@ -26,7 +33,7 @@ export async function POST(request: Request) {
       INNER JOIN component c ON c.mukey = mu.mukey
       INNER JOIN chorizon ch ON ch.cokey = c.cokey
       WHERE mu.mukey IN (
-        SELECT mukey FROM SDA_Get_Mukey_from_intersection_with_WktWgs84('POINT(${lon} ${lat})')
+        SELECT mukey FROM SDA_Get_Mukey_from_intersection_with_WktWgs84('POINT(${safeLon} ${safeLat})')
       )
       AND c.majcompflag = 'Yes' -- Only major components
       AND ch.hzdept_r < 50 -- Top 50cm
