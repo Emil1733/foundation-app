@@ -7,7 +7,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-export const revalidate = 0; // Dynamic rendering
+export const revalidate = 604800; // ISR: Cache for 1 week to protect Vercel compute and Supabase DB
 
 const STATE_NAMES: Record<string, string> = {
     "texas": "TX", "florida": "FL", "georgia": "GA", "colorado": "CO", 

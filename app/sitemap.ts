@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase';
 // TODO: Update this to your real custom domain when you buy one.
 const BASE_URL = 'https://foundationrisk.org';
 
-export const revalidate = 0; // CRITICAL: Force Next.js to dynamically render the sitemap so new cities appear instantly
+export const revalidate = 86400; // ISR: Cache sitemap for 24 hours to prevent Supabase query exhaustion
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // 1. Fetch all cities using a pagination loop to bypass the Supabase 1,000 row hard limit

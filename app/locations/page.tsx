@@ -11,7 +11,7 @@ export const metadata = {
     description: "Explore our forensic engineering service areas across the United States. We provide permanent foundation repair solutions in high-risk soil zones nationwide.",
 };
 
-export const revalidate = 0; // CRITICAL: Force dynamic rendering so new clusters appear immediately
+export const revalidate = 604800; // ISR: Cache for 1 week to protect Vercel compute and Supabase DB
 
 const STATE_NAMES: Record<string, string> = {
     "TX": "Texas", "FL": "Florida", "GA": "Georgia", "CO": "Colorado", 

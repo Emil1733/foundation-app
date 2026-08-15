@@ -17,7 +17,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
-export const revalidate = 0; // Force Next.js to bypass the aggressive cache
+export const revalidate = 604800; // ISR: Cache for 1 week to protect Vercel compute and Supabase DB
 
 // SSG: Build pages for all cities
 export async function generateStaticParams() {
