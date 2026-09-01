@@ -2,18 +2,17 @@
 
 export default function PartnerLogos() {
   const partners = [
-    { name: "USDA", desc: "Soil Survey Data" },
-    { name: "USGS", desc: "Geological Mapping" },
-    { name: "ASCE", desc: "Structural Standards" },
-    { name: "NSPE", desc: "Engineering Ethics" },
-    { name: "SSURGO", desc: "Inventory Data" }
+    { name: "USDA", desc: "Public Agency" },
+    { name: "NRCS", desc: "Soil Survey Program" },
+    { name: "SSURGO", desc: "Mapped Soil Data" },
+    { name: "USGS", desc: "Public Geology Data" }
   ];
 
   return (
     <div className="w-full bg-white border-y border-slate-100 py-8 px-6">
       <div className="max-w-7xl mx-auto flex flex-col items-center">
         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.4em] mb-8">
-          Official Data Integrations & Standards
+          Public Data Sources Referenced
         </p>
         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
           {partners.map((p) => (

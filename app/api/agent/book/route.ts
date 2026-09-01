@@ -77,7 +77,7 @@ export async function POST(request: Request) {
         
         return NextResponse.json({ 
             success: true, 
-            message: "Consultation successfully booked.",
+            message: "Foundation evaluation follow-up request received.",
             lead_id: data?.[0]?.id,
             confirmation_code: `FRR-${Math.floor(Math.random() * 90000) + 10000}`
         });

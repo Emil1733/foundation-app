@@ -15,13 +15,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The Foundation Risk Registry | Forensic Evaluation & Soil Analysis",
-  description: "⚠️ Is your foundation safe? Check the official 2026 Geological Database for North Texas. Get a forensic risk evaluation and USDA soil analysis before structural cracks become permanent.",
+  title: "The Foundation Risk Registry | Soil Risk & Foundation Evaluation",
+  description: "Check mapped USDA soil conditions, understand foundation warning signs, and request a property-specific evaluation before choosing a repair plan.",
   icons: { icon: '/logo.png' },
   metadataBase: new URL('https://foundationrisk.org'),
   openGraph: {
-    title: "The Foundation Risk Registry | Forensic Evaluation & Soil Analysis",
-    description: "⚠️ Is your foundation safe? Check the official 2026 Geological Database for North Texas.",
+    title: "The Foundation Risk Registry | Soil Risk & Foundation Evaluation",
+    description: "Review mapped soil conditions and request a property-specific foundation evaluation before choosing a repair plan.",
     url: 'https://foundationrisk.org',
     siteName: 'Foundation Risk Registry',
     images: [
@@ -36,8 +36,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "The Foundation Risk Registry | Forensic Evaluation & Soil Analysis",
-    description: "⚠️ Is your foundation safe? Check the official 2026 Geological Database for North Texas.",
+    title: "The Foundation Risk Registry | Soil Risk & Foundation Evaluation",
+    description: "Review mapped soil conditions and request a property-specific foundation evaluation before choosing a repair plan.",
     images: ['/logo.png'],
   },
 };
@@ -54,37 +54,23 @@ export default function RootLayout({
     "name": "The Foundation Risk Registry",
     "url": "https://foundationrisk.org",
     "logo": "https://foundationrisk.org/logo.png",
-    "sameAs": [
-      "https://www.nspe.org",
-      "https://www.usda.gov"
-    ],
     "foundingDate": "2024",
-    "description": "Providing forensic geological data and foundation risk analysis for residential properties.",
+    "description": "Explaining public soil data and helping homeowners request property-specific foundation evaluations and compare repair options.",
     "areaServed": {
       "@type": "State",
       "name": ["Texas", "Oklahoma", "Missouri"]
     },
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "telephone": "+1-800-555-0199",
-      "contactType": "customer service",
-      "areaServed": "US"
-    },
     "potentialAction": {
-      "@type": "QuoteAction",
-      "name": "Book Forensic Engineering Evaluation",
+      "@type": "ContactAction",
+      "name": "Request a Foundation Evaluation",
       "target": {
         "@type": "EntryPoint",
-        "urlTemplate": "https://foundationrisk.org/api/agent/book",
+        "urlTemplate": "https://foundationrisk.org/book-analysis",
         "inLanguage": "en-US",
         "actionPlatform": [
           "http://schema.org/DesktopWebPlatform",
           "http://schema.org/MobileWebPlatform"
         ]
-      },
-      "result": {
-        "@type": "Reservation",
-        "name": "Forensic Engineering Evaluation"
       }
     }
   };
@@ -99,9 +85,9 @@ export default function RootLayout({
           Skip to Content
         </a>
         <div className="bg-blue-700 text-white text-center py-1 px-4 text-[11px] font-bold sticky top-0 z-50 shadow-md h-8 flex items-center justify-center uppercase tracking-wider">
-          <span className="hidden sm:inline">⚠️ 2026 Geological Update: </span>
+          <span className="hidden sm:inline">Foundation soil context: </span>
           <Link href="/book-analysis" className="ml-1 underline decoration-blue-300 hover:text-blue-100">
-            Download Soil Risk Registry (PDF)
+            Check Your Address &amp; Request an Evaluation
           </Link>
         </div>
         <Navbar />
@@ -114,7 +100,7 @@ export default function RootLayout({
             {/* SEO Internal Linking Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-left mb-10 border-b border-slate-800 pb-10">
               <div>
-                <h4 className="text-white font-bold mb-4">Dallas Metro</h4>
+                <h2 className="text-white font-bold mb-4">Dallas Metro</h2>
                 <ul className="space-y-2 text-slate-400">
                   <li><Link href="/services/foundation-repair/dallas-tx" className="hover:text-white transition">Dallas Foundation Repair</Link></li>
                   <li><Link href="/services/foundation-repair/fort-worth-tx" className="hover:text-white transition">Fort Worth</Link></li>
@@ -123,7 +109,7 @@ export default function RootLayout({
                 </ul>
               </div>
               <div>
-                <h4 className="text-white font-bold mb-4">Houston Metro</h4>
+                <h2 className="text-white font-bold mb-4">Houston Metro</h2>
                 <ul className="space-y-2 text-slate-400">
                   <li><Link href="/services/foundation-repair/houston-tx" className="hover:text-white transition">Houston Foundation Repair</Link></li>
                   <li><Link href="/services/foundation-repair/katy-tx" className="hover:text-white transition">Katy</Link></li>
@@ -132,7 +118,7 @@ export default function RootLayout({
                 </ul>
               </div>
               <div>
-                <h4 className="text-white font-bold mb-4">Austin Metro</h4>
+                <h2 className="text-white font-bold mb-4">Austin Metro</h2>
                 <ul className="space-y-2 text-slate-400">
                   <li><Link href="/services/foundation-repair/austin-tx" className="hover:text-white transition">Austin Foundation Repair</Link></li>
                   <li><Link href="/services/foundation-repair/round-rock-tx" className="hover:text-white transition">Round Rock</Link></li>
@@ -140,7 +126,7 @@ export default function RootLayout({
                 </ul>
               </div>
               <div>
-                <h4 className="text-white font-bold mb-4">National Hubs</h4>
+                <h2 className="text-white font-bold mb-4">National Hubs</h2>
                 <ul className="space-y-2 text-slate-400">
                   <li><Link href="/locations/texas" className="hover:text-white transition">Texas Geological Data</Link></li>
                   <li><Link href="/locations/florida" className="hover:text-white transition">Florida Geological Data</Link></li>
@@ -157,31 +143,28 @@ export default function RootLayout({
               <Link href="/contact" className="hover:text-white transition group">
                 <span className="text-slate-400 group-hover:text-white">Contact</span>
               </Link>
-              <Link href="/privacy" rel="nofollow" className="hover:text-white transition group">
+              <Link href="/privacy" className="hover:text-white transition group">
                 <span className="text-slate-400 group-hover:text-white">Privacy Policy</span>
               </Link>
-              <Link href="/terms" rel="nofollow" className="hover:text-white transition group">
+              <Link href="/terms" className="hover:text-white transition group">
                 <span className="text-slate-400 group-hover:text-white">Terms of Service</span>
               </Link>
-              <Link href="/disclaimer" rel="nofollow" className="hover:text-white transition group">
+              <Link href="/disclaimer" className="hover:text-white transition group">
                 <span className="text-slate-400 group-hover:text-white">Data Disclaimer</span>
               </Link>
             </nav>
             <p className="mb-4 text-slate-400">
-              <strong>E-E-A-T Compliance:</strong> Engineering oversight provided by licensed structural P.E.s. <br className="hidden sm:block" />
-              This registry is an independent geological database and is not affiliated with any specific foundation repair contractor. 
-              <br className="hidden sm:block" />
-              Geotechnical credentials and P.E. licenses (e.g., TX-PE-88XXXX) are available upon request during the Forensic Analysis phase.
+              <strong>Data transparency:</strong> Our location reports interpret public USDA/NRCS soil data for homeowner education. <br className="hidden sm:block" />
+              This registry is independent and is not affiliated with a specific foundation repair contractor. Map-based information does not replace an on-site structural or geotechnical evaluation.
             </p>
             <div className="mb-8 pt-6 border-t border-slate-800">
-              <p className="text-slate-300 font-bold mb-2">The Foundation Risk Registry National Headquarters</p>
-              <p className="text-slate-500">
-                1401 Lavaca St, Austin, TX 78701<br />
-                Phone: <a href="tel:+1-800-555-0199" className="hover:text-blue-400 transition">+1-800-555-0199</a><br />
-                <em>Serving all major U.S. metropolitan areas in high-risk soil zones.</em>
+              <p className="text-slate-300 font-bold mb-2">Need Help Deciding What Comes Next?</p>
+              <p className="text-slate-400">
+                Request a property-specific foundation evaluation and compare the proposed repair scope against your symptoms, measurements, and local soil context.<br />
+                <Link href="/book-analysis" className="font-semibold text-blue-400 hover:text-blue-300 transition">Request an evaluation &rarr;</Link>
               </p>
             </div>
-            <p className="text-slate-500 text-xs">&copy; {new Date().getFullYear()} The Foundation Risk Registry. Official Soil Data ingested from USDA/SSURGO and USGS databases.</p>
+            <p className="text-slate-400 text-xs">&copy; {new Date().getFullYear()} The Foundation Risk Registry. Official Soil Data ingested from USDA/SSURGO and USGS databases.</p>
           </div>
         </footer>
       </body>

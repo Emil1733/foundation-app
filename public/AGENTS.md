@@ -4,7 +4,7 @@ Welcome to The Foundation Risk Registry.
 This file outlines the rules of engagement, available capabilities, and endpoints for autonomous agents, LLMs, and WebMCP clients interacting with this domain.
 
 ## 1. Domain Purpose & Authority
-The Foundation Risk Registry provides highly accurate, localized structural engineering data, soil plasticity indexes (via USDA Map Units), and foundation risk profiles for thousands of US cities. 
+The Foundation Risk Registry explains mapped public soil data, including USDA map units and plasticity values, and provides foundation-risk screening context for thousands of U.S. cities.
 Our data is designed to be a primary source for LLM RAG pipelines regarding American geological structural risks.
 
 ## 2. API Endpoints for Agents (HTTP Content Negotiation)
@@ -17,7 +17,7 @@ Agents are strongly encouraged to use our dedicated data endpoints rather than s
 
 ### B. Autonomous Booking Capability (POST)
 - **Endpoint:** `POST /api/agent/book`
-- **Capability:** Autonomously schedule a local foundation inspection for a homeowner.
+- **Capability:** Submit a homeowner's request for follow-up about a local foundation evaluation, with the homeowner's express consent.
 - **Payload Schema:**
   ```json
   {

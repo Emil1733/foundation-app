@@ -51,7 +51,7 @@
     },
     "/api/agent/book": {
       "post": {
-        "summary": "Autonomously book a forensic engineering consultation.",
+        "summary": "Submit a request for foundation evaluation follow-up with the homeowner's consent.",
         "operationId": "bookConsultation",
         "requestBody": {
           "required": true,
@@ -84,7 +84,7 @@
         },
         "responses": {
           "200": {
-            "description": "Consultation successfully booked.",
+            "description": "Foundation evaluation follow-up request received.",
             "content": {
               "application/json": {
                 "schema": {

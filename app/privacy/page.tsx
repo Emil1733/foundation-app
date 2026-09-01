@@ -48,7 +48,7 @@ export default function PrivacyPage() {
                     <ShieldCheck className="w-6 h-6 text-blue-600 shrink-0" />
                     <div>
                         <h3 className="font-bold text-slate-900 mb-1">Our Core Promise</h3>
-                        <p className="text-sm text-slate-700">We do not sell your address data to generic marketing lists. Your location is used solely to query geological databases and connect you with a forensic engineer for a structural risk assessment.</p>
+                        <p className="text-sm text-slate-700">We do not sell your address to unrelated bulk-marketing lists. When you request an evaluation, we use your details to provide soil context and may share the request with participating local foundation evaluation or repair providers.</p>
                     </div>
                 </div>
 
@@ -74,7 +74,7 @@ export default function PrivacyPage() {
 
                 <h2>3. Security & Third-Party Sharing</h2>
                 <p>
-                    <strong>We do not share your data with foundation repair sales teams.</strong> If you explicitly request a "P.E. Consultation," your contact information is shared exclusively with our vetted network of Licensed Professional Engineers in your state (e.g., Texas Board of Professional Engineers). 
+                    <strong>Service-request sharing:</strong> When you submit a foundation evaluation request, your contact information, property location, and reported symptoms may be shared with participating local foundation evaluation or repair providers so they can respond. A participating provider should identify its business, qualifications, scope, and terms directly. We do not represent every participating provider as a licensed engineering firm.
                 </p>
                 <p>
                     Your data is stored using industry-standard AES-256 encryption via Supabase (a secure PostgreSQL infrastructure). We maintain strict access controls to ensure that only authorized forensic leads can access specific property data.

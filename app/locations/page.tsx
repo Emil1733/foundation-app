@@ -8,9 +8,12 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 export const metadata = {
     title: "National Foundation Repair Service Areas | Foundation Risk Registry",
-    description: "Explore our forensic engineering service areas across the United States. We provide permanent foundation repair solutions in high-risk soil zones nationwide.",
+    description: "Explore local soil-risk reports, foundation warning signs, evaluation requests, and repair options across service areas in the United States.",
     alternates: {
         canonical: 'https://foundationrisk.org/locations',
+    },
+    openGraph: {
+        url: 'https://foundationrisk.org/locations',
     },
 };
 

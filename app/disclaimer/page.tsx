@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata = {
     title: "Data Disclaimer | Foundation Risk Registry",
-    description: "Important disclaimers regarding USDA soil data, plasticity indices, and engineering oversight.",
+    description: "Important limitations for USDA soil data, foundation-risk screening, evaluation requests, and repair-provider information.",
 };
 
 export default function DisclaimerPage() {
@@ -62,14 +62,14 @@ export default function DisclaimerPage() {
                         The "Liquid Limit" and "Plasticity Index" (PI) values shown are based on USDA historical records. Actual site conditions may have been altered by grading, backfilling, or local landscape changes not reflected in the national dataset.
                     </p>
 
-                    <h2>Licensed Professional Engineers (P.E.)</h2>
+                    <h2>Property Evaluations and Professional Services</h2>
                     <p>
-                        Any reference to "Forensic Analysis" or "Engineering Oversight" refers to the human-led verification process available as a premium service. The automated map interface does not constitute an engagement with a Licensed Professional Engineer.
+                        Requesting an evaluation through the registry does not by itself create an engineer-client relationship or guarantee that a licensed engineer will perform the initial visit. The professional or repair provider involved should identify their qualifications, scope, fees, and responsibility for any opinion or work before service begins.
                     </p>
 
                     <h2>Assumption of Risk</h2>
                     <p>
-                        The property owner or user assumes all risk for any diagnostic conclusions drawn from this Service. We strongly recommend a physical soil soil boring and a manual structural inspection for any property exhibiting signs of foundation distress.
+                        Do not select or reject a repair solely from this Service. Properties with changing or significant distress may warrant an on-site foundation evaluation; structural or geotechnical expertise should be obtained when the observed conditions or proposed work call for it.
                     </p>
                 </div>
 
@@ -78,20 +78,15 @@ export default function DisclaimerPage() {
                         <div className="bg-blue-600/20 p-3 rounded-full w-fit mb-4">
                             <ShieldAlert className="w-6 h-6 text-blue-400" />
                         </div>
-                        <h3 className="font-bold text-lg mb-2">Engineering Oversight</h3>
+                        <h3 className="font-bold text-lg mb-2">Clear Service Boundaries</h3>
                         <p className="text-slate-400 text-sm mb-4">
-                            Geotechnical data integrity is maintained by licensed Texas Professional Engineers.
+                            Registry reports explain mapped public data. Property evaluators and repair providers remain responsible for their own findings, credentials, proposals, warranties, and work.
                         </p>
-                        <div className="border-t border-slate-800 pt-4">
-                            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Lead Engineer</p>
-                            <p className="font-bold">Elias Thorne, P.E.</p>
-                            <p className="text-slate-400 text-xs">TX License: #88XXXX</p>
-                        </div>
                     </div>
                     <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
                         <h4 className="font-bold text-slate-900 text-sm mb-2 uppercase tracking-tight">Verified Database</h4>
                         <p className="text-slate-600 text-xs leading-relaxed">
-                            This registry cross-references USDA SSURGO data with municipal foundation repair permit histories to establish localized risk profiles.
+                            Soil context is derived from USDA/NRCS SSURGO survey records. Neighborhood labels and registry classifications are screening information, not parcel-level findings.
                         </p>
                     </div>
                 </aside>

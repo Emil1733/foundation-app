@@ -48,7 +48,7 @@ export default function Navbar() {
               FOUNDATION<span className="text-blue-600">RISK</span>
             </span>
             <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.3em]">
+              <span className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.24em]">
                 Registry 2026
               </span>
               <div className="h-[1px] w-3 bg-slate-200" />
@@ -88,7 +88,7 @@ export default function Navbar() {
               className="group flex items-center gap-2 bg-slate-900 text-white px-6 py-2.5 rounded-full font-bold text-[10px] uppercase tracking-widest hover:bg-blue-600 transition-all duration-500 shadow-[0_10px_20px_rgba(15,23,42,0.15)] hover:shadow-[0_10px_25px_rgba(37,99,235,0.3)] hover:-translate-y-0.5 active:translate-y-0"
             >
               <Search className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
-              Get Forensic Eval
+              Request Evaluation
             </Link>
           </div>
         </div>
@@ -127,7 +127,7 @@ export default function Navbar() {
                 className="mt-4 bg-slate-900 text-white p-5 rounded-2xl text-base font-bold text-center shadow-xl flex items-center justify-center gap-2"
               >
                 <Search className="w-4 h-4" />
-                Get Forensic Evaluation
+                Request Foundation Evaluation
               </Link>
            </div>
         </div>

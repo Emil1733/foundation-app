@@ -98,11 +98,11 @@ function IntakeForm() {
                     <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
                         <CheckCircle className="w-10 h-10 text-green-600" />
                     </div>
-                    <h1 className="text-3xl font-extrabold text-slate-900 mb-4">Analysis Requested</h1>
+                    <h1 className="text-3xl font-extrabold text-slate-900 mb-4">Evaluation Requested</h1>
                     <p className="text-slate-600 mb-8">
-                        We have received your forensic intake for <span className="font-bold">{formData.address}</span>.
+                        We have received your foundation evaluation request for <span className="font-bold">{formData.address}</span>.
                         <br /><br />
-                        An engineer will review your soil data match and contact you at <span className="font-bold">{formData.email}</span> shortly.
+                        The registry team or a participating local service provider will review the request and follow up using the contact information you provided. The provider should explain their qualifications and scope before any service begins.
                     </p>
                     <Link href="/" className="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-slate-800 transition">
                         Return to Registry
@@ -120,7 +120,7 @@ function IntakeForm() {
                     Foundation Risk Registry
                 </Link>
                 <div className="hidden md:flex text-sm text-slate-500 font-medium">
-                    Forensic Intake Protocol v2.4
+                    Property Evaluation Request
                 </div>
             </header>
 
@@ -131,11 +131,11 @@ function IntakeForm() {
                         Preliminary Assessment
                     </div>
                     <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-4 leading-tight">
-                        Request Forensic Analysis
+                        Request a Foundation Evaluation
                     </h1>
                     <p className="text-slate-600 text-lg max-w-lg mx-auto">
-                        Get a no-cost engineering review of your property's geological risk profile.
-                        <span className="block mt-2 font-bold text-slate-800">No Sales Pressure. Just Data.</span>
+                        Share your symptoms and property details so the soil context can be reviewed and the appropriate local next step can be identified.
+                        <span className="block mt-2 font-bold text-slate-800">No obligation to purchase a repair.</span>
                     </p>
                 </div>
 
@@ -164,7 +164,7 @@ function IntakeForm() {
                                 <AlertTriangle className="w-5 h-5 text-orange-500" />
                                 What signs are you seeing?
                             </h2>
-                            <p className="text-sm text-slate-500">Select all that apply to help our engineers diagnose the failure mode.</p>
+                            <p className="text-sm text-slate-500">Select all that apply so the reviewer understands what you have observed. This is not an online diagnosis.</p>
                             
                             <div className="grid grid-cols-2 gap-4">
                                 {symptomsList.map((s) => (
@@ -254,9 +254,9 @@ function IntakeForm() {
                         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                              <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
                                 <User className="w-5 h-5 text-green-500" />
-                                Engineering Report Delivery
+                                Evaluation Follow-Up
                             </h2>
-                            <p className="text-sm text-slate-500">Where should we send your Forensic Risk Profile?</p>
+                            <p className="text-sm text-slate-500">Where should we send your soil-risk summary and follow up about evaluation availability?</p>
 
                             <div className="space-y-4">
                                 <div>
@@ -309,7 +309,7 @@ function IntakeForm() {
                                             onChange={(e) => setFormData({...formData, tcpaConsent: e.target.checked})}
                                         />
                                         <span className="text-[11px] text-slate-500 leading-relaxed">
-                                            <strong>TCPA Consent:</strong> By checking this box, I agree to receive text messages and phone calls (including via automated technology) from Foundation Risk Registry and its authorized local engineering partners at the number provided. Consent is not a condition of purchase. Msg & data rates may apply.
+                                            <strong>Contact consent:</strong> By checking this box, I agree to receive calls and text messages, including automated messages, from Foundation Risk Registry and participating local foundation evaluation or repair providers about this request. Consent is not a condition of purchase. Message and data rates may apply.
                                         </span>
                                     </label>
                                 </div>
@@ -322,7 +322,7 @@ function IntakeForm() {
                                     disabled={!formData.tcpaConsent}
                                     className="bg-green-600 hover:bg-green-700 disabled:bg-slate-300 text-white px-8 py-4 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg hover:shadow-green-200 w-full justify-center"
                                 >
-                                    Get My Forensic Analysis
+                                    Request My Evaluation
                                 </button>
                             </div>
                         </div>
@@ -331,7 +331,7 @@ function IntakeForm() {
                 </form>
 
                 <div className="mt-8 text-center text-xs text-slate-400">
-                    <p>Secure SSL Encryption. Licensed Engineering Protocols.</p>
+                    <p>Secure transmission. Property details are used to process this request and provide relevant follow-up.</p>
                 </div>
             </main>
         </div>

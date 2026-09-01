@@ -27,24 +27,15 @@ export async function generateStaticParams() {
 // Logic to select intro based on city/soil features (Deterministic/Hash-based)
 const getDynamicIntro = (city: string, soilName: string, risk: string) => {
   if (city.toLowerCase() === "austin") {
-    return `Austin foundations face unique stress from the Edwards Aquifer and underlying limestone shelves. While most contractors treat it like clay, the forensic reality is 'Limestone Heave' and localized moisture pockets that require a specific hydraulic approach.`;
+    return `Austin properties can encounter varied limestone, clay, fill, slope, and drainage conditions. The mapped ${soilName} record is useful context, but a repair decision should be based on evidence from the property itself.`;
   }
 
   const hooks = [
-    // Hook A: Urgency/Weather
-    `Recent drought cycles in ${city} have accelerated soil shrinkage. If you own a home on ${soilName}, your slab is under stress.`,
-
-    // Hook B: Technical (Soil Focus)
-    `The ${soilName} underlying ${city} is notorious for its high Plasticity Index. This 'silent engine' breaks foundations from the bottom up.`,
-
-    // Hook C: Regulatory/Code
-    `New 2026 engineering standards in ${city} require deeper piering for ${risk}-risk profiles. Most vintage slabs are non-compliant.`,
-
-    // Hook D: Financial/Asset Protection
-    `Protecting your real estate asset in ${city} starts with geology. Ignoring ${soilName} movement can devalue your property by 15% overnight.`,
-
-    // Hook E: Social Proof/Neighbors
-    `We are seeing a surge of structural failures in ${city} neighborhoods this quarter. Your neighbors on ${soilName} are likely underpinning right now.`,
+    `${city} homes can respond differently to drought, heavy rain, drainage, vegetation, plumbing leaks, and previous site work. The mapped ${soilName} record helps frame the right questions before a repair is chosen.`,
+    `The ${soilName} mapped around ${city} provides useful soil context for homeowners comparing foundation repair options. It does not replace measurements or an inspection at the property.`,
+    `A ${risk}-risk map classification is a screening signal, not a repair prescription. In ${city}, the next step is to compare the soil record with crack history, drainage, and floor-elevation evidence.`,
+    `Protecting a ${city} home starts with understanding whether movement is active and what is contributing to it. That evidence helps homeowners avoid both unnecessary work and undersized repairs.`,
+    `Foundation symptoms in ${city} should be evaluated as a pattern. Soil context, water control, measured movement, and construction details all help define an appropriate repair scope.`,
   ];
 
   // Deterministic rotation based on city name length
@@ -68,14 +59,16 @@ export async function generateMetadata({
   if (!location) return { title: "Foundation Distress Identification Services" };
 
   const risk = location.soil_cache?.risk_level || "Unknown";
-  const soilName = location.soil_cache?.map_unit_name || "Expansive Clay";
-
   const zipCode = location.zip_code || "";
   return {
-    title: `${location.city} Foundation Repair | Forensic Engineers`,
-    description: `Expert foundation repair in ${location.city}, ${location.state}. Is ${soilName} settling your home? Consult our forensic engineers for a scientific structural evaluation.`,
+    title: `${location.city} Foundation Repair | Soil Risk & Evaluation`,
+    description: `Foundation repair in ${location.city}, ${location.state}: review local soil risks, settlement warning signs, and forensic evaluation options before choosing a repair plan.`,
     alternates: {
       canonical: `https://foundationrisk.org/services/foundation-repair/${slug}`,
+    },
+    openGraph: {
+      url: `https://foundationrisk.org/services/foundation-repair/${slug}`,
+      images: ["/logo.png"],
     },
   };
 }
@@ -145,87 +138,87 @@ export default async function CityPage({
   const faqs = [
     {
       q: `How much does foundation repair cost in ${city}?`,
-      a: `Costs in ${city} typically range from $4,500 to $15,000 depending on the number of piers needed. Given the ${soil?.map_unit_name}, deep piers are often required.`,
+      a: `Foundation repair cost in ${city} depends on the cause, affected area, access, repair design, and number and type of supports. Compare written scopes based on property measurements rather than choosing a system from mapped soil data alone.`,
     },
     {
       q: `Does active clay soil affect foundations in ${city}?`,
-      a: `Yes. ${soil?.map_unit_name} has a Plasticity Index of ${soil?.plasticity_index}, which is considered ${soil?.risk_level}. This causes significant seasonal movement.`,
+      a: `The mapped ${soil?.map_unit_name} record has a Plasticity Index of ${soil?.plasticity_index} and a registry classification of ${soil?.risk_level}. That may indicate moisture sensitivity, but it does not prove that a particular home is moving.`,
     },
     {
-      q: `Do you offer a warranty?`,
-      a: `Yes, we provide a Lifetime Transferable Warranty on all steel pier installations.`,
+      q: `Should I compare foundation repair warranties?`,
+      a: `Yes. Warranty terms vary by provider. Ask who is responsible for the warranty, what movement or components it covers, whether it transfers, and which service fees or exclusions apply.`,
     },
     {
       q: `What does a foundation evaluation in ${city} involve?`,
-      a: `A foundation evaluation in ${city} is a systematic forensic inspection of your slab, grade beams, and pier reactions. Our licensed P.E. documents interior cracks, door/window alignment, and exterior separation patterns. We correlate findings against your local soil data (${soil?.map_unit_name || 'expansive clay'}) to determine if movement is active, historic, or cosmetic only.`,
+      a: `A useful foundation evaluation in ${city} documents visible symptoms, drainage, door and window alignment, and floor elevations where appropriate. The reviewer should explain whether movement appears active, historic, or cosmetic and how the evidence supports any proposed repair.`,
     },
     {
       q: `How do I identify foundation distress in my ${city} home?`,
-      a: `Foundation distress identification in ${city} focuses on three key signals: (1) Diagonal cracks at door/window corners, indicating differential settlement; (2) Visible gaps between walls and ceiling/floor, indicating clay heave; (3) Sticking doors or sloping floors, indicating active soil movement under the slab. Because ${city} sits on ${soil?.map_unit_name || 'high-plasticity soils'}, these symptoms often worsen during drought-to-rain cycles.`,
+      a: `Track diagonal cracks, changing wall or trim gaps, multiple sticking openings, and measurable floor-level differences. None of these signs proves foundation failure by itself, so dates, measurements, drainage observations, and changes over time are important.`,
     },
     {
       q: `What causes foundation settling in ${city}, ${state}?`,
-      a: `Foundation settling in ${city} is primarily caused by moisture-driven volume change in the underlying soil — specifically the ${soil?.map_unit_name || 'expansive clay'}. During droughts, the clay shrinks and the slab drops. During rain seasons, the clay swells and lifts. With a Plasticity Index of ${soil?.plasticity_index || 30}+, this cycle causes cumulative structural fatigue that eventually requires piering or leveling to correct.`,
+      a: `Possible contributors include moisture-sensitive soil, erosion, poorly compacted fill, drainage concentration, plumbing leaks, vegetation, and construction details. The mapped ${soil?.map_unit_name || 'local soil'} record helps with screening, but a property evaluation is needed to identify the likely cause and whether repair is warranted.`,
     },
   ];
 
   const jsonLd = [
     {
       "@context": "https://schema.org",
-      "@type": "HomeAndConstructionBusiness",
-      name: `Foundation Repair ${city} - The Risk Registry`,
-      image: "https://www.foundationrisk.org/logo.png",
-      url: `https://www.foundationrisk.org/services/foundation-repair/${slug}`,
-      telephone: "+1-800-555-0199",
-      priceRange: "$$$$",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: city,
-        addressRegion: state,
-        postalCode: location.zip_code,
-        addressCountry: "US",
-      },
-      geo: {
-        "@type": "GeoCoordinates",
-        latitude: location.latitude,
-        longitude: location.longitude,
-      },
+      "@type": "Organization",
+      "@id": "https://foundationrisk.org/#organization",
+      name: "The Foundation Risk Registry",
+      url: "https://foundationrisk.org",
+      logo: "https://foundationrisk.org/logo.png",
       areaServed: {
-        "@type": "GeoShape",
-        postalCode: location.zip_code,
-        addressCountry: "US",
-      }
+        "@type": "City",
+        name: `${city}, ${state}`,
+        containedInPlace: {
+          "@type": "Country",
+          name: "United States",
+        },
+      },
+      knowsAbout: [
+        "Foundation soil risk",
+        "Expansive clay soil",
+        "Foundation settlement warning signs",
+      ],
     },
     {
       "@context": "https://schema.org",
       "@type": "Service",
+      "@id": `https://foundationrisk.org/services/foundation-repair/${slug}#service`,
       name: `Foundation Repair in ${city}, ${state}`,
       serviceType: "Foundation Repair",
+      url: `https://foundationrisk.org/services/foundation-repair/${slug}`,
       provider: {
-        "@type": "HomeAndConstructionBusiness",
-        name: "The Foundation Risk Registry",
+        "@id": "https://foundationrisk.org/#organization",
       },
       areaServed: {
         "@type": "City",
-        name: city,
+        name: `${city}, ${state}`,
+        containedInPlace: {
+          "@type": "Country",
+          name: "United States",
+        },
       },
-      description: `Permanent foundation repair and forensic engineering for homes in ${city}, ${state} affected by ${soil?.map_unit_name}.`,
+      description: `Foundation repair services and forensic evaluation options for homeowners in ${city}, ${state} affected by ${soil?.map_unit_name || "local soil conditions"}.`,
       hasOfferCatalog: {
         "@type": "OfferCatalog",
-        name: "Foundation Stabilization Services",
+        name: "Foundation Repair and Evaluation Services",
         itemListElement: [
           {
             "@type": "Offer",
             itemOffered: {
               "@type": "Service",
-              name: "Forensic Foundation Inspection",
+              name: "Forensic Foundation Evaluation",
             },
           },
           {
             "@type": "Offer",
             itemOffered: {
               "@type": "Service",
-              name: "Deep Steel Pier Installation",
+              name: "Foundation Repair Consultation",
             },
           },
         ],
@@ -275,11 +268,11 @@ export default async function CityPage({
             <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 px-4 py-1.5 rounded-full text-blue-200 text-sm font-semibold mb-8 backdrop-blur-sm">
               <ShieldCheck className="w-4 h-4 text-blue-400" />
               <span>
-                Geological Authority in {city}, {state}
+                Local Soil Context for {city}, {state}
               </span>
             </div>
             <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-              Forensic Foundation Repair & Engineering{" "}
+              Foundation Repair Evaluation & Options{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">
                 in {city}, {state}
               </span>
@@ -289,16 +282,15 @@ export default async function CityPage({
               <strong>
                 {city}, {state}
               </strong>
-              . Our forensic engineers identify foundation distress caused by{" "}
-              <strong>{soil?.map_unit_name}</strong> — stopping settling, cracking, and
-              structural failure permanently.
+              . Review mapped <strong>{soil?.map_unit_name || "soil conditions"}</strong>, understand warning signs,
+              and request a property-specific evaluation before choosing a repair plan.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/book-analysis"
                 className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition hover:shadow-lg"
               >
-                <ShieldCheck className="w-5 h-5" /> Get a Free Foundation Inspection
+                <ShieldCheck className="w-5 h-5" /> Request a Foundation Evaluation
               </Link>
             </div>
             
@@ -306,21 +298,21 @@ export default async function CityPage({
             <div className="mt-6 pt-6 border-t border-slate-700/50 flex flex-wrap items-center gap-6">
               <div className="flex items-center gap-2 text-slate-300">
                 <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center border border-blue-500/30">
-                  <span className="text-blue-400 font-extrabold text-[11px]">A+</span>
+                  <Info className="w-4 h-4 text-blue-400" />
                 </div>
-                <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">BBB Accredited</span>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">USDA Soil Context</span>
               </div>
               <div className="flex items-center gap-2 text-slate-300">
                 <div className="w-8 h-8 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-500/30">
                   <ShieldCheck className="w-4 h-4 text-emerald-400" />
                 </div>
-                <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Licensed {state} P.E.</span>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Property-Specific Review</span>
               </div>
               <div className="flex items-center gap-2 text-slate-300">
                 <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center border border-blue-500/30">
                   <ShieldCheck className="w-4 h-4 text-blue-400" />
                 </div>
-                <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Lifetime Warranty</span>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Compare Repair Options</span>
               </div>
             </div>
           </div>
@@ -477,39 +469,27 @@ export default async function CityPage({
           </h3>
           <div className="space-y-3 text-blue-100/80 text-sm leading-relaxed">
             <p>
-              {city} sits within the{' '}
-              <strong className="text-white">
-                {state === 'TX' || state === 'OK' ? 'I-35 Expansive Clay Corridor' : 'Midwest Active Clay Belt'}
-              </strong>
-              , one of the most geologically active zones for residential foundation movement in{' '}
-              {state === 'TX' ? 'North Texas' : state === 'OK' ? 'Central Oklahoma' : 'the Missouri region'}. 
-              The dominant soil series — <strong className="text-white">{soil?.map_unit_name || 'Expansive Clay'}</strong> —
-              is characterized by ultra-high shrink-swell potential. As soil moisture fluctuates seasonally,
-              the ground beneath your foundation shifts vertically by several centimeters per cycle, generating
-              cumulative stress that leads to measurable foundation distress.
+              The USDA soil record associated with this {city} page is{' '}
+              <strong className="text-white">{soil?.map_unit_name || 'not available'}</strong>.
+              Soil surveys describe mapped areas rather than individual lots, so grading, fill, drainage, vegetation,
+              plumbing, and construction can make conditions at a home different from the surrounding map unit.
             </p>
             <p>
-              Unlike cosmetic cracks, structural distress in {city} homes almost always traces back to the{' '}
-              <strong className="text-white">Plasticity Index (PI)</strong> of the underlying clay. With a PI of{' '}
-              {Number(soil?.plasticity_index || 30).toFixed(1)}, the soil is classified as{' '}
-              <strong className="text-white">{soil?.risk_level || 'High'} risk</strong> under local ASCE structural guidelines.
-              Every homeowner in zip code {location.zip_code} should have a baseline forensic{' '}
-              <strong className="text-white">foundation evaluation</strong> on record — especially before buying,
-              selling, or filing an insurance claim.
+              This record lists a <strong className="text-white">Plasticity Index (PI)</strong> of{' '}
+              {Number(soil?.plasticity_index || 0).toFixed(1)} and a registry classification of{' '}
+              <strong className="text-white"> {soil?.risk_level || 'not reported'}</strong>. Use those values to understand
+              possible moisture sensitivity—not to decide whether a home needs piers, leveling, drainage work, or no structural repair.
             </p>
             <p>
-              Our licensed engineers perform <strong className="text-white">foundation distress identification</strong> in{' '}
-              {city} by correlating visible symptoms (diagonal cracks, door misalignment, sloping floors) against
-              your specific USDA soil map unit. This produces a P.E.-certified report documenting whether
-              observed <strong className="text-white">foundation settling</strong> is active or historic —
-              the exact standard used in regional real estate litigation and structural insurance disputes.
+              A property-specific <strong className="text-white">foundation evaluation</strong> can compare visible symptoms,
+              drainage, crack history, and floor elevations with this soil context. Requesting that review gives you a clearer
+              basis for comparing repair scopes and deciding whether additional structural or geotechnical expertise is appropriate.
             </p>
           </div>
           <div className="mt-4 pt-4 border-t border-blue-800 flex items-center gap-2 text-xs text-blue-300">
             <ShieldCheck className="w-4 h-4 flex-shrink-0" />
             <span>
-              Data sourced from USDA SSURGO soil surveys. Analysis conducted by{' '}
-              <strong>Elias Thorne, P.E.</strong> — Licensed Professional Engineer, TX-PE-88XXXX.
+              Soil context is derived from USDA/NRCS SSURGO survey data. Repair recommendations require property-specific evidence.
             </span>
           </div>
         </div>
@@ -582,34 +562,24 @@ export default async function CityPage({
             </table>
           </div>
           <p className="text-xs text-slate-400 mt-4 italic">
-            *Hyper-local data based on historical foundation repair permits and
-            USDA soil overlays.
+            *Neighborhood labels organize local records. Risk values are screening context and do not describe every property.
           </p>
         </div>
 
-        {/* MUNICIPAL PERMIT HONEYPOT (Genius Tactic) */}
+        {/* PROPERTY EVALUATION GUIDANCE */}
         <div className="mt-8 bg-yellow-50 border border-yellow-200 p-6 rounded-xl flex items-start gap-4">
           <div className="bg-yellow-100 p-2 rounded-lg">
             <ShieldCheck className="w-6 h-6 text-yellow-700" />
           </div>
           <div>
-            <h4 className="font-bold text-yellow-900 text-lg mb-1">
-              ⚠️ Public Notice: Active Soil Movement in {city}
-            </h4>
+            <h3 className="font-bold text-yellow-900 text-lg mb-1">
+              When to Request a Foundation Evaluation in {city}
+            </h3>
             <p className="text-yellow-800 text-sm mb-4">
-              Our forensic analysts are currently tracking elevated foundation
-              repair permit filings in{" "}
-              <strong>
-                {(location.neighborhoods || [])
-                  .map((n: any) => (typeof n === "string" ? n : n.name))
-                  .slice(0, 3)
-                  .join(", ")}
-              </strong>
-              .
+              Schedule a property review when cracks, floor levels, or several doors and windows are changing—or when water repeatedly collects near one part of the foundation.
             </p>
             <p className="text-yellow-800 text-sm">
-              If you see pier drilling rigs on your street, your home sits on
-              the same active {soil?.map_unit_name || "soil"} vein.
+              Bring dated photos, repair records, drainage observations, and any previous elevation measurements. Better evidence leads to a more useful scope and a fairer comparison between repair options.
             </p>
           </div>
         </div>
@@ -662,9 +632,9 @@ export default async function CityPage({
         {/* SPIDERWEB (NEARBY CITIES) */}
         {neighbors && neighbors.length > 0 && (
           <div className="border-t border-slate-200 pt-12">
-            <h4 className="font-bold text-slate-900 mb-6">
+            <h3 className="font-bold text-slate-900 mb-6">
               Serving Neighbors Near {city}
-            </h4>
+            </h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {neighbors.map((n) => (
                 <Link
@@ -687,7 +657,7 @@ export default async function CityPage({
           href="/book-analysis"
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2"
         >
-          <ShieldCheck className="w-5 h-5" /> Get a Free Inspection
+          <ShieldCheck className="w-5 h-5" /> Request a Foundation Evaluation
         </Link>
       </div>
     </div>

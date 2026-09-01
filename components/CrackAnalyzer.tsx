@@ -24,8 +24,8 @@ export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number 
       id: "stair-step",
       label: "Stair-Step Cracks (Brick)",
       icon: TrendingDown,
-      risk: "High Risk",
-      desc: "Classic indicator of differential settlement. The soil under one part of your slab is shrinking/swelling faster than the rest.",
+      risk: "Evaluation Recommended",
+      desc: "A stair-step pattern can accompany differential movement, but its cause and significance depend on location, width, progression, and the surrounding structure.",
       color: "from-orange-500 to-red-500",
       bg: "bg-orange-500/10",
       iconColor: "text-orange-500",
@@ -35,8 +35,8 @@ export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number 
       id: "horizontal",
       label: "Horizontal Wall Cracks",
       icon: Layers,
-      risk: "Severe Risk",
-      desc: "Indicates hydrostatic pressure pushing laterally against the foundation. Requires immediate engineering review.",
+      risk: "Prompt Review",
+      desc: "A horizontal crack deserves prompt review, particularly if it is widening, bowing, leaking, or accompanied by other movement. Several causes are possible.",
       color: "from-red-600 to-rose-600",
       bg: "bg-red-500/10",
       iconColor: "text-red-500",
@@ -46,8 +46,8 @@ export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number 
       id: "doors",
       label: "Sticking Doors / Windows",
       icon: DoorOpen,
-      risk: "Moderate-High Risk",
-      desc: "The framing of the house is torquing because the center of the slab is lifting (heave) or dropping relative to the perimeter.",
+      risk: "Track the Pattern",
+      desc: "A sticking opening can result from humidity, hardware, framing, or foundation movement. Multiple changing openings make a property evaluation more useful.",
       color: "from-yellow-400 to-orange-400",
       bg: "bg-yellow-500/10",
       iconColor: "text-yellow-500",
@@ -57,8 +57,8 @@ export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number 
       id: "hairline",
       label: "Vertical Hairline Cracks",
       icon: Zap,
-      risk: "Low Risk",
-      desc: "Often cosmetic. Normal concrete curing or minor thermal expansion. Keep an eye on it to ensure it doesn't widen.",
+      risk: "Monitor",
+      desc: "A narrow, stable crack may be cosmetic. Photograph and measure it so widening, displacement, or related symptoms are easier to identify.",
       color: "from-blue-400 to-cyan-500",
       bg: "bg-blue-500/10",
       iconColor: "text-blue-400",
@@ -67,7 +67,7 @@ export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number 
   ];
 
   const activeIssue = issues.find((i) => i.id === selectedIssue);
-  const plasticity = pi || 35; // Default high PI if not provided
+  const plasticity = Number.isFinite(pi) ? Number(pi) : null;
 
   return (
     <div className="bg-slate-900 rounded-3xl shadow-2xl overflow-hidden my-12 border border-slate-700 font-sans">
@@ -129,7 +129,7 @@ export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number 
               <div className="text-center">
                 <p className="text-cyan-400 font-mono font-bold tracking-widest animate-pulse">ANALYZING SOIL DATA...</p>
                 <p className="text-slate-500 text-xs mt-2 font-mono">Location: {city.toUpperCase()}</p>
-                <p className="text-slate-500 text-xs mt-1 font-mono">Plasticity Index: {plasticity.toFixed(1)}</p>
+                <p className="text-slate-500 text-xs mt-1 font-mono">Plasticity Index: {plasticity === null ? "Not available" : plasticity.toFixed(1)}</p>
               </div>
             </div>
           )}
@@ -141,20 +141,24 @@ export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number 
                   {activeIssue.risk}
                 </div>
                 
-                <h3 className="text-2xl font-extrabold text-white mb-3">Diagnostic Match</h3>
+                <h3 className="text-2xl font-extrabold text-white mb-3">Symptom Context</h3>
                 <p className="text-slate-300 leading-relaxed mb-6 text-lg">{activeIssue.desc}</p>
                 
                 <div className="bg-slate-900 rounded-xl p-5 border border-slate-800 mb-6 relative overflow-hidden">
                   <div className={`absolute left-0 top-0 w-1.5 h-full bg-gradient-to-b ${activeIssue.color}`}></div>
                   <p className="text-slate-400 text-sm leading-relaxed">
                     <span className="text-white font-bold block mb-2 uppercase tracking-wider text-xs">Geological Context:</span> 
-                    Because {city} has an active soil PI of <span className="text-red-400 font-mono font-bold bg-red-400/10 px-1.5 py-0.5 rounded">{plasticity.toFixed(1)}</span>, this symptom is highly correlated with seasonal volumetric soil expansion.
+                    {plasticity === null ? (
+                      <>No mapped Plasticity Index is available for this record. The visible pattern and whether it is changing matter more than a citywide assumption.</>
+                    ) : (
+                      <>The mapped soil record for {city} has a PI of <span className="text-red-400 font-mono font-bold bg-red-400/10 px-1.5 py-0.5 rounded">{plasticity.toFixed(1)}</span>. This provides moisture-sensitivity context, but it cannot diagnose the cause of a crack at a specific property.</>
+                    )}
                   </p>
                 </div>
               </div>
 
               <div className="mt-8 pt-6 border-t border-slate-800 mb-2">
-                <p className="text-slate-400 font-bold mb-3 text-xs uppercase tracking-widest">Generate P.E. Protocol</p>
+                <p className="text-slate-400 font-bold mb-3 text-xs uppercase tracking-widest">Request a Property Review</p>
                 <form action="/book-analysis" className="flex flex-col sm:flex-row gap-3">
                   <input type="hidden" name="symptom" value={activeIssue.id} />
                   <input

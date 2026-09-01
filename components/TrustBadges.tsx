@@ -1,4 +1,4 @@
-import { ShieldCheck, UserCheck, Scale, Leaf } from "lucide-react";
+import { ShieldCheck, UserCheck, Scale, Map } from "lucide-react";
 
 export default function TrustBadges() {
     return (
@@ -8,8 +8,8 @@ export default function TrustBadges() {
                     <UserCheck className="w-6 h-6" />
                 </div>
                 <div>
-                    <h4 className="font-bold text-slate-900 text-sm">P.E. Certified</h4>
-                    <p className="text-xs text-slate-500">Engineer oversight</p>
+                    <p className="font-bold text-slate-900 text-sm">Property-Specific Review</p>
+                    <p className="text-xs text-slate-500">Your symptoms and address</p>
                 </div>
             </div>
 
@@ -18,8 +18,8 @@ export default function TrustBadges() {
                     <ShieldCheck className="w-6 h-6" />
                 </div>
                 <div>
-                    <h4 className="font-bold text-slate-900 text-sm">Lifetime Warranty</h4>
-                    <p className="text-xs text-slate-500">Transferable coverage</p>
+                    <p className="font-bold text-slate-900 text-sm">Repair Options</p>
+                    <p className="text-xs text-slate-500">Compare the proposed scope</p>
                 </div>
             </div>
 
@@ -28,18 +28,18 @@ export default function TrustBadges() {
                     <Scale className="w-6 h-6" />
                 </div>
                 <div>
-                    <h4 className="font-bold text-slate-900 text-sm">Code Compliant</h4>
-                    <p className="text-xs text-slate-500">Fully permitted</p>
+                    <p className="font-bold text-slate-900 text-sm">Informed Decisions</p>
+                    <p className="text-xs text-slate-500">Questions before you commit</p>
                 </div>
             </div>
 
             <div className="flex flex-col items-center text-center gap-2">
                 <div className="bg-blue-50 p-3 rounded-full text-blue-600">
-                    <Leaf className="w-6 h-6" />
+                    <Map className="w-6 h-6" />
                 </div>
                 <div>
-                    <h4 className="font-bold text-slate-900 text-sm">Eco-Friendly</h4>
-                    <p className="text-xs text-slate-500">Low impact verify</p>
+                    <p className="font-bold text-slate-900 text-sm">USDA Soil Context</p>
+                    <p className="text-xs text-slate-500">Public survey data explained</p>
                 </div>
             </div>
         </div>

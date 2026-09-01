@@ -5,10 +5,13 @@ import PartnerLogos from "@/components/PartnerLogos";
 import { supabase } from '@/lib/supabase';
 
 export const metadata = {
-  title: "The Foundation Risk Registry | Forensic Evaluation & Soil Analysis",
-  description: "⚠️ Is your foundation safe? Check the official 2026 Geological Database for North Texas. Get a forensic risk evaluation and USDA soil analysis before structural cracks become permanent.",
+  title: "The Foundation Risk Registry | Soil Risk & Foundation Evaluation",
+  description: "Check mapped USDA soil conditions, understand foundation warning signs, and request a property-specific evaluation before choosing a repair plan.",
   alternates: {
     canonical: 'https://foundationrisk.org',
+  },
+  openGraph: {
+    url: 'https://foundationrisk.org',
   },
 };
 
@@ -23,7 +26,7 @@ export default async function Home() {
     .order('created_at', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)] flex flex-col items-center">
+    <main className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)] flex flex-col items-center">
         <section className="w-full flex flex-col items-center justify-center pb-8 px-6 bg-white border-b border-slate-100">
           <div className="max-w-4xl w-full text-center space-y-6 mb-12">
             <div className="inline-block bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
@@ -34,8 +37,8 @@ export default async function Home() {
               Not Just The Crack.
             </h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              Most foundation repairs fail because they ignore the geological root cause.
-              <strong> Stop structural damage</strong> with a forensic risk evaluation today.
+              Understand the soil context behind common foundation symptoms.
+              <strong> Request a property-specific evaluation</strong> before choosing a repair plan.
             </p>
           </div>
 
@@ -52,7 +55,7 @@ export default async function Home() {
             {[
               { title: "USDA Data", desc: "Sourced directly from federal soil surveys (SSURGO)." },
               { title: "Geological Risk", desc: "Understand PI and Linear Extensibility before you dig." },
-              { title: "Engineered Solutions", desc: "Get matched with geology-aware forensic engineers." }
+              { title: "Evaluation Options", desc: "Request a local property review and compare repair scopes." }
             ].map((item, i) => (
               <div key={i} className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
                 <h3 className="font-bold text-slate-900 text-lg mb-2">{item.title}</h3>
@@ -64,10 +67,9 @@ export default async function Home() {
 
         {/* AEO: EDUCATIONAL CONTENT BLOCK */}
         <section className="w-full py-16 px-6 bg-white max-w-4xl mx-auto prose prose-slate prose-lg">
-          <h2 className="text-3xl font-bold text-slate-900 text-center mb-8">Why Traditional Foundation Repair Fails</h2>
+          <h2 className="text-3xl font-bold text-slate-900 text-center mb-8">Why Foundation Repair Estimates Differ</h2>
           <p>
-            Homeowners often ask: <em>"Why are foundation repair estimates so different?"</em> The answer lies in the <strong>Geological Profile</strong>.
-            Contractors using "cookie-cutter" methods (like pressed piling) often fail to account for the <strong>Active Zone</strong> depth of your specific soil unit.
+            Foundation repair estimates can differ because providers measure different areas, identify different causes, or propose different systems. The <strong>geological profile</strong> adds useful context, but the scope should ultimately be supported by property-specific observations and measurements.
           </p>
 
           <div className="grid md:grid-cols-2 gap-8 not-prose mt-12">
@@ -75,11 +77,10 @@ export default async function Home() {
               <h3 className="font-bold text-slate-900 mb-4">What IS an "Active Zone"?</h3>
               <p>
                 The <strong>Active Zone</strong> is the depth at which soil moisture fluctuates seasonally.
-                In expansive clay, this zone can extend 15+ feet deep.
+                Its depth varies by site and requires property-specific investigation to establish.
               </p>
               <p>
-                <strong>The Risk:</strong> If a pier is installed to 10 feet (Standard), but the Active Zone is 15 feet,
-                the pier will move <em>with</em> the heaving soil, rendering the "repair" useless.
+                <strong>The practical question:</strong> Ask how the proposed system accounts for actual subsurface conditions, loads, access, and the evidence that movement is active.
               </p>
             </div>
 
@@ -92,11 +93,11 @@ export default async function Home() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded text-xs">2</span>
-                  Calculate Linear Extensibility (Shrink/Swell).
+                  Explain mapped plasticity and shrink-swell indicators.
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded text-xs">3</span>
-                  Match with Forensic Engineering protocols.
+                  Organize the questions to ask during a property evaluation.
                 </li>
               </ul>
             </div>
@@ -109,29 +110,29 @@ export default async function Home() {
             <h2 className="text-3xl font-bold text-slate-900 mb-8">The Forensic Difference: Why Soil Data Matters</h2>
             <div className="prose prose-slate max-w-none">
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
-                Most homeowners approach foundation repair from a symptom-based perspective: "I see a crack, I need a pier." However, forensic civil engineering dictates that repair without a root-cause geological analysis is merely a temporary patch. At the Foundation Risk Registry, we leverage the <strong>Plasticity Index (PI)</strong> and <strong>Linear Extensibility</strong> metrics from USDA/SSURGO datasets to provide a predictive risk model for every residential zone we monitor.
+                A crack does not automatically mean a home needs piers. The Foundation Risk Registry explains <strong>Plasticity Index (PI)</strong> and related USDA/NRCS soil-survey values so homeowners can place visible symptoms in context before requesting an evaluation or comparing repair proposals.
               </p>
               
               <div className="grid md:grid-cols-2 gap-12 my-12">
                 <div>
                   <h3 className="text-xl font-bold text-slate-900 mb-4">The Active Zone Phenomenon</h3>
                   <p className="text-slate-600 text-sm leading-relaxed">
-                    Expansive clay soils, particularly those found in the Blackland Prairie and Gulf Coast regions, possess a molecular structure that allows them to absorb vast quantities of water. This results in "heave" during wet seasons and "shrinkage" during droughts. The depth at which this seasonal moisture fluctuation occurs is known as the <em>Active Zone</em>. A truly forensic repair must penetrate well below this zone to reach stable, non-reactive strata.
+                    Some fine-grained soils change volume as moisture conditions change. The depth affected by seasonal variation is often called the <em>active zone</em>, but its depth cannot be selected from a city map. Repair design should reflect site conditions, loads, and measured movement.
                   </p>
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-slate-900 mb-4">Engineering vs. Sales</h3>
                   <p className="text-slate-600 text-sm leading-relaxed">
-                    By making the USDA soil plasticity maps transparent, we empower homeowners to challenge the "standard" 15-pier estimate. If your property sits on low-plasticity loam, your "foundation failure" might actually be a simple drainage issue. Our goal is to provide the objective data necessary to determine if you need a structural contractor or a landscape professional.
+                    Transparent soil context helps homeowners ask why a repair is recommended, how the affected area was measured, and whether drainage or plumbing is contributing. Those questions make competing proposals easier to compare without assuming that map data supplies the diagnosis.
                   </p>
                 </div>
               </div>
 
               <blockquote className="border-l-4 border-blue-600 pl-6 py-2 bg-slate-50 rounded-r-xl">
-                <p className="text-slate-900 font-bold italic">
-                  "Foundation movement is a geological certainty in high-PI zones. Structural intervention should only be considered when the rate of movement exceeds the slab's tolerance for deflection."
+                <p className="text-slate-900 font-bold">
+                  Higher-plasticity soil can be more sensitive to moisture change, but map data does not establish whether a particular foundation is moving. Repair decisions should be tied to property measurements, observed progression, and the likely cause.
                 </p>
-                <cite className="text-xs text-slate-500 block mt-2">— Elias Thorne, P.E., Senior Geotechnical Lead</cite>
+                <cite className="text-xs text-slate-500 block mt-2">— Foundation Risk Registry research guidance</cite>
               </blockquote>
             </div>
           </div>
@@ -196,9 +197,9 @@ export default async function Home() {
                 <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-3">High-Priority Analysis Zones</p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {[
-                    { city: 'Lewisville', state: 'TX', zip: '75067', slug: 'lewisville-tx-75067', label: 'Foundation Evaluation' },
-                    { city: 'Frisco', state: 'TX', zip: '75035', slug: 'frisco-tx-75035', label: 'Distress Analysis' },
-                    { city: 'Richardson', state: 'TX', zip: '75080', slug: 'richardson-tx-75080', label: 'Settling Report' },
+                    { city: 'Lewisville', state: 'TX', zip: '75067', slug: 'lewisville-tx', label: 'Foundation Evaluation' },
+                    { city: 'Frisco', state: 'TX', zip: '75035', slug: 'frisco-tx', label: 'Distress Analysis' },
+                    { city: 'Richardson', state: 'TX', zip: '75080', slug: 'richardson-tx', label: 'Settling Report' },
                   ].map((city) => (
                     <Link
                       key={city.slug}
@@ -237,6 +238,6 @@ export default async function Home() {
             </div>
           </section>
         )}
-    </div>
+    </main>
   );
 }

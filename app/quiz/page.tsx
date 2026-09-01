@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export const metadata = {
     title: "Forensic Foundation Diagnostic Tool | 60-Second Check",
-    description: "Official diagnostic tool to identify foundation failure risk using forensic engineering parameters.",
+    description: "A short screening tool to organize visible foundation warning signs and decide whether a property-specific evaluation may be useful.",
     alternates: {
         canonical: '/quiz',
     },
