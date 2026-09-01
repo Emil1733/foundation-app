@@ -3,7 +3,9 @@ import Link from "next/link";
 
 export const metadata = {
     title: "Data Disclaimer | Foundation Risk Registry",
-    description: "Important limitations for USDA soil data, foundation-risk screening, evaluation requests, and repair-provider information.",
+    description: "Understand the limits of mapped USDA soil data, foundation-risk screening, evaluation requests, and information supplied by participating service providers.",
+    alternates: { canonical: "https://foundationrisk.org/disclaimer" },
+    openGraph: { url: "https://foundationrisk.org/disclaimer" },
 };
 
 export default function DisclaimerPage() {

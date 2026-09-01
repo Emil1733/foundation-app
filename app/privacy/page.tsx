@@ -3,7 +3,9 @@ import Link from "next/link";
 
 export const metadata = {
     title: "Privacy Policy & Data Usage | Foundation Risk Registry",
-    description: "Transparency on how we handle your address data and our integration with the USDA SSURGO database.",
+    description: "Learn how the Foundation Risk Registry collects, uses, protects, retains, and shares address, contact, and foundation evaluation request information.",
+    alternates: { canonical: "https://foundationrisk.org/privacy" },
+    openGraph: { url: "https://foundationrisk.org/privacy" },
 };
 
 export default function PrivacyPage() {

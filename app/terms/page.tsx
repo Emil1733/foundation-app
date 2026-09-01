@@ -3,7 +3,9 @@ import Link from "next/link";
 
 export const metadata = {
     title: "Terms of Service | Foundation Risk Registry",
-    description: "Terms and conditions for using the Foundation Risk Registry and accessing geological data.",
+    description: "Read the terms governing Foundation Risk Registry soil reports, evaluation requests, data limitations, acceptable use, and professional-service disclosures.",
+    alternates: { canonical: "https://foundationrisk.org/terms" },
+    openGraph: { url: "https://foundationrisk.org/terms" },
 };
 
 export default function TermsPage() {

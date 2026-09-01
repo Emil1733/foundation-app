@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata = {
     title: "Contact the Registry | Foundation Risk Support",
-    description: "Contact the Foundation Risk Registry about soil-data corrections, foundation evaluation requests, or general support.",
+    description: "Contact the Foundation Risk Registry for soil-data corrections, report questions, support, or help requesting a property-specific foundation evaluation.",
     alternates: { canonical: "https://foundationrisk.org/contact" },
     openGraph: { url: "https://foundationrisk.org/contact" },
 };

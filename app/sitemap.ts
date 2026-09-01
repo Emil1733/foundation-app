@@ -6,9 +6,62 @@ const BASE_URL = 'https://foundationrisk.org';
 
 export const revalidate = 86400; // ISR: Cache sitemap for 24 hours to prevent Supabase query exhaustion
 
+type SitemapLocation = {
+    slug: string;
+    created_at: string;
+};
+
+const coreUrls: MetadataRoute.Sitemap = [
+    {
+        url: BASE_URL,
+        changeFrequency: 'daily',
+        priority: 1,
+    },
+    {
+        url: `${BASE_URL}/learn`,
+        changeFrequency: 'daily',
+        priority: 0.9,
+    },
+    {
+        url: `${BASE_URL}/locations`,
+        changeFrequency: 'weekly',
+        priority: 0.9,
+    },
+    {
+        url: `${BASE_URL}/book-analysis`,
+        changeFrequency: 'monthly',
+        priority: 0.8,
+    },
+    {
+        url: `${BASE_URL}/about`,
+        changeFrequency: 'monthly',
+        priority: 0.6,
+    },
+    {
+        url: `${BASE_URL}/contact`,
+        changeFrequency: 'monthly',
+        priority: 0.6,
+    },
+    {
+        url: `${BASE_URL}/disclaimer`,
+        changeFrequency: 'yearly',
+        priority: 0.3,
+    },
+    {
+        url: `${BASE_URL}/privacy`,
+        changeFrequency: 'yearly',
+        priority: 0.3,
+    },
+    {
+        url: `${BASE_URL}/terms`,
+        changeFrequency: 'yearly',
+        priority: 0.3,
+    },
+];
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // 1. Fetch all cities using a pagination loop to bypass the Supabase 1,000 row hard limit
-    let locations: any[] = [];
+    let locations: SitemapLocation[] = [];
     let from = 0;
     const step = 1000;
     let hasMore = true;
@@ -17,6 +70,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         const { data, error } = await supabase
             .from('target_locations')
             .select('slug, created_at')
+            .order('slug', { ascending: true })
             .range(from, from + step - 1);
 
         if (error || !data || data.length === 0) {
@@ -28,7 +82,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }
     }
 
-    if (locations.length === 0) return [];
+    // Keep important static pages discoverable even if Supabase is temporarily unavailable.
+    if (locations.length === 0) return coreUrls;
 
     const cityUrls = locations.map((loc) => ({
         url: `${BASE_URL}/services/foundation-repair/${loc.slug}`,
@@ -45,26 +100,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8, // Deeper educational content
     }));
 
-    return [
-        {
-            url: BASE_URL,
-            lastModified: new Date(),
-            changeFrequency: 'daily',
-            priority: 1,
-        },
-        {
-            url: `${BASE_URL}/learn`,
-            lastModified: new Date(),
-            changeFrequency: 'daily',
-            priority: 1,
-        },
-        {
-            url: `${BASE_URL}/locations`,
-            lastModified: new Date(),
-            changeFrequency: 'daily',
-            priority: 0.9,
-        },
-        ...cityUrls,
-        ...articleUrls,
-    ];
+    return [...coreUrls, ...cityUrls, ...articleUrls];
 }
