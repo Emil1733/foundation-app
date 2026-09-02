@@ -18,6 +18,7 @@ import { Metadata } from "next";
 import { getNearbyLocations } from "@/lib/nearbyLocations";
 import { STATE_FOUNDATION_GUIDES } from "@/lib/stateFoundationGuides";
 import { shouldIndexServicePage } from "@/lib/serviceIndexability";
+import { getTexasFoundationGuide } from "@/lib/texasFoundationGuides";
 
 export const revalidate = 604800; // ISR: Cache for 1 week to protect Vercel compute and Supabase DB
 
@@ -92,14 +93,16 @@ export default async function CityPage({
   // 1. Fetch Main Data
   const { data: location, error } = await supabase
     .from("target_locations")
-    .select(`id, city, state, zip_code, soil_cache (*)`)
+    .select(`id, city, state, zip_code, latitude, longitude, soil_cache (*)`)
     .eq("slug", slug)
     .single();
 
   if (error || !location) return notFound();
   const { city, state, soil_cache: rawSoil } = location;
   const soil = Array.isArray(rawSoil) ? rawSoil[0] : rawSoil;
-  const stateGuide = STATE_FOUNDATION_GUIDES[state];
+  const stateGuide = state === "TX"
+    ? getTexasFoundationGuide(Number(location.latitude), Number(location.longitude))
+    : STATE_FOUNDATION_GUIDES[state];
 
   // 2. Read the six precomputed nearby locations without loading the full table.
   const neighbors = await getNearbyLocations(location.id, state);
@@ -439,6 +442,19 @@ export default async function CityPage({
               Soil context is derived from USDA/NRCS SSURGO survey data. Repair recommendations require property-specific evidence.
             </span>
           </div>
+          {stateGuide?.sources && (
+            <p className="mt-3 text-xs text-blue-300">
+              Regional references:{' '}
+              {stateGuide.sources.map((source, index) => (
+                <span key={source.url}>
+                  {index > 0 && ' · '}
+                  <a href={source.url} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-white">
+                    {source.label}
+                  </a>
+                </span>
+              ))}
+            </p>
+          )}
         </div>
 
         {/* COST ESTIMATOR WIDGET */}

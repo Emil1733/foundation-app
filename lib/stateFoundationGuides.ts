@@ -3,6 +3,7 @@ export type StateFoundationGuide = {
     overview: string[];
     watchFor: string[];
     evaluation: string;
+    sources?: Array<{ label: string; url: string }>;
 };
 
 export const STATE_FOUNDATION_GUIDES: Record<string, StateFoundationGuide> = {
