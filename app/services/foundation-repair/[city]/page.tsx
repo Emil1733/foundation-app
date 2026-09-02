@@ -7,7 +7,6 @@ import CrackAnalyzer from "@/components/CrackAnalyzer";
 import CostEstimator from "@/components/CostEstimator";
 import {
   MoveRight,
-  Phone,
   ShieldCheck,
   MapPin,
   Info,
@@ -27,10 +26,6 @@ export async function generateStaticParams() {
 
 // Logic to select intro based on city/soil features (Deterministic/Hash-based)
 const getDynamicIntro = (city: string, soilName: string, risk: string) => {
-  if (city.toLowerCase() === "austin") {
-    return `Austin properties can encounter varied limestone, clay, fill, slope, and drainage conditions. The mapped ${soilName} record is useful context, but a repair decision should be based on evidence from the property itself.`;
-  }
-
   const hooks = [
     `${city} homes can respond differently to drought, heavy rain, drainage, vegetation, plumbing leaks, and previous site work. The mapped ${soilName} record helps frame the right questions before a repair is chosen.`,
     `The ${soilName} mapped around ${city} provides useful soil context for homeowners comparing foundation repair options. It does not replace measurements or an inspection at the property.`,
@@ -53,14 +48,12 @@ export async function generateMetadata({
   const { city: slug } = await params;
   const { data: location } = await supabase
     .from("target_locations")
-    .select(`*, soil_cache (risk_level, map_unit_name)`)
+    .select(`city, state, soil_cache (risk_level, map_unit_name)`)
     .eq("slug", slug)
     .single();
 
   if (!location) return { title: "Foundation Distress Identification Services" };
 
-  const risk = location.soil_cache?.risk_level || "Unknown";
-  const zipCode = location.zip_code || "";
   return {
     title: `${location.city} Foundation Repair | Soil Risk & Evaluation`,
     description: `Foundation repair in ${location.city}, ${location.state}: review local soil risks, settlement warning signs, and forensic evaluation options before choosing a repair plan.`,
@@ -85,12 +78,13 @@ export default async function CityPage({
   // 1. Fetch Main Data
   const { data: location, error } = await supabase
     .from("target_locations")
-    .select(`*, soil_cache (*), neighborhoods`)
+    .select(`id, city, state, zip_code, soil_cache (*)`)
     .eq("slug", slug)
     .single();
 
   if (error || !location) return notFound();
-  const { city, state, soil_cache: soil } = location;
+  const { city, state, soil_cache: rawSoil } = location;
+  const soil = Array.isArray(rawSoil) ? rawSoil[0] : rawSoil;
 
   // 2. Read the six precomputed nearby locations without loading the full table.
   const neighbors = await getNearbyLocations(location.id, state);
@@ -299,10 +293,10 @@ export default async function CityPage({
             </div>
             <div>
               <h2 className="text-2xl font-bold text-slate-900">
-                Why {city} Foundations Fail
+                Mapped Soil and Foundation Context for {city}
               </h2>
               <p className="text-slate-500 text-sm">
-                Forensic Soil Report for Zip {location.zip_code}
+                USDA/NRCS soil screening record for ZIP {location.zip_code}
               </p>
             </div>
           </div>
@@ -314,32 +308,6 @@ export default async function CityPage({
                 soil?.risk_level || "High",
               )}
             </p>
-            {location.city_profile && (
-              <p className="mt-4 leading-relaxed bg-slate-100 p-5 rounded-xl border-l-4 border-blue-500 text-slate-700">
-                <strong>{city} Geological Profile:</strong> {location.city_profile}
-              </p>
-            )}
-            
-            {/* NEIGHBORHOOD RISK GRID */}
-            {location.neighborhoods && location.neighborhoods.length > 0 && (
-              <div className="mt-8 mb-4 not-prose">
-                <h3 className="text-lg font-bold text-slate-900 mb-4">Neighborhood Risk Profile</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {location.neighborhoods.map((n: any, i: number) => (
-                    <div key={i} className="bg-white border border-slate-200 p-3 rounded-lg shadow-sm">
-                      <div className="flex justify-between items-start mb-1">
-                        <span className="font-semibold text-slate-800 text-sm truncate pr-2">{n.name}</span>
-                        <span className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded ${n.risk === 'Severe' ? 'bg-red-100 text-red-700' : n.risk === 'High' ? 'bg-orange-100 text-orange-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                          {n.risk}
-                        </span>
-                      </div>
-                      {n.note && <p className="text-xs text-slate-500 line-clamp-2">{n.note}</p>}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            
             {soil && (
               <div className="my-8 grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose">
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
@@ -351,13 +319,13 @@ export default async function CityPage({
                       {Number(soil.plasticity_index).toFixed(1)}
                     </span>
                     <span
-                      className={`text-sm font-bold px-2 py-0.5 rounded ${Number(soil.plasticity_index) > 35 ? "bg-red-100 text-red-700" : "bg-orange-100 text-orange-700"}`}
+                      className="rounded bg-blue-100 px-2 py-0.5 text-sm font-bold text-blue-800"
                     >
-                      {Number(soil.plasticity_index) > 35 ? "SEVERE" : "HIGH"}
+                      {soil.risk_level || "NOT CLASSIFIED"}
                     </span>
                   </div>
                   <p className="text-xs text-slate-500 mt-2">
-                    Critical limit is 25.0.
+                    Mapped screening value; not a measurement from the property.
                   </p>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
@@ -370,7 +338,7 @@ export default async function CityPage({
                     </span>
                   </div>
                   <p className="text-xs text-slate-500 mt-2">
-                    Vertical movement potential.
+                    Mapped linear-extensibility context; site conditions can vary.
                   </p>
                 </div>
               </div>
@@ -398,25 +366,6 @@ export default async function CityPage({
             </div>
           </div>
         </div>
-
-        {/* RICHARDSON SPECIFIC CRACK GUIDE */}
-        {city.toLowerCase() === "richardson" && (
-          <div className="bg-amber-50 rounded-2xl p-8 border border-amber-200 mb-12">
-            <h3 className="text-xl font-bold text-amber-900 mb-4">
-              Visual Crack Identification Guide: Richardson, TX
-            </h3>
-            <div className="space-y-4 text-amber-900/80 text-sm">
-              <p>
-                Richardson homes often exhibit <strong>diagonal 'stair-step' cracks</strong> in brick mortar near the corners of the slab. This is a classic indicator of differential settlement in the local clay veins.
-              </p>
-              <ul className="list-disc pl-5 space-y-2">
-                <li><strong>Vertical Cracks:</strong> Usually indicate slab shrinkage or thermal expansion.</li>
-                <li><strong>Horizontal Cracks:</strong> High-risk signal of hydrostatic pressure (soil pushing against the beam).</li>
-                <li><strong>Diagonal Corner Cracks:</strong> The #1 signal for foundation piering requirements in Richardson.</li>
-              </ul>
-            </div>
-          </div>
-        )}
 
         <FoundationDiagram />
 
@@ -457,75 +406,6 @@ export default async function CityPage({
 
         {/* COST ESTIMATOR WIDGET */}
         <CostEstimator city={city} pi={soil?.plasticity_index} />
-
-        {/* NEIGHBORHOOD SOIL RISK TABLE */}
-        <div className="mt-12 bg-slate-50 rounded-2xl p-8 border border-slate-200">
-          <h3 className="text-xl font-bold text-slate-900 mb-6">
-            Neighborhood Risk Audit: {city}
-          </h3>
-
-          {/* MOBILE CARD VIEW */}
-          <div className="md:hidden space-y-4">
-            {(location.neighborhoods || []).map((n: any, i: number) => (
-              <div
-                key={i}
-                className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm"
-              >
-                <div className="flex justify-between items-start mb-2">
-                  <span className="font-bold text-slate-900">
-                    {typeof n === "string" ? n : n.name}
-                  </span>
-                  <span
-                    className={`px-2 py-1 rounded text-xs font-bold ${n.risk === "Severe" ? "bg-red-100 text-red-700" : (n.risk || "High") === "High" ? "bg-orange-100 text-orange-700" : "bg-yellow-100 text-yellow-700"}`}
-                  >
-                    {(n.risk || "High").toUpperCase()}
-                  </span>
-                </div>
-                <p className="text-sm text-slate-600">
-                  {n.note || "Active soil zone detected."}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* DESKTOP TABLE VIEW */}
-          <div className="hidden md:block overflow-x-auto">
-            <table className="w-full text-sm text-left">
-              <thead className="text-xs text-slate-500 uppercase bg-slate-100 font-bold">
-                <tr>
-                  <th className="px-4 py-3 rounded-l-lg">Neighborhood</th>
-                  <th className="px-4 py-3">Geological Note</th>
-                  <th className="px-4 py-3 rounded-r-lg">Risk Level</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(location.neighborhoods || []).map((n: any, i: number) => (
-                  <tr
-                    key={i}
-                    className="border-b border-slate-200 hover:bg-white transition"
-                  >
-                    <td className="px-4 py-4 font-bold text-slate-900">
-                      {typeof n === "string" ? n : n.name}
-                    </td>
-                    <td className="px-4 py-4 text-slate-600">
-                      {n.note || "Detailed analysis available."}
-                    </td>
-                    <td className="px-4 py-4">
-                      <span
-                        className={`px-2 py-1 rounded text-xs font-bold ${n.risk === "Severe" ? "bg-red-100 text-red-700" : (n.risk || "High") === "High" ? "bg-orange-100 text-orange-700" : "bg-yellow-100 text-yellow-700"}`}
-                      >
-                        {(n.risk || "High").toUpperCase()}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="text-xs text-slate-400 mt-4 italic">
-            *Neighborhood labels organize local records. Risk values are screening context and do not describe every property.
-          </p>
-        </div>
 
         {/* PROPERTY EVALUATION GUIDANCE */}
         <div className="mt-8 bg-yellow-50 border border-yellow-200 p-6 rounded-xl flex items-start gap-4">

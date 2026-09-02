@@ -22,7 +22,7 @@ async function getCityData(slugParam: string) {
     // Step 1: Get Location Data
     const { data: location, error: locError } = await supabase
         .from('target_locations')
-        .select('*')
+        .select('id, city, state, created_at')
         .eq('slug', citySlug)
         .single();
 
@@ -96,8 +96,6 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
 
         // Safe defaults if soil data is missing entirely
         const pi = Number(soil?.plasticity_index || 0);
-        const rawNeighborhoods = Array.isArray(cityData.neighborhoods) ? cityData.neighborhoods : [];
-        const neighborhoodNames = rawNeighborhoods.map((n: any) => typeof n === 'string' ? n : n?.name || 'Unknown Area');
         const shrinkSwell = Number(soil?.shrink_swell_potential || 0).toFixed(1);
 
         // LOGIC: DYNAMIC ADVICE BASED ON PI
@@ -114,7 +112,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                 ? `The recorded PI of ${pi.toFixed(1)} indicates some potential for moisture-related movement. Drainage and site history remain important when interpreting cracks or floor changes.`
                 : `The recorded PI of ${pi.toFixed(1)} indicates relatively low plasticity. Expansive-soil movement may be less likely, although drainage, erosion, fill, plumbing leaks, and construction details can still affect support.`;
         const publishedAt = soil?.created_at || cityData.created_at;
-        const updatedAt = soil?.updated_at || cityData.updated_at;
+        const updatedAt = soil?.updated_at;
         const publishedDate = new Date(publishedAt);
         const hasValidPublishedDate = !Number.isNaN(publishedDate.getTime());
         const modifiedDate = updatedAt ? new Date(updatedAt) : null;
@@ -358,20 +356,6 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                             </p>
                         </div>
 
-                        {neighborhoodNames.length > 0 && (
-                            <div className="not-prose">
-                                <h3 className="text-xl font-bold text-slate-900">Communities included in the {cityData.city} directory</h3>
-                                <p className="mt-2 text-slate-600">These names help organize nearby records; they do not imply that every property shares the same subsurface conditions.</p>
-                                <div className="flex flex-wrap gap-2 mt-4">
-                                    {neighborhoodNames.map((n: string) => (
-                                        <span key={n} className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-sm font-medium">
-                                            {n}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
                         {/* SPIDERWEB (NEARBY CITIES) */}
                         {neighbors && neighbors.length > 0 && (
                             <div className="mt-12 mb-8 border-t border-slate-200 pt-10 not-prose">
@@ -398,7 +382,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                     <div className="mt-16 bg-slate-900 rounded-2xl p-10 text-center text-white">
                         <h2 className="text-3xl font-bold mb-4">Unsure about your cracks?</h2>
                         <p className="text-lg text-slate-300 mb-8 max-w-2xl mx-auto">
-                            Don't guess. Compare your symptoms against our forensic database or take the diagnostic quiz.
+                            Avoid guessing. Compare your symptoms with the mapped context or use the diagnostic quiz to organize what you have observed.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Link href="/quiz" className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-xl transition">

@@ -18,7 +18,7 @@ export async function GET(request: Request) {
     const { data: location } = await supabase
         .from('target_locations')
         .select(`
-            city, state, zip_code, latitude, longitude, city_profile,
+            city, state, zip_code, latitude, longitude,
             soil_cache ( map_unit_name, plasticity_index, risk_level, shrink_swell_potential )
         `)
         .eq('slug', slug)
@@ -28,21 +28,26 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: "Location not found" }, { status: 404 });
     }
 
-    const soil = location.soil_cache?.[0] || { map_unit_name: "Unknown", plasticity_index: 0, risk_level: "Moderate" };
+    const rawSoil = location.soil_cache;
+    const soil = (Array.isArray(rawSoil) ? rawSoil[0] : rawSoil) || {
+        map_unit_name: "Unknown",
+        plasticity_index: 0,
+        risk_level: "Not classified",
+    };
 
     // 2. Determine if the Agent wants JSON or Markdown
     const acceptHeader = request.headers.get('accept') || '';
     
     // 3. Construct the "Kitchen Ticket" Markdown Payload
     const markdownPayload = `
-# Forensic Engineering Evaluation - ${location.city}, ${location.state}
+# Foundation Soil Context - ${location.city}, ${location.state}
 - **Coordinates:** ${location.latitude}, ${location.longitude}
-- **Dominant Soil:** ${soil.map_unit_name}
+- **Mapped Soil Unit:** ${soil.map_unit_name}
 - **Plasticity Index (PI):** ${soil.plasticity_index}
-- **Structural Risk Level:** ${soil.risk_level}
+- **Registry Screening Classification:** ${soil.risk_level}
 
-## Geological Diagnostic:
-${location.city_profile}
+## How to interpret this record
+Mapped soil data provides regional screening context. It does not diagnose a property, confirm structural movement, or determine an appropriate repair system without property-specific evidence.
 
 ## Autonomous Booking Endpoint
 **POST** https://foundationrisk.org/api/agent/book
@@ -85,7 +90,7 @@ ${location.city_profile}
         soil_type: soil.map_unit_name,
         plasticity_index: soil.plasticity_index,
         risk_level: soil.risk_level,
-        diagnostic: location.city_profile,
+        interpretation: "Mapped soil data is regional screening context, not a property diagnosis or repair recommendation.",
         agent_booking_endpoint: "https://foundationrisk.org/api/agent/book"
     }, {
         headers: { 'Vary': 'Accept' }
