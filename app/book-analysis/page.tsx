@@ -7,6 +7,12 @@ import { useSearchParams } from 'next/navigation';
 
 import { submitLead } from './actions';
 import { CONTACT_CONSENT_TEXT } from '@/lib/leadConsent';
+import {
+    ALLOWED_SYMPTOMS,
+    LeadField,
+    LeadFieldErrors,
+    LeadSubmissionInput,
+} from '@/lib/leadValidation';
 
 function IntakeForm() {
     const searchParams = useSearchParams();
@@ -14,8 +20,10 @@ function IntakeForm() {
     const [step, setStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
-    const [formData, setFormData] = useState({
-        symptoms: [] as string[],
+    const [fieldErrors, setFieldErrors] = useState<LeadFieldErrors>({});
+    const [formError, setFormError] = useState('');
+    const [formData, setFormData] = useState<LeadSubmissionInput>({
+        symptoms: [],
         address: '',
         zip: '',
         name: '',
@@ -50,7 +58,11 @@ function IntakeForm() {
             setFormData(prev => ({
                 ...prev,
                 address: addressParam || prev.address,
-                symptoms: symptomParam ? [...prev.symptoms, symptomParam] : prev.symptoms
+                symptoms: symptomParam
+                    && ALLOWED_SYMPTOMS.includes(symptomParam as typeof ALLOWED_SYMPTOMS[number])
+                    && !prev.symptoms.includes(symptomParam)
+                    ? [...prev.symptoms, symptomParam]
+                    : prev.symptoms
             }));
             
             // If they provided an address, jump them to step 2 automatically!
@@ -61,6 +73,7 @@ function IntakeForm() {
     }, [searchParams]);
 
     const handleSymptomToggle = (id: string) => {
+        clearFieldError('symptoms');
         setFormData(prev => ({
             ...prev,
             symptoms: prev.symptoms.includes(id)
@@ -72,8 +85,28 @@ function IntakeForm() {
     const nextStep = () => setStep(s => s + 1);
     const prevStep = () => setStep(s => s - 1);
 
+    const clearFieldError = (field: LeadField) => {
+        setFieldErrors((current) => {
+            if (!current[field]) return current;
+            const next = { ...current };
+            delete next[field];
+            return next;
+        });
+        setFormError('');
+    };
+
+    const updateField = <Field extends keyof LeadSubmissionInput>(
+        field: Field,
+        value: LeadSubmissionInput[Field],
+    ) => {
+        clearFieldError(field);
+        setFormData((current) => ({ ...current, [field]: value }));
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setFieldErrors({});
+        setFormError('');
         setIsSubmitting(true);
         
         try {
@@ -81,12 +114,16 @@ function IntakeForm() {
             
             if (result.success) {
                 setIsSuccess(true);
-                // Optional: Redirect or Show Success UI
             } else {
-                alert('Error: ' + result.error);
+                setFormError(result.error);
+                const errors = result.fieldErrors ?? {};
+                setFieldErrors(errors);
+                if (errors.symptoms) setStep(1);
+                else if (errors.address || errors.zip) setStep(2);
+                else setStep(3);
             }
         } catch {
-            alert('An unexpected error occurred. Please call to confirm.');
+            setFormError('An unexpected error occurred. Your information is still on this page; please try again.');
         } finally {
             setIsSubmitting(false);
         }
@@ -157,6 +194,11 @@ function IntakeForm() {
                 </div>
 
                 <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8">
+                    {formError && (
+                        <div role="alert" className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-800">
+                            {formError}
+                        </div>
+                    )}
                     
                     {/* STEP 1: SYMPTOMS */}
                     {step === 1 && (
@@ -173,6 +215,7 @@ function IntakeForm() {
                                         key={s.id}
                                         type="button"
                                         onClick={() => handleSymptomToggle(s.id)}
+                                        aria-pressed={formData.symptoms.includes(s.id)}
                                         className={`p-4 rounded-xl border-2 text-left transition-all hover:bg-slate-50
                                             ${formData.symptoms.includes(s.id) 
                                                 ? 'border-blue-600 bg-blue-50/50 shadow-sm ring-1 ring-blue-600' 
@@ -185,6 +228,7 @@ function IntakeForm() {
                                     </button>
                                 ))}
                             </div>
+                            {fieldErrors.symptoms && <p role="alert" className="text-sm font-medium text-red-700">{fieldErrors.symptoms}</p>}
 
                             <div className="pt-6 flex justify-end">
                                 <button
@@ -210,29 +254,43 @@ function IntakeForm() {
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-bold text-slate-700 mb-1">Street Address</label>
+                                    <label htmlFor="lead-address" className="block text-sm font-bold text-slate-700 mb-1">Street Address</label>
                                     <div className="relative">
                                         <Home className="absolute top-3 left-3 w-5 h-5 text-slate-400" />
                                         <input 
+                                            id="lead-address"
                                             type="text" 
                                             required
+                                            autoComplete="street-address"
+                                            maxLength={200}
+                                            aria-invalid={Boolean(fieldErrors.address)}
+                                            aria-describedby={fieldErrors.address ? 'lead-address-error' : undefined}
                                             className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
                                             placeholder="123 Example St"
                                             value={formData.address}
-                                            onChange={(e) => setFormData({...formData, address: e.target.value})}
+                                            onChange={(e) => updateField('address', e.target.value)}
                                         />
                                     </div>
+                                    {fieldErrors.address && <p id="lead-address-error" role="alert" className="mt-2 text-sm font-medium text-red-700">{fieldErrors.address}</p>}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-slate-700 mb-1">Zip Code</label>
+                                    <label htmlFor="lead-zip" className="block text-sm font-bold text-slate-700 mb-1">Zip Code</label>
                                     <input 
+                                        id="lead-zip"
                                         type="text" 
                                         required
+                                        inputMode="numeric"
+                                        autoComplete="postal-code"
+                                        maxLength={10}
+                                        pattern="[0-9]{5}(-[0-9]{4})?"
+                                        aria-invalid={Boolean(fieldErrors.zip)}
+                                        aria-describedby={fieldErrors.zip ? 'lead-zip-error' : undefined}
                                         className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
                                         placeholder="75024"
                                         value={formData.zip}
-                                        onChange={(e) => setFormData({...formData, zip: e.target.value})}
+                                        onChange={(e) => updateField('zip', e.target.value)}
                                     />
+                                    {fieldErrors.zip && <p id="lead-zip-error" role="alert" className="mt-2 text-sm font-medium text-red-700">{fieldErrors.zip}</p>}
                                 </div>
                             </div>
 
@@ -261,41 +319,60 @@ function IntakeForm() {
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-bold text-slate-700 mb-1">Your Name</label>
+                                    <label htmlFor="lead-name" className="block text-sm font-bold text-slate-700 mb-1">Your Name</label>
                                     <input 
+                                        id="lead-name"
                                         type="text" 
                                         required
+                                        autoComplete="name"
+                                        maxLength={100}
+                                        aria-invalid={Boolean(fieldErrors.name)}
+                                        aria-describedby={fieldErrors.name ? 'lead-name-error' : undefined}
                                         className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
                                         placeholder="Jane Doe"
                                         value={formData.name}
-                                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                        onChange={(e) => updateField('name', e.target.value)}
                                     />
+                                    {fieldErrors.name && <p id="lead-name-error" role="alert" className="mt-2 text-sm font-medium text-red-700">{fieldErrors.name}</p>}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-slate-700 mb-1">Email Address</label>
+                                    <label htmlFor="lead-email" className="block text-sm font-bold text-slate-700 mb-1">Email Address</label>
                                     <input 
+                                        id="lead-email"
                                         type="email" 
                                         required
+                                        autoComplete="email"
+                                        maxLength={254}
+                                        aria-invalid={Boolean(fieldErrors.email)}
+                                        aria-describedby={fieldErrors.email ? 'lead-email-error' : undefined}
                                         className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
                                         placeholder="jane@example.com"
                                         value={formData.email}
-                                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                        onChange={(e) => updateField('email', e.target.value)}
                                     />
+                                    {fieldErrors.email && <p id="lead-email-error" role="alert" className="mt-2 text-sm font-medium text-red-700">{fieldErrors.email}</p>}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-slate-700 mb-1">Phone Number</label>
+                                    <label htmlFor="lead-phone" className="block text-sm font-bold text-slate-700 mb-1">Phone Number</label>
                                     <div className="relative">
                                         <Phone className="absolute top-3 left-3 w-5 h-5 text-slate-400" />
                                         <input 
+                                            id="lead-phone"
                                             type="tel" 
                                             required
+                                            inputMode="tel"
+                                            autoComplete="tel"
+                                            maxLength={30}
+                                            aria-invalid={Boolean(fieldErrors.phone)}
+                                            aria-describedby={fieldErrors.phone ? 'lead-phone-error' : 'lead-phone-help'}
                                             className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
                                             placeholder="(555) 555-5555"
                                             value={formData.phone}
-                                            onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                                            onChange={(e) => updateField('phone', e.target.value)}
                                         />
                                     </div>
-                                    <p className="text-xs text-slate-400 mt-2 flex items-center gap-1">
+                                    {fieldErrors.phone && <p id="lead-phone-error" role="alert" className="mt-2 text-sm font-medium text-red-700">{fieldErrors.phone}</p>}
+                                    <p id="lead-phone-help" className="text-xs text-slate-400 mt-2 flex items-center gap-1">
                                         <ShieldCheck className="w-3 h-3" /> Secure data transmission.
                                     </p>
                                 </div>
@@ -307,12 +384,15 @@ function IntakeForm() {
                                             required
                                             className="mt-1 w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
                                             checked={formData.tcpaConsent}
-                                            onChange={(e) => setFormData({...formData, tcpaConsent: e.target.checked})}
+                                            aria-invalid={Boolean(fieldErrors.tcpaConsent)}
+                                            aria-describedby={fieldErrors.tcpaConsent ? 'lead-consent-error' : undefined}
+                                            onChange={(e) => updateField('tcpaConsent', e.target.checked)}
                                         />
                                         <span className="text-[11px] text-slate-500 leading-relaxed">
                                             <strong>Contact consent:</strong> {CONTACT_CONSENT_TEXT}
                                         </span>
                                     </label>
+                                    {fieldErrors.tcpaConsent && <p id="lead-consent-error" role="alert" className="mt-2 text-sm font-medium text-red-700">{fieldErrors.tcpaConsent}</p>}
                                 </div>
                             </div>
 

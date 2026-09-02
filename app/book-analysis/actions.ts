@@ -7,6 +7,11 @@ import {
     CONTACT_CONSENT_TEXT,
     CONTACT_CONSENT_VERSION,
 } from '@/lib/leadConsent';
+import {
+    LeadSubmissionResult,
+    LeadSubmissionInput,
+    validateLeadSubmission,
+} from '@/lib/leadValidation';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 // Use Service Role Key to bypass RLS policies and guarantee write access
@@ -19,28 +24,18 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-export async function submitLead(formData: {
-    name: string;
-    email: string;
-    phone: string;
-    address: string;
-    zip: string;
-    symptoms: string[];
-    notes: string;
-    tcpaConsent: boolean;
-}) {
-    // Consent must be enforced on the trusted server boundary, not only in the UI.
-    if (formData.tcpaConsent !== true) {
+export async function submitLead(
+    formData: LeadSubmissionInput,
+): Promise<LeadSubmissionResult> {
+    const validation = validateLeadSubmission(formData);
+    if (!validation.success) {
         return {
             success: false,
-            error: 'Please confirm contact consent before submitting your request.',
+            error: 'Review the highlighted fields and try again.',
+            fieldErrors: validation.fieldErrors,
         };
     }
-
-    // 1. Validate Data (Basic)
-    if (!formData.email || !formData.phone || !formData.address) {
-        return { success: false, error: 'Missing required fields' };
-    }
+    const lead = validation.data;
 
     const requestHeaders = await headers();
     const forwardedIp = requestHeaders.get('x-forwarded-for')?.split(',')[0]?.trim();
@@ -63,13 +58,13 @@ export async function submitLead(formData: {
         .from('leads')
         .insert([
             {
-                name: formData.name,
-                email: formData.email,
-                phone: formData.phone,
-                address: formData.address,
-                zip: formData.zip,
-                symptoms: formData.symptoms, // Stored as JSONB or Array depending on schema
-                notes: formData.notes,
+                name: lead.name,
+                email: lead.email,
+                phone: lead.phone,
+                address: lead.address,
+                zip: lead.zip,
+                symptoms: lead.symptoms,
+                notes: lead.notes,
                 status: 'new',
                 source: 'web_intake',
                 contact_consent: true,
@@ -85,7 +80,10 @@ export async function submitLead(formData: {
 
     if (error) {
         console.error('Supabase Insert Error:', error);
-        return { success: false, error: 'Failed to record lead. Please try again.' };
+        return {
+            success: false,
+            error: 'We could not record your request. Your information is still on this page; please try again.',
+        };
     }
 
     return { success: true };
