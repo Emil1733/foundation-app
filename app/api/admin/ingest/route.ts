@@ -81,8 +81,9 @@ export async function POST(request: Request) {
                 };
             }
             return null;
-        } catch (e: any) {
-            console.error(`Geocode Error (${zip}):`, e.message);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error);
+            console.error(`Geocode Error (${zip}):`, message);
             return null;
         }
     }
@@ -118,17 +119,18 @@ export async function POST(request: Request) {
 
             if (!res.ok) throw new Error(`USDA API: ${res.statusText}`);
 
-            const data = await res.json();
+            const data = await res.json() as { Table?: unknown[][] };
             if (data.Table && data.Table.length > 1) {
-                const headers = data.Table[0];
+                const headers = data.Table[0] as string[];
                 const values = data.Table[1];
-                const rec: any = {};
+                const rec: Record<string, unknown> = {};
                 headers.forEach((key: string, i: number) => rec[key] = values[i]);
                 return rec;
             }
             return null;
-        } catch (e: any) {
-            console.error(`USDA Error:`, e.message);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error);
+            console.error(`USDA Error:`, message);
             return null;
         }
     }
@@ -200,7 +202,8 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ success: true, results });
 
-    } catch (e: any) {
-        return NextResponse.json({ error: e.message }, { status: 500 });
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        return NextResponse.json({ error: message }, { status: 500 });
     }
 }

@@ -55,7 +55,7 @@ export default function PrivacyPage() {
                 </div>
 
                 <p className="text-sm text-slate-500 mb-8 leading-relaxed">
-                    This Privacy Policy describes how The Foundation Risk Registry ("we", "us", or "our") collects, uses, and shares your information. We are committed to transparency in our data practices, especially concerning the sensitive geological mapping of residential properties.
+                    This Privacy Policy describes how The Foundation Risk Registry (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) collects, uses, and shares your information. We are committed to transparency in our data practices, especially concerning the sensitive geological mapping of residential properties.
                 </p>
 
                 <h2>1. Data Collection & Usage</h2>
@@ -84,7 +84,7 @@ export default function PrivacyPage() {
 
                 <h2>4. Data Retention & Your Rights</h2>
                 <p>
-                    Address queries are cached anonymously for 30 days to improve system performance. You have the right to request a full "Right to Be Forgotten" purge of your property history and email from our registry at any time.
+                    Address queries are cached anonymously for 30 days to improve system performance. You have the right to request a full &ldquo;Right to Be Forgotten&rdquo; purge of your property history and email from our registry at any time.
                 </p>
 
                 <h2>Contact the Data Protection Officer</h2>

@@ -54,8 +54,8 @@ export default function SoilRiskWidget() {
             const soilData = await soilRes.json();
             setData(soilData);
 
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : 'Unable to retrieve soil data');
         } finally {
             setLoading(false);
         }

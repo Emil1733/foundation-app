@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Shield, MapPin, BookOpen, Search, Menu, X, Phone } from "lucide-react";
+import { Shield, Search, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function Navbar() {

@@ -55,15 +55,15 @@ export async function POST(request: Request) {
             throw new Error(`USDA API failed: ${res.statusText}`);
         }
 
-        const data = await res.json();
+        const data = await res.json() as { Table?: unknown[][] };
 
         if (data.Table && data.Table.length > 1) {
             // Data found. 
             // Row 0 = Headers, Row 1 = Values
-            const headers = data.Table[0];
+            const headers = data.Table[0] as string[];
             const values = data.Table[1];
 
-            const soilData: Record<string, any> = {};
+            const soilData: Record<string, unknown> = {};
             headers.forEach((key: string, index: number) => {
                 soilData[key] = values[index];
             });
@@ -73,8 +73,9 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "No soil data found for this location" }, { status: 404 });
         }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("API Error:", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        const message = error instanceof Error ? error.message : String(error);
+        return NextResponse.json({ error: message }, { status: 500 });
     }
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowUpRight, ArrowRight, Minus, Maximize2, X, AlertTriangle, CheckCircle } from 'lucide-react';
+import { ArrowUpRight, Minus, Maximize2, X, AlertTriangle } from 'lucide-react';
 import clsx from 'clsx';
 
 type CrackType = 'diagonal' | 'stairstep' | 'horizontal';
@@ -121,7 +121,7 @@ export default function VisualProofGallery() {
                                     <div className="flex items-start gap-3 bg-yellow-50 p-4 rounded-lg">
                                         <AlertTriangle className="w-5 h-5 text-yellow-600 shrink-0 mt-0.5" />
                                         <div>
-                                            <p className="text-sm text-yellow-800 font-medium">Engineer's Note</p>
+                                            <p className="text-sm text-yellow-800 font-medium">Engineer&apos;s Note</p>
                                             <p className="text-xs text-yellow-700 mt-1">
                                                 Cosmetic patching (paint/spackle) will fail within 3 months if the underlying {cracks[activeType].cause.toLowerCase()} is not stabilized with piers.
                                             </p>

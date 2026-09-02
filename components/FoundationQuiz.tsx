@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { ArrowRight, CheckCircle2, AlertTriangle, HelpCircle, Activity } from 'lucide-react';
-import clsx from 'clsx';
 import Link from 'next/link';
 
 type Step = 'cracks' | 'sticking' | 'history' | 'result';

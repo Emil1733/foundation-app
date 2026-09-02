@@ -74,7 +74,7 @@ export default async function Home() {
 
           <div className="grid md:grid-cols-2 gap-8 not-prose mt-12">
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-              <h3 className="font-bold text-slate-900 mb-4">What IS an "Active Zone"?</h3>
+              <h3 className="font-bold text-slate-900 mb-4">What IS an &ldquo;Active Zone&rdquo;?</h3>
               <p>
                 The <strong>Active Zone</strong> is the depth at which soil moisture fluctuates seasonally.
                 Its depth varies by site and requires property-specific investigation to establish.

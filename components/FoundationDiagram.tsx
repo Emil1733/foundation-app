@@ -40,7 +40,7 @@ export default function FoundationDiagram() {
             </div>
 
             <p className="text-center text-sm text-slate-400 mt-8 max-w-md mx-auto">
-                <strong>Visual Proof:</strong> While concrete cylinders sit in the "Active Zone" (expanding/shrinking clay),
+                <strong>Visual Proof:</strong> While concrete cylinders sit in the &ldquo;Active Zone&rdquo; (expanding/shrinking clay),
                 our steel piers penetrate until they hit load-bearing strata (refusal).
             </p>
         </div>

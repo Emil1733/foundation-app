@@ -61,7 +61,7 @@ export default function DisclaimerPage() {
 
                     <h2>Plasticity Index interpretation</h2>
                     <p>
-                        The "Liquid Limit" and "Plasticity Index" (PI) values shown are based on USDA historical records. Actual site conditions may have been altered by grading, backfilling, or local landscape changes not reflected in the national dataset.
+                        The &ldquo;Liquid Limit&rdquo; and &ldquo;Plasticity Index&rdquo; (PI) values shown are based on USDA historical records. Actual site conditions may have been altered by grading, backfilling, or local landscape changes not reflected in the national dataset.
                     </p>
 
                     <h2>Property Evaluations and Professional Services</h2>

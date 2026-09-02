@@ -55,7 +55,7 @@ export default function TermsPage() {
 
                 <h2>1. Service Description</h2>
                 <p>
-                    The Foundation Risk Registry ("the Service") provides visualization of geological and soil data sourced from the USDA Natural Resources Conservation Service (NRCS) Web Soil Survey (SSURGO). The Service is intended for informational and preliminary assessment purposes only.
+                    The Foundation Risk Registry (&ldquo;the Service&rdquo;) provides visualization of geological and soil data sourced from the USDA Natural Resources Conservation Service (NRCS) Web Soil Survey (SSURGO). The Service is intended for informational and preliminary assessment purposes only.
                 </p>
 
                 <h2>2. No Engineering Advice</h2>

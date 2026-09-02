@@ -50,7 +50,7 @@ export default function AboutPage() {
                     <div>
                         <h3 className="text-2xl font-bold text-slate-900 mb-4">The Active Zone Philosophy</h3>
                         <p className="text-slate-600 text-sm leading-relaxed">
-                            The "active zone" is the depth where seasonal moisture variation can affect soil volume. Its depth and behavior vary by site and cannot be established from a regional map alone. We explain the concept so homeowners can ask how a proposed repair accounts for actual subsurface conditions.
+                            The &ldquo;active zone&rdquo; is the depth where seasonal moisture variation can affect soil volume. Its depth and behavior vary by site and cannot be established from a regional map alone. We explain the concept so homeowners can ask how a proposed repair accounts for actual subsurface conditions.
                         </p>
                     </div>
                     <div>

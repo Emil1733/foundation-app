@@ -110,7 +110,7 @@ export default async function LearnPage({
                         Forensic Soil Analysis & <br />Repair Protocols
                     </h1>
                     <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                        Don't rely on general advice. Read the specific engineering breakdown for your city's geological profile.
+                        Don&apos;t rely on general advice. Read the specific engineering breakdown for your city&apos;s geological profile.
                     </p>
                 </div>
             </header>

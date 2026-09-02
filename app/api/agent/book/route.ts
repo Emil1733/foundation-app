@@ -82,7 +82,7 @@ export async function POST(request: Request) {
             confirmation_code: `FRR-${Math.floor(Math.random() * 90000) + 10000}`
         });
         
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Invalid JSON Payload" }, { status: 400 });
     }
 }

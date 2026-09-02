@@ -46,7 +46,7 @@ export default function ReviewsPage() {
                     </Link>
                     <h1 className="text-3xl md:text-5xl font-bold mb-4">Forensic Case Studies</h1>
                     <p className="text-slate-400 max-w-2xl mx-auto">
-                        We don't collect "5-star reviews" for doing our job. We document engineering victories against expansive soil.
+                        We don&apos;t collect &ldquo;5-star reviews&rdquo; for doing our job. We document engineering victories against expansive soil.
                     </p>
                 </div>
             </header>

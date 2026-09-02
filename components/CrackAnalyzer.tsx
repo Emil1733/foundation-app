@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AlertTriangle, CheckCircle2, Zap, TrendingDown, Layers, DoorOpen, Activity, Search } from "lucide-react";
+import { CheckCircle2, Zap, TrendingDown, Layers, DoorOpen, Activity, Search } from "lucide-react";
 
 export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number }) {
   const [selectedIssue, setSelectedIssue] = useState<string | null>(null);
