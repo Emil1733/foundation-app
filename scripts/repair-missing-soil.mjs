@@ -50,17 +50,24 @@ const protectedUrls = new Set(gscRows.map((row) => normalizeUrl(row.keys[0])));
 const locations = await all((from, to) => db.from("target_locations")
   .select("id, slug, city, state, zip_code, latitude, longitude, soil_cache(map_unit_name)")
   .order("id").range(from, to));
-const usedZips = new Map(locations.filter((loc) => loc.zip_code !== "00000").map((loc) => [loc.zip_code, loc.id]));
-
 const normalizeCity = (value) => value.toLowerCase().replace(/^st[.]? /, "saint ").replace(/[^a-z0-9]/g, "");
-function resolvePlace(location) {
+function resolvePlaces(location) {
+  const matches = [];
   if (/^\d{5}$/.test(location.zip_code) && location.zip_code !== "00000") {
     const match = cities.zipLookup(location.zip_code);
-    if (match?.state_abbr === location.state) return match;
+    if (match?.state_abbr === location.state) matches.push(match);
   }
-  const direct = cities.findByCityAndState(location.city, location.state);
-  if (direct) return direct;
-  return cities.filter((item) => item.state_abbr === location.state && normalizeCity(item.city) === normalizeCity(location.city))[0] ?? null;
+  matches.push(...cities.filter((item) => item.state_abbr === location.state && normalizeCity(item.city) === normalizeCity(location.city)));
+  if (Number.isFinite(Number(location.latitude)) && Number.isFinite(Number(location.longitude))) {
+    matches.push({ zipcode: location.zip_code, latitude: location.latitude, longitude: location.longitude, source: "stored_coordinates" });
+  }
+  const seen = new Set();
+  return matches.filter((item) => {
+    const key = `${Number(item.latitude).toFixed(5)},${Number(item.longitude).toFixed(5)}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 async function soilAt(latitude, longitude) {
@@ -80,13 +87,17 @@ const missing = locations.filter((location) => {
 }).slice(0, limit);
 const results = [];
 for (const location of missing) {
-  const place = resolvePlace(location);
-  if (!place) { results.push({ slug: location.slug, status: "unresolved_place" }); continue; }
-  const collision = usedZips.get(place.zipcode);
-  if (collision && collision !== location.id) { results.push({ slug: location.slug, status: "zip_collision", zip: place.zipcode }); continue; }
+  const places = resolvePlaces(location);
+  if (!places.length) { results.push({ slug: location.slug, status: "unresolved_place" }); continue; }
   try {
-    const soil = await soilAt(place.latitude, place.longitude);
-    if (!soil?.map_unit_name) { results.push({ slug: location.slug, status: "no_usda_soil", zip: place.zipcode }); continue; }
+    let soil = null;
+    let place = null;
+    for (const candidate of places) {
+      soil = await soilAt(candidate.latitude, candidate.longitude);
+      if (soil?.map_unit_name) { place = candidate; break; }
+      await new Promise((resolve) => setTimeout(resolve, 150));
+    }
+    if (!soil?.map_unit_name || !place) { results.push({ slug: location.slug, status: "no_usda_soil", candidates_checked: places.length }); continue; }
     const pi = soil.plasticity_index == null || soil.plasticity_index === "" ? null : Number(soil.plasticity_index);
     const shrink = soil.shrink_swell == null || soil.shrink_swell === "" ? null : Number(soil.shrink_swell);
     const risk = pi == null ? null : pi >= 35 ? "Severe" : pi >= 25 ? "High" : pi >= 15 ? "Moderate" : "Low";
