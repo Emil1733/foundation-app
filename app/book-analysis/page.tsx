@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
 import { submitLead } from './actions';
+import { CONTACT_CONSENT_TEXT } from '@/lib/leadConsent';
 
 function IntakeForm() {
     const searchParams = useSearchParams();
@@ -84,7 +85,7 @@ function IntakeForm() {
             } else {
                 alert('Error: ' + result.error);
             }
-        } catch (err) {
+        } catch {
             alert('An unexpected error occurred. Please call to confirm.');
         } finally {
             setIsSubmitting(false);
@@ -309,7 +310,7 @@ function IntakeForm() {
                                             onChange={(e) => setFormData({...formData, tcpaConsent: e.target.checked})}
                                         />
                                         <span className="text-[11px] text-slate-500 leading-relaxed">
-                                            <strong>Contact consent:</strong> By checking this box, I agree to receive calls and text messages, including automated messages, from Foundation Risk Registry and participating local foundation evaluation or repair providers about this request. Consent is not a condition of purchase. Message and data rates may apply.
+                                            <strong>Contact consent:</strong> {CONTACT_CONSENT_TEXT}
                                         </span>
                                     </label>
                                 </div>
@@ -319,10 +320,10 @@ function IntakeForm() {
                                 <button type="button" onClick={prevStep} className="text-slate-500 font-bold px-4 py-2 hover:text-slate-700">Back</button>
                                 <button
                                     type="submit"
-                                    disabled={!formData.tcpaConsent}
+                                    disabled={!formData.tcpaConsent || isSubmitting}
                                     className="bg-green-600 hover:bg-green-700 disabled:bg-slate-300 text-white px-8 py-4 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg hover:shadow-green-200 w-full justify-center"
                                 >
-                                    Request My Evaluation
+                                    {isSubmitting ? 'Sending Request…' : 'Request My Evaluation'}
                                 </button>
                             </div>
                         </div>
