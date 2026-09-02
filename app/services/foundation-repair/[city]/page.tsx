@@ -17,6 +17,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getNearbyLocations } from "@/lib/nearbyLocations";
 import { STATE_FOUNDATION_GUIDES } from "@/lib/stateFoundationGuides";
+import { shouldIndexServicePage } from "@/lib/serviceIndexability";
 
 export const revalidate = 604800; // ISR: Cache for 1 week to protect Vercel compute and Supabase DB
 
@@ -55,12 +56,24 @@ export async function generateMetadata({
 
   if (!location) return { title: "Foundation Distress Identification Services" };
 
+  const indexable = shouldIndexServicePage(slug, location.soil_cache);
+
   return {
     title: `${location.city} Foundation Repair | Soil Risk & Evaluation`,
     description: `Foundation repair in ${location.city}, ${location.state}: review mapped soil context, warning signs, and evaluation options before choosing a repair plan.`,
     alternates: {
       canonical: `https://foundationrisk.org/services/foundation-repair/${slug}`,
     },
+    ...(!indexable && {
+      robots: {
+        index: false,
+        follow: true,
+        googleBot: {
+          index: false,
+          follow: true,
+        },
+      },
+    }),
     openGraph: {
       url: `https://foundationrisk.org/services/foundation-repair/${slug}`,
       images: ["/logo.png"],

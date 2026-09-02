@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { supabase } from '@/lib/supabase';
+import { shouldIndexServicePage } from '@/lib/serviceIndexability';
 
 // TODO: Update this to your real custom domain when you buy one.
 const BASE_URL = 'https://foundationrisk.org';
@@ -9,6 +10,10 @@ export const revalidate = 86400; // ISR: Cache sitemap for 24 hours to prevent S
 type SitemapLocation = {
     slug: string;
     created_at: string;
+    soil_cache:
+        | { map_unit_name?: string | null }
+        | Array<{ map_unit_name?: string | null }>
+        | null;
 };
 
 const coreUrls: MetadataRoute.Sitemap = [
@@ -69,7 +74,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     while (hasMore) {
         const { data, error } = await supabase
             .from('target_locations')
-            .select('slug, created_at')
+            .select('slug, created_at, soil_cache(map_unit_name)')
             .order('slug', { ascending: true })
             .range(from, from + step - 1);
 
@@ -85,12 +90,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Keep important static pages discoverable even if Supabase is temporarily unavailable.
     if (locations.length === 0) return coreUrls;
 
-    const cityUrls = locations.map((loc) => ({
+    const cityUrls = locations
+      .filter((loc) => shouldIndexServicePage(loc.slug, loc.soil_cache))
+      .map((loc) => ({
         url: `${BASE_URL}/services/foundation-repair/${loc.slug}`,
         lastModified: new Date(loc.created_at),
         changeFrequency: 'weekly' as const,
         priority: 0.9, // Direct homepage links
-    }));
+      }));
 
     // NEW: Programmatic Soil Reports (/learn/...)
     const articleUrls = locations.map((loc) => ({
