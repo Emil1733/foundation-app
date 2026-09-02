@@ -16,6 +16,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getNearbyLocations } from "@/lib/nearbyLocations";
+import { STATE_FOUNDATION_GUIDES } from "@/lib/stateFoundationGuides";
 
 export const revalidate = 604800; // ISR: Cache for 1 week to protect Vercel compute and Supabase DB
 
@@ -56,7 +57,7 @@ export async function generateMetadata({
 
   return {
     title: `${location.city} Foundation Repair | Soil Risk & Evaluation`,
-    description: `Foundation repair in ${location.city}, ${location.state}: review local soil risks, settlement warning signs, and forensic evaluation options before choosing a repair plan.`,
+    description: `Foundation repair in ${location.city}, ${location.state}: review mapped soil context, warning signs, and evaluation options before choosing a repair plan.`,
     alternates: {
       canonical: `https://foundationrisk.org/services/foundation-repair/${slug}`,
     },
@@ -85,6 +86,7 @@ export default async function CityPage({
   if (error || !location) return notFound();
   const { city, state, soil_cache: rawSoil } = location;
   const soil = Array.isArray(rawSoil) ? rawSoil[0] : rawSoil;
+  const stateGuide = STATE_FOUNDATION_GUIDES[state];
 
   // 2. Read the six precomputed nearby locations without loading the full table.
   const neighbors = await getNearbyLocations(location.id, state);
@@ -157,7 +159,7 @@ export default async function CityPage({
           name: "United States",
         },
       },
-      description: `Foundation repair services and forensic evaluation options for homeowners in ${city}, ${state} affected by ${soil?.map_unit_name || "local soil conditions"}.`,
+      description: `Foundation repair information and evaluation options for homeowners in ${city}, ${state}, with mapped context for ${soil?.map_unit_name || "local soil conditions"}.`,
       hasOfferCatalog: {
         "@type": "OfferCatalog",
         name: "Foundation Repair and Evaluation Services",
@@ -166,7 +168,7 @@ export default async function CityPage({
             "@type": "Offer",
             itemOffered: {
               "@type": "Service",
-              name: "Forensic Foundation Evaluation",
+              name: "Foundation Evaluation",
             },
           },
           {
@@ -372,29 +374,51 @@ export default async function CityPage({
         {/* DYNAMIC ACTION PLAN (Entropy Check) */}
         <SoilActionPlan soil={soil} city={city} />
 
-        {/* GEOLOGICAL PROFILE */}
+        {/* REGIONAL FOUNDATION GUIDANCE */}
         <div className="mt-12 bg-blue-950 text-white rounded-2xl p-8 border border-blue-800">
           <h3 className="text-xl font-bold mb-4 text-blue-200">
-            Geological Profile: {city}, {state} ({location.zip_code})
+            What Homeowners in {stateGuide ? stateGuide.name : city} Should Know About Foundation Movement
           </h3>
           <div className="space-y-3 text-blue-100/80 text-sm leading-relaxed">
-            <p>
-              The USDA soil record associated with this {city} page is{' '}
-              <strong className="text-white">{soil?.map_unit_name || 'not available'}</strong>.
-              Soil surveys describe mapped areas rather than individual lots, so grading, fill, drainage, vegetation,
-              plumbing, and construction can make conditions at a home different from the surrounding map unit.
-            </p>
-            <p>
-              This record lists a <strong className="text-white">Plasticity Index (PI)</strong> of{' '}
-              {Number(soil?.plasticity_index || 0).toFixed(1)} and a registry classification of{' '}
-              <strong className="text-white"> {soil?.risk_level || 'not reported'}</strong>. Use those values to understand
-              possible moisture sensitivity—not to decide whether a home needs piers, leveling, drainage work, or no structural repair.
-            </p>
-            <p>
-              A property-specific <strong className="text-white">foundation evaluation</strong> can compare visible symptoms,
-              drainage, crack history, and floor elevations with this soil context. Requesting that review gives you a clearer
-              basis for comparing repair scopes and deciding whether additional structural or geotechnical expertise is appropriate.
-            </p>
+            {stateGuide ? (
+              <>
+                {stateGuide.overview.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+                <div className="pt-2">
+                  <h4 className="font-semibold text-white mb-2">What is worth watching</h4>
+                  <ul className="space-y-2 list-disc pl-5 marker:text-blue-400">
+                    {stateGuide.watchFor.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <p className="pt-2">
+                  <strong className="text-white">A sensible next step:</strong>{' '}
+                  {stateGuide.evaluation}
+                </p>
+              </>
+            ) : (
+              <>
+                <p>
+                  The USDA soil record associated with this {city} page is{' '}
+                  <strong className="text-white">{soil?.map_unit_name || 'not available'}</strong>.
+                  Soil surveys describe mapped areas rather than individual lots, so grading, fill, drainage, vegetation,
+                  plumbing, and construction can make conditions at a home different from the surrounding map unit.
+                </p>
+                <p>
+                  This record lists a <strong className="text-white">Plasticity Index (PI)</strong> of{' '}
+                  {Number(soil?.plasticity_index || 0).toFixed(1)} and a registry classification of{' '}
+                  <strong className="text-white"> {soil?.risk_level || 'not reported'}</strong>. Use those values to understand
+                  possible moisture sensitivity—not to decide whether a home needs piers, leveling, drainage work, or no structural repair.
+                </p>
+                <p>
+                  A property-specific <strong className="text-white">foundation evaluation</strong> can compare visible symptoms,
+                  drainage, crack history, and floor elevations with this soil context. That gives you a clearer basis for comparing
+                  repair scopes and deciding whether structural or geotechnical expertise is appropriate.
+                </p>
+              </>
+            )}
           </div>
           <div className="mt-4 pt-4 border-t border-blue-800 flex items-center gap-2 text-xs text-blue-300">
             <ShieldCheck className="w-4 h-4 flex-shrink-0" />
@@ -431,13 +455,13 @@ export default async function CityPage({
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
             <div>
               <span className="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
-                Geological Library
+                Soil Reference
               </span>
               <h3 className="text-xl font-bold text-slate-900 mt-3 mb-2">
-                Soil Hazard Analysis for {city}
+                Mapped Soil Report for {city}
               </h3>
               <p className="text-slate-600 text-sm max-w-xl">
-                Read the engineering report on local soil composition ({soil?.map_unit_name || "Expansive Clay"}) with custom plasticity indexes and how they impact residential foundations.
+                Review the mapped soil unit ({soil?.map_unit_name || "local soil"}), its recorded plasticity data, and what those figures can—and cannot—tell you about a home.
               </p>
             </div>
             <Link
