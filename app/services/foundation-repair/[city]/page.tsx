@@ -11,6 +11,7 @@ import {
   MapPin,
   Info,
   ChevronDown,
+  ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -19,6 +20,7 @@ import { getNearbyLocations } from "@/lib/nearbyLocations";
 import { STATE_FOUNDATION_GUIDES } from "@/lib/stateFoundationGuides";
 import { shouldIndexServicePage } from "@/lib/serviceIndexability";
 import { getTexasFoundationGuide } from "@/lib/texasFoundationGuides";
+import { getStateRoute } from "@/lib/stateRoutes";
 
 export const revalidate = 604800; // ISR: Cache for 1 week to protect Vercel compute and Supabase DB
 
@@ -103,6 +105,7 @@ export default async function CityPage({
   const stateGuide = state === "TX"
     ? getTexasFoundationGuide(Number(location.latitude), Number(location.longitude))
     : STATE_FOUNDATION_GUIDES[state];
+  const stateRoute = getStateRoute(state);
 
   // 2. Read the six precomputed nearby locations without loading the full table.
   const neighbors = await getNearbyLocations(location.id, state);
@@ -238,6 +241,17 @@ export default async function CityPage({
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-800 to-slate-950 -z-10" />
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           <div>
+            <nav aria-label="Breadcrumb" className="mb-6 text-sm text-slate-400">
+              <ol className="flex flex-wrap items-center gap-2">
+                <li><Link href="/" className="hover:text-white">Home</Link></li>
+                <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5" /></li>
+                <li><Link href="/locations" className="hover:text-white">Service Areas</Link></li>
+                <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5" /></li>
+                <li><Link href={stateRoute.href} className="hover:text-white">{stateRoute.name}</Link></li>
+                <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5" /></li>
+                <li aria-current="page" className="text-slate-200">{city}</li>
+              </ol>
+            </nav>
             <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 px-4 py-1.5 rounded-full text-blue-200 text-sm font-semibold mb-8 backdrop-blur-sm">
               <ShieldCheck className="w-4 h-4 text-blue-400" />
               <span>

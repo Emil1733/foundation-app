@@ -1,9 +1,10 @@
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
-import { MapPin, Activity, Info, ShieldCheck } from 'lucide-react';
+import { MapPin, Activity, Info, ShieldCheck, ChevronRight } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import AddressAutocomplete from "@/components/AddressAutocomplete";
 import { getNearbyLocations } from "@/lib/nearbyLocations";
+import { getStateRoute } from "@/lib/stateRoutes";
 
 export const revalidate = 86400; // ISR: Rebuild every 24 hours
 
@@ -102,6 +103,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
         const isHighRisk = pi > 25;
         const isModerate = pi > 15 && pi <= 25;
         const citySlug = params.slug.replace('-soil-analysis', '');
+        const stateRoute = getStateRoute(cityData.state);
         const mapUnitName = soil?.map_unit_name || 'Mapped local soil unit';
         const componentName = soil?.component_name || 'Not specified';
         const drainageClass = soil?.drainage_class || 'Not reported';
@@ -210,6 +212,23 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                     >
                     {/* HEADER */}
                     <header className="mb-12">
+                        <nav aria-label="Breadcrumb" className="mb-6 text-sm text-slate-500">
+                            <ol className="flex flex-wrap items-center gap-2">
+                                <li><Link href="/" className="hover:text-blue-700">Home</Link></li>
+                                <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5" /></li>
+                                <li><Link href="/locations" className="hover:text-blue-700">Service Areas</Link></li>
+                                <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5" /></li>
+                                <li><Link href={stateRoute.href} className="hover:text-blue-700">{stateRoute.name}</Link></li>
+                                <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5" /></li>
+                                <li>
+                                    <Link href={`/services/foundation-repair/${citySlug}`} className="hover:text-blue-700">
+                                        {cityData.city}
+                                    </Link>
+                                </li>
+                                <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5" /></li>
+                                <li aria-current="page" className="text-slate-700">Soil report</li>
+                            </ol>
+                        </nav>
                         <div className="inline-flex items-center gap-2 bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
                             Local Soil Report
                         </div>
