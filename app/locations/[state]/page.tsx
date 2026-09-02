@@ -4,6 +4,7 @@ import { MapPin, ShieldAlert, ChevronRight, ArrowLeft } from 'lucide-react';
 import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import Pagination from '@/components/Pagination';
+import DirectoryPageIndex from '@/components/DirectoryPageIndex';
 import { paginatedUrl, parsePageNumber, type PageSearchParams } from '@/lib/pagination';
 import { STATE_FOUNDATION_GUIDES } from '@/lib/stateFoundationGuides';
 
@@ -156,6 +157,14 @@ export default async function StateHubPage({
                         Showing {firstResult.toLocaleString()}–{lastResult.toLocaleString()} of {count.toLocaleString()} areas
                     </p>
                 </div>
+                {currentPage === 1 && (
+                    <DirectoryPageIndex
+                        basePath={basePath}
+                        totalItems={count}
+                        totalPages={totalPages}
+                        pageSize={PAGE_SIZE}
+                    />
+                )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {locations.map(loc => (
                         <Link
