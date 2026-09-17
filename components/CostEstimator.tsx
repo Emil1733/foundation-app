@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Activity, Calculator, ShieldAlert, BadgeDollarSign } from "lucide-react";
+import { Calculator, ShieldAlert, BadgeDollarSign } from "lucide-react";
 
 export default function CostEstimator({ city, pi }: { city: string; pi?: number }) {
   const [severity, setSeverity] = useState<string | null>(null);
