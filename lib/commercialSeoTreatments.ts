@@ -12,10 +12,14 @@ export type CommercialSeoTreatment = {
  * Keep this list small until the experiment has enough post-change GSC data.
  * Controls in docs/SEO-EXPERIMENT-2026-09.md must not be added during the
  * initial measurement window.
+ *
+ * IMPORTANT: treatment keys must match target_locations.slug exactly.
+ * The live Allen record is `allen-tx`; the earlier `allen-tx-75002` key did
+ * not match the database-backed route and therefore never received treatment.
  */
 export const COMMERCIAL_SEO_TREATMENTS: Record<string, CommercialSeoTreatment> = {
   "cedar-park-tx": createTreatment(),
-  "allen-tx-75002": createTreatment(),
+  "allen-tx": createTreatment(),
   "schertz-tx": createTreatment(),
   "boerne-tx": createTreatment(),
   "lewisville-tx": createTreatment(),
