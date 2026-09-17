@@ -31,19 +31,21 @@ Implemented:
 - only sourced OSM place names are stored
 - no sourced neighborhoods means an empty list
 - missing USDA component/drainage values are not replaced with invented descriptive defaults
+- `scripts/sanitize-neighborhoods.mjs` provides a dry-run-first remediation path for historical records
+- `docs/DATA-REMEDIATION.md` documents the cleanup boundary and why names cannot safely be deleted by pattern matching alone
 
-Follow-up: historical database rows created by the old script may still contain fabricated neighborhood metadata. Do not use those historical risk labels as evidence until affected records are cleaned or rebuilt.
+Important: remediation tooling does not mean production rows have been cleaned. The sanitizer must be reviewed in dry-run mode before an explicit `--apply` execution.
 
 ## Finding 3 - USDA ingestion keeps only the first returned row
 
 The public soil API, admin ingestion endpoint, and CLI use related USDA Soil Data Access queries that can return multiple major-component/horizon rows. Current code maps only `Table[1]`, the first returned row, into the cached representation.
 
-Because the query orders by component percentage descending and horizon depth ascending, this appears intended to approximate the dominant component's shallowest returned horizon, but the assumption is not explicitly modeled.
+The query orders by component percentage descending and horizon depth ascending. Therefore the current representation is the dominant returned major component's shallowest returned horizon within the top 50 cm. This is now explicitly documented in the public API code, but it remains a product/scientific modeling decision that should be validated before historical data is recalculated.
 
 Unresolved follow-up:
-- verify against representative cities
-- decide whether the product wants dominant-component top-horizon data, an aggregate, or richer horizon representation
-- document the decision before changing historical soil records
+- verify against representative cities and raw USDA responses
+- decide whether the product wants dominant-component top-horizon data, a depth-weighted/other aggregate, or richer horizon representation
+- document the scientific/product decision before changing historical soil records
 
 Do not silently recalculate the whole database until this is resolved because it could change indexed content at scale.
 
@@ -118,9 +120,41 @@ Before change, `components/CostEstimator.tsx` showed an animated `REVIEWING SCOP
 
 Implemented: the component is now explicitly a symptom-to-next-step scope planner. It does not simulate a calculation, estimate repair cost from mapped PI, or imply that symptoms alone determine repair scope.
 
+## Finding 15 - Build validation exposed interface assumptions
+
+The first commercial-page rewrite compiled JavaScript but failed Vercel's TypeScript stage because it referenced fields that were not present on shared interfaces (`StateFoundationGuide.summary` and later `NearbyLocation.distance_miles`).
+
+Implemented process change:
+- risky changes are developed on `seo-build-validation`
+- shared interfaces are inspected before consumers are changed
+- a change is not promoted to `seo-foundation-implementation` merely because it committed successfully
+- Vercel production-build success is required before promotion when the branch deployment is available
+
+The corrected city-page build was validated successfully before being promoted to the implementation branch.
+
+## Finding 16 - Build config contained a local Windows path
+
+`next.config.ts` pinned `turbopack.root` to a developer-machine path (`c:/Users/...`). Vercel warned that this conflicted with its deployment tracing root.
+
+Implemented on the validation branch: remove the machine-specific Turbopack root and let Next/Vercel resolve the project workspace. This change must pass the validation deployment before promotion.
+
+## Finding 17 - Public soil API coordinate/error handling was too loose
+
+Before change, `app/api/soil/route.ts` used truthiness checks for coordinates and returned raw exception messages to clients.
+
+Implemented on the validation branch:
+- coordinates are parsed as finite numbers
+- latitude is constrained to -90..90
+- longitude is constrained to -180..180
+- upstream provider failures return a generic 502 response
+- unexpected failures return a generic 500 response
+- detailed errors remain server-side
+
+The first-row USDA interpretation is deliberately not changed in this hardening pass. Scientific/data-model changes require separate validation rather than being bundled with defensive API work.
+
 ## Implementation status
 
-Completed in the implementation branch:
+Completed and previously validated/promoted:
 1. Remove unsafe/fabricated neighborhood data generation.
 2. Guard placeholder ZIP values.
 3. Align soil-report sitemap inclusion with real data availability.
@@ -131,15 +165,22 @@ Completed in the implementation branch:
 8. Replace the prescriptive repair-system diagram.
 9. Strengthen soil-report-to-commercial-page funnel links.
 10. Remove misleading calculation behavior from the scope planner.
-11. Pass actual soil data/PI into the supporting action-plan and scope-planner components so their guidance remains tied to the same page record.
+11. Pass actual soil data/PI into supporting components.
 12. Document experiment, architecture, lead/data flow, and audit decisions.
+13. Correct shared-interface rendering errors and validate the city-page production build.
+
+Currently on `seo-build-validation`, awaiting build validation before promotion:
+1. Legacy neighborhood remediation script and documentation.
+2. Removal of machine-specific Turbopack root.
+3. Public soil API coordinate and error-response hardening.
 
 Still to verify/follow up:
-1. Verify the USDA first-row interpretation before any database-wide recalculation.
-2. Audit historical database neighborhood metadata created by the old script.
-3. Run build/type/lint checks in an environment with repository dependencies and record results before merge.
-4. Review fresh GSC data 4-8 weeks after deployment before expanding the treatment cohort.
+1. Validate the USDA first-row scientific/product interpretation before any database-wide recalculation.
+2. Dry-run and review historical neighborhood remediation before production mutation.
+3. Review fresh GSC data 4-8 weeks after deployment before expanding the treatment cohort.
 
 ## Rule for future audits
 
 A generated fact must have a traceable source or deterministic documented derivation. Randomization may be used for harmless presentation variation, but never for geographic, scientific, risk, credential, contractor, engineering, or property claims.
+
+Build rule: a committed change is not a verified change. Shared types must be inspected and the production build must pass before risky implementation work is promoted.
