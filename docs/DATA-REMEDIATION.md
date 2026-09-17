@@ -50,6 +50,63 @@ If an old fallback neighborhood name itself was fabricated, the database does no
 
 If stronger cleanup is required, re-query the geographic source for each location and reconcile stored names against sourced results rather than guessing from naming patterns.
 
+## USDA soil methodology migration
+
+Status: new ingestion methodology implemented; historical `soil_cache` migration not approved or performed.
+
+### Why migration is separate from code deployment
+
+Older cached records were produced by selecting the first USDA major-component/horizon row. Current ingestion calculates PI and LEP for the dominant major component using horizon-thickness weighting over the 0-50 cm interval.
+
+Changing ingestion fixes new/re-ingested records, but blindly rewriting historical records could alter public soil values, screening classes, and indexed page copy at scale. Historical data therefore stays unchanged until impact is measured.
+
+### Read-only comparison tool
+
+Use `scripts/compare-soil-methodology.mjs` to compare cached values against fresh USDA values calculated with the current methodology.
+
+The script has no update/upsert/delete calls and is intentionally read-only.
+
+Default sample:
+
+```bash
+node scripts/compare-soil-methodology.mjs
+```
+
+Limit sample size:
+
+```bash
+node scripts/compare-soil-methodology.mjs --limit=50
+```
+
+Target specific indexed/priority cities:
+
+```bash
+node scripts/compare-soil-methodology.mjs --slugs=cedar-park-tx,allen-tx-75002,schertz-tx,boerne-tx,lewisville-tx
+```
+
+Change the PI delta considered material:
+
+```bash
+node scripts/compare-soil-methodology.mjs --threshold=2
+```
+
+The output reports old/new PI, PI delta, risk-class changes, dominant-component changes, mean absolute PI change, and maximum absolute PI change. No database writes are performed.
+
+### Migration decision gate
+
+Do not create or run a historical soil migration until the comparison output has been reviewed.
+
+At minimum, review:
+
+1. the five SEO treatment cities,
+2. a broader sample across states/regions,
+3. every risk-class change,
+4. large PI deltas,
+5. dominant-component changes,
+6. cases where USDA now returns no usable result.
+
+If changes are small and scientifically coherent, a separate migration script can be designed with dry-run, explicit apply flag, audit output, and rollback/export requirements. If changes are widespread or surprising, investigate the affected USDA rows before any database mutation.
+
 ## Data-integrity rule
 
 Generated or stored geographic, scientific, risk, credential, engineering, contractor, or property claims must have either:
