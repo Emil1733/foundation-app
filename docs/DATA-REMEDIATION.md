@@ -52,9 +52,9 @@ If stronger cleanup is required, re-query the geographic source for each locatio
 
 ## Stored PI risk-label reclassification
 
-Status: inconsistency audited; dry-run/apply tooling prepared; production values not modified automatically.
+Status: completed in production on 2026-09-17 and verified after the write.
 
-A 2026-09-17 read-only audit found that historical `soil_cache.risk_level` values often do not match the centralized classifier in `lib/soilRisk.ts`. This is a label-consistency problem and must remain separate from the USDA methodology migration below.
+A read-only audit found that historical `soil_cache.risk_level` values often did not match the centralized classifier in `lib/soilRisk.ts`. This was a label-consistency problem and remained separate from the USDA methodology migration below.
 
 The deterministic classifier is:
 
@@ -88,11 +88,25 @@ Apply is deliberately explicit:
 node scripts/reclassify-soil-risk.mjs --apply
 ```
 
-Do not run `--apply` until the dry-run transition counts are reviewed. Apply mode updates rows by ID and also checks the previously observed `risk_level` so a concurrent change causes an abort instead of silently overwriting newer data.
+Apply mode updates rows by ID and also checks the previously observed `risk_level` so a concurrent change causes an abort instead of silently overwriting newer data.
 
-### Audit snapshot
+### Production remediation record
 
-The 2026-09-17 database audit found 4,143 `soil_cache` rows and 3,912 risk-label mismatches under the centralized classifier. The largest observed transition was stored `Moderate` to calculated `Lower`. These counts are an audit snapshot, not a permanent invariant, and must be rechecked immediately before any apply run.
+On 2026-09-17, the pre-write audit scanned 4,143 `soil_cache` rows and identified exactly 3,912 mismatches. The proposed change set was fingerprinted before mutation so the production update would not proceed against an unexpected data set.
+
+The original database check constraint allowed only `Low`, `Moderate`, `High`, and `Severe`. That schema was older than the application classifier and initially blocked canonical `Lower` / `Not classified` values. The migration therefore proceeded in stages:
+
+1. An attempted direct tightening to canonical labels failed safely because 145 legacy `Low` rows still existed.
+2. The constraint was temporarily expanded to accept both legacy and canonical labels.
+3. The 3,912-row change-set count and fingerprint were revalidated unchanged.
+4. Exactly 3,912 `risk_level` values were updated from their existing stored PI. No PI, LEP, USDA map unit, component, coordinate, or other soil value was changed.
+5. A post-write audit found zero classifier mismatches and zero legacy `Low` rows across all 4,143 records.
+6. The database constraint was then tightened successfully to the canonical set only: `Lower`, `Moderate`, `High`, `Severe`, `Not classified`.
+7. A final post-migration audit again found 4,143 rows, zero classifier mismatches, and zero legacy `Low` values.
+
+Final production distribution at remediation time was 3,391 `Lower`, 420 `Moderate`, 126 `High`, 199 `Severe`, and 7 `Not classified`.
+
+These counts document the completed migration and are not intended as permanent invariants as new locations are ingested.
 
 ## USDA soil methodology migration
 
