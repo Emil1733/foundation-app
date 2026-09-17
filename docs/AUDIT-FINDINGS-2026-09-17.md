@@ -10,33 +10,20 @@ The reviewed GSC export covered 2026-06-16 through 2026-09-15 and showed 145 cli
 
 The immediate strategy is therefore to improve already-visible commercial URLs rather than multiply the page count indiscriminately.
 
-Priority treatment cohort:
-- Cedar Park
-- Allen
-- Schertz
-- Boerne
-- Lewisville
+Priority treatment cohort: Cedar Park, Allen, Schertz, Boerne, Lewisville.
+Directional controls: Frisco, Richardson, Pflugerville, Carrollton, Denton.
 
-Directional controls:
-- Frisco
-- Richardson
-- Pflugerville
-- Carrollton
-- Denton
-
-Cedar Park is the primary experiment because its commercial service URL and core foundation-repair queries were clustering around positions 10-11 while producing almost no clicks.
-
-The full baseline, treatment rules, controls, and measurement plan are in `docs/SEO-EXPERIMENT-2026-09.md`.
+Cedar Park is the primary experiment because its commercial service URL and core foundation-repair queries were clustering around positions 10-11 while producing almost no clicks. Full baseline and measurement rules are in `docs/SEO-EXPERIMENT-2026-09.md`.
 
 ## Finding 1 - Sitemap exposed fallback-only soil reports
 
-Before change, commercial URLs were filtered through `shouldIndexServicePage()` but soil-report URLs were generated for every target location, including records where the report's differentiating soil dataset was absent.
+Before change, commercial URLs were filtered through `shouldIndexServicePage()` but soil-report URLs were generated for every target location.
 
 Implemented: `app/sitemap.ts` now requires a usable soil record before a soil-report URL is included in the sitemap.
 
 ## Finding 2 - City ingestion contained fabricated neighborhood risk labels
 
-Before change, `scripts/add-city.mjs` queried real neighborhood names but randomly assigned High, Severe, or Moderate risk. When no neighborhoods were returned, it invented names and geographic notes.
+Before change, `scripts/add-city.mjs` queried real neighborhood names but randomly assigned risk labels. When no neighborhoods were returned, it invented names and geographic notes.
 
 Implemented:
 - randomized neighborhood risk labels removed
@@ -49,7 +36,7 @@ Follow-up: historical database rows created by the old script may still contain 
 
 ## Finding 3 - USDA ingestion keeps only the first returned row
 
-The public soil API, admin ingestion endpoint, and CLI use related USDA Soil Data Access queries that can return multiple major-component/horizon rows. Current code maps only `Table[1]`, the first returned data row, into the cached representation.
+The public soil API, admin ingestion endpoint, and CLI use related USDA Soil Data Access queries that can return multiple major-component/horizon rows. Current code maps only `Table[1]`, the first returned row, into the cached representation.
 
 Because the query orders by component percentage descending and horizon depth ascending, this appears intended to approximate the dominant component's shallowest returned horizon, but the assumption is not explicitly modeled.
 
@@ -73,17 +60,11 @@ Implemented: `lib/soilRisk.ts` defines one registry screening classifier:
 
 Admin ingestion, commercial rendering, and the soil-report template now use the shared classifier. The standalone CLI mirrors the same thresholds because it executes directly as Node ESM outside the Next.js TypeScript import path.
 
-All public language frames the labels as mapped screening context, not a property-specific structural diagnosis.
-
 ## Finding 5 - Admin ingest security default
 
 Before change, `app/api/admin/ingest/route.ts` fell back to the literal secret `changeme` and returned configuration/debug information.
 
-Implemented:
-- missing `ADMIN_SECRET` disables ingestion
-- missing Supabase admin configuration fails closed
-- unauthorized responses no longer expose debug state
-- basic target validation runs before ingestion
+Implemented: missing secrets/config fail closed, unauthorized responses no longer expose debug state, and basic target validation runs before ingestion.
 
 ## Finding 6 - Historical contributor route is neutralized
 
@@ -91,9 +72,7 @@ Implemented:
 
 ## Finding 7 - Texas regional guidance is deterministic but approximate
 
-`lib/texasFoundationGuides.ts` selects broad guidance regions using latitude/longitude boundaries. These are application-defined heuristics, not authoritative GIS polygons.
-
-Use them as regional educational context, not surveyed property-level classifications.
+`lib/texasFoundationGuides.ts` selects broad guidance regions using latitude/longitude boundaries. These are application-defined heuristics, not authoritative GIS polygons. Use them as regional educational context, not surveyed property-level classifications.
 
 ## Finding 8 - Trust badges are descriptive, not credential badges
 
@@ -123,25 +102,21 @@ Before change, the commercial template led with `Local Soil Context` and `Founda
 
 Implemented as a controlled experiment: `lib/commercialSeoTreatments.ts` contains the five treatment slugs. Only those pages receive commercial-first metadata and hero treatment.
 
-Treatment pages:
-- lead title/H1 with Foundation Repair plus city/state
-- lead hero copy with homeowner symptoms and evaluation intent
-- retain soil data as supporting evidence rather than the primary product
-- retain a cautious evaluation CTA
-
-See `docs/SEO-EXPERIMENT-2026-09.md` before changing treatment membership.
-
 ## Finding 13 - Soil reports needed a stronger commercial path
 
-Before change, soil reports linked to the matching commercial city page mainly through breadcrumbs/schema while the body focused on soil interpretation.
+Before change, soil reports linked to the matching commercial city page mainly through breadcrumbs/schema.
 
 Implemented:
-- prominent in-body `Foundation Repair in [City], [State]` link added near the top of the report
-- footer CTA includes a direct link back to the commercial city guide
+- prominent in-body `Foundation Repair in [City], [State]` link near the top
+- footer CTA links back to the commercial city guide
 - report uses the shared soil screening classifier
-- reports without a usable map-unit record return not-found rather than presenting default scientific-looking values
+- reports without a usable map-unit record return not-found instead of presenting default scientific-looking values
 
-The intended funnel is documented in `docs/SEO-EXPERIMENT-2026-09.md`.
+## Finding 14 - Scope planner used misleading calculation theater
+
+Before change, `components/CostEstimator.tsx` showed an animated `REVIEWING SCOPE FACTORS...` state and text such as `Calculating material yield`, even though the component was not actually calculating a defensible repair quantity or cost.
+
+Implemented: the component is now explicitly a symptom-to-next-step scope planner. It does not simulate a calculation, estimate repair cost from mapped PI, or imply that symptoms alone determine repair scope.
 
 ## Implementation status
 
@@ -155,7 +130,8 @@ Completed in the implementation branch:
 7. Launch Cedar Park plus four treatment peers while preserving controls.
 8. Replace the prescriptive repair-system diagram.
 9. Strengthen soil-report-to-commercial-page funnel links.
-10. Document experiment, architecture, lead/data flow, and audit decisions.
+10. Remove misleading calculation behavior from the scope planner.
+11. Document experiment, architecture, lead/data flow, and audit decisions.
 
 Still to verify/follow up:
 1. Verify the USDA first-row interpretation before any database-wide recalculation.
