@@ -33,25 +33,14 @@ const getDynamicIntro = (city: string, soilName: string, risk: string) => {
 
 export async function generateMetadata({ params }: { params: Promise<{ city: string }> }): Promise<Metadata> {
   const { city: slug } = await params;
-  const { data: location } = await supabase
-    .from("target_locations")
-    .select(`city, state, soil_cache (risk_level, map_unit_name)`)
-    .eq("slug", slug)
-    .single();
-
+  const { data: location } = await supabase.from("target_locations").select(`city, state, soil_cache (risk_level, map_unit_name)`).eq("slug", slug).single();
   if (!location) return { title: "Foundation Distress Identification Services" };
   const indexable = shouldIndexServicePage(slug, location.soil_cache);
   const treatment = getCommercialSeoTreatment(slug);
-  const title = treatment
-    ? treatment.title(location.city, location.state)
-    : `${location.city} Foundation Repair | Soil Risk & Evaluation`;
-  const description = treatment
-    ? `Foundation repair in ${location.city}, ${location.state}. Review warning signs, mapped soil context, evaluation steps, costs, and repair options before choosing a scope.`
-    : `Foundation repair in ${location.city}, ${location.state}: review mapped soil context, warning signs, and evaluation options before choosing a repair plan.`;
-
+  const title = treatment ? treatment.title(location.city, location.state) : `${location.city} Foundation Repair | Soil Risk & Evaluation`;
+  const description = treatment ? `Foundation repair in ${location.city}, ${location.state}. Review warning signs, mapped soil context, evaluation steps, costs, and repair options before choosing a scope.` : `Foundation repair in ${location.city}, ${location.state}: review mapped soil context, warning signs, and evaluation options before choosing a repair plan.`;
   return {
-    title,
-    description,
+    title, description,
     alternates: { canonical: `https://foundationrisk.org/services/foundation-repair/${slug}` },
     ...(!indexable && { robots: { index: false, follow: true, googleBot: { index: false, follow: true } } }),
     openGraph: { title, description, url: `https://foundationrisk.org/services/foundation-repair/${slug}`, images: ["/logo.png"] },
@@ -60,127 +49,46 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
 
 export default async function CityPage({ params }: { params: Promise<{ city: string }> }) {
   const { city: slug } = await params;
-  const { data: location, error } = await supabase
-    .from("target_locations")
-    .select(`id, city, state, zip_code, latitude, longitude, soil_cache (*)`)
-    .eq("slug", slug)
-    .single();
-
+  const { data: location, error } = await supabase.from("target_locations").select(`id, city, state, zip_code, latitude, longitude, soil_cache (*)`).eq("slug", slug).single();
   if (error || !location) return notFound();
 
   const { city, state, soil_cache: rawSoil } = location;
   const soil = Array.isArray(rawSoil) ? rawSoil[0] : rawSoil;
   const riskClass = classifySoilPlasticityIndex(soil?.plasticity_index);
   const treatment = getCommercialSeoTreatment(slug);
-  const stateGuide = state === "TX"
-    ? getTexasFoundationGuide(Number(location.latitude), Number(location.longitude))
-    : STATE_FOUNDATION_GUIDES[state];
+  const stateGuide = state === "TX" ? getTexasFoundationGuide(Number(location.latitude), Number(location.longitude)) : STATE_FOUNDATION_GUIDES[state];
   const stateRoute = getStateRoute(state);
   const neighbors = await getNearbyLocations(location.id, state);
   const soilReportAvailable = Boolean(soil?.map_unit_name);
 
   const faqs = [
-    {
-      q: `How much does foundation repair cost in ${city}?`,
-      a: `Foundation repair cost in ${city} depends on the cause, affected area, access, repair design, and number and type of supports. Compare written scopes based on property measurements rather than choosing a system from mapped soil data alone.`,
-    },
-    {
-      q: `Does active clay soil affect foundations in ${city}?`,
-      a: soil
-        ? `The mapped ${soil.map_unit_name} record has a Plasticity Index of ${soil.plasticity_index} and a registry screening classification of ${riskClass}. That provides soil context, but it does not prove that a particular home is moving.`
-        : `Soil conditions can influence foundation performance, but mapped data alone cannot determine whether a particular home is moving. Property measurements, drainage, construction, and changes over time matter.`,
-    },
-    {
-      q: `What does a foundation evaluation in ${city} involve?`,
-      a: `A useful foundation evaluation in ${city} documents visible symptoms, drainage, door and window alignment, and floor elevations where appropriate. The reviewer should explain how the evidence supports any proposed repair.`,
-    },
-    {
-      q: `How do I identify foundation distress in my ${city} home?`,
-      a: `Track diagonal cracks, changing wall or trim gaps, multiple sticking openings, and measurable floor-level differences. None proves foundation failure by itself, so dates, measurements, drainage observations, and changes over time are important.`,
-    },
-    {
-      q: `What causes foundation settling in ${city}, ${state}?`,
-      a: `Possible contributors include moisture-sensitive soil, erosion, poorly compacted fill, drainage concentration, plumbing leaks, vegetation, and construction details. A property evaluation is needed to identify the likely cause and whether repair is warranted.`,
-    },
+    { q: `How much does foundation repair cost in ${city}?`, a: `Foundation repair cost in ${city} depends on the cause, affected area, access, repair design, and number and type of supports. Compare written scopes based on property measurements rather than choosing a system from mapped soil data alone.` },
+    { q: `Does active clay soil affect foundations in ${city}?`, a: soil ? `The mapped ${soil.map_unit_name} record has a Plasticity Index of ${soil.plasticity_index} and a registry screening classification of ${riskClass}. That provides soil context, but it does not prove that a particular home is moving.` : `Soil conditions can influence foundation performance, but mapped data alone cannot determine whether a particular home is moving. Property measurements, drainage, construction, and changes over time matter.` },
+    { q: `What does a foundation evaluation in ${city} involve?`, a: `A useful foundation evaluation in ${city} documents visible symptoms, drainage, door and window alignment, and floor elevations where appropriate. The reviewer should explain how the evidence supports any proposed repair.` },
+    { q: `How do I identify foundation distress in my ${city} home?`, a: `Track diagonal cracks, changing wall or trim gaps, multiple sticking openings, and measurable floor-level differences. None proves foundation failure by itself, so dates, measurements, drainage observations, and changes over time are important.` },
+    { q: `What causes foundation settling in ${city}, ${state}?`, a: `Possible contributors include moisture-sensitive soil, erosion, poorly compacted fill, drainage concentration, plumbing leaks, vegetation, and construction details. A property evaluation is needed to identify the likely cause and whether repair is warranted.` },
   ];
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://foundationrisk.org/#organization",
-        name: "The Foundation Risk Registry",
-        url: "https://foundationrisk.org",
-        logo: "https://foundationrisk.org/logo.png",
-        knowsAbout: ["Foundation soil risk", "Foundation settlement warning signs", "Foundation evaluation questions"],
-      },
-      {
-        "@type": "WebPage",
-        "@id": `https://foundationrisk.org/services/foundation-repair/${slug}#webpage`,
-        url: `https://foundationrisk.org/services/foundation-repair/${slug}`,
-        name: `Foundation Repair in ${city}, ${state}`,
-        description: `Foundation repair information, warning signs, mapped soil context, and evaluation options for homeowners in ${city}, ${state}.`,
-        about: { "@type": "Thing", name: `Foundation repair in ${city}, ${state}` },
-        publisher: { "@id": "https://foundationrisk.org/#organization" },
-      },
-      {
-        "@type": "FAQPage",
-        mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
-      },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Service Areas", item: "https://foundationrisk.org/locations" },
-          { "@type": "ListItem", position: 2, name: `${city} Foundation Repair`, item: `https://foundationrisk.org/services/foundation-repair/${slug}` },
-        ],
-      },
-    ],
-  };
+  const jsonLd = { "@context": "https://schema.org", "@graph": [
+    { "@type": "Organization", "@id": "https://foundationrisk.org/#organization", name: "The Foundation Risk Registry", url: "https://foundationrisk.org", logo: "https://foundationrisk.org/logo.png", knowsAbout: ["Foundation soil risk", "Foundation settlement warning signs", "Foundation evaluation questions"] },
+    { "@type": "WebPage", "@id": `https://foundationrisk.org/services/foundation-repair/${slug}#webpage`, url: `https://foundationrisk.org/services/foundation-repair/${slug}`, name: `Foundation Repair in ${city}, ${state}`, description: `Foundation repair information, warning signs, mapped soil context, and evaluation options for homeowners in ${city}, ${state}.`, about: { "@type": "Thing", name: `Foundation repair in ${city}, ${state}` }, publisher: { "@id": "https://foundationrisk.org/#organization" } },
+    { "@type": "FAQPage", mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) },
+    { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Service Areas", item: "https://foundationrisk.org/locations" }, { "@type": "ListItem", position: 2, name: `${city} Foundation Repair`, item: `https://foundationrisk.org/services/foundation-repair/${slug}` }] }
+  ] };
 
   return (
     <div className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-
       <header className="bg-slate-900 text-white py-8 md:py-12 px-6 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-800 to-slate-950 -z-10" />
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           <div>
-            <nav aria-label="Breadcrumb" className="mb-6 text-sm text-slate-400">
-              <ol className="flex flex-wrap items-center gap-2">
-                <li><Link href="/" className="hover:text-white">Home</Link></li>
-                <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5" /></li>
-                <li><Link href="/locations" className="hover:text-white">Service Areas</Link></li>
-                <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5" /></li>
-                <li><Link href={stateRoute.href} className="hover:text-white">{stateRoute.name}</Link></li>
-                <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5" /></li>
-                <li aria-current="page" className="text-slate-200">{city}</li>
-              </ol>
-            </nav>
-
-            <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 px-4 py-1.5 rounded-full text-blue-200 text-sm font-semibold mb-8">
-              <ShieldCheck className="w-4 h-4 text-blue-400" />
-              <span>{treatment ? treatment.eyebrow(city, state) : `Local Soil Context for ${city}, ${state}`}</span>
-            </div>
-
-            <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-              {treatment ? treatment.h1Lead : "Foundation Repair Evaluation & Options"}{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">in {city}, {state}</span>
-            </h1>
-
-            <p className="text-slate-300 text-lg mb-6 leading-relaxed max-w-xl">
-              {treatment
-                ? treatment.hero(city, state)
-                : <>Review mapped <strong>{soil?.map_unit_name || "soil conditions"}</strong>, understand warning signs, and request a property-specific evaluation before choosing a repair plan.</>}
-            </p>
-
-            <Link href="/book-analysis" className="inline-flex bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold items-center justify-center gap-2 transition hover:shadow-lg">
-              <ShieldCheck className="w-5 h-5" /> {treatment?.cta || "Request a Foundation Evaluation"}
-            </Link>
-
-            <div className="mt-6 pt-6 border-t border-slate-700/50 flex flex-wrap gap-6 text-[11px] font-bold uppercase tracking-widest text-slate-400">
-              <span>USDA Soil Context</span><span>Property-Specific Review</span><span>Compare Repair Options</span>
-            </div>
+            <nav aria-label="Breadcrumb" className="mb-6 text-sm text-slate-400"><ol className="flex flex-wrap items-center gap-2"><li><Link href="/" className="hover:text-white">Home</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li><li><Link href="/locations" className="hover:text-white">Service Areas</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li><li><Link href={stateRoute.href} className="hover:text-white">{stateRoute.name}</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li><li aria-current="page" className="text-slate-200">{city}</li></ol></nav>
+            <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 px-4 py-1.5 rounded-full text-blue-200 text-sm font-semibold mb-8"><ShieldCheck className="w-4 h-4 text-blue-400" /><span>{treatment ? treatment.eyebrow(city, state) : `Local Soil Context for ${city}, ${state}`}</span></div>
+            <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">{treatment ? treatment.h1Lead : "Foundation Repair Evaluation & Options"}{" "}<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">in {city}, {state}</span></h1>
+            <p className="text-slate-300 text-lg mb-6 leading-relaxed max-w-xl">{treatment ? treatment.hero(city, state) : <>Review mapped <strong>{soil?.map_unit_name || "soil conditions"}</strong>, understand warning signs, and request a property-specific evaluation before choosing a repair plan.</>}</p>
+            <Link href="/book-analysis" className="inline-flex bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold items-center justify-center gap-2 transition hover:shadow-lg"><ShieldCheck className="w-5 h-5" /> {treatment?.cta || "Request a Foundation Evaluation"}</Link>
+            <div className="mt-6 pt-6 border-t border-slate-700/50 flex flex-wrap gap-6 text-[11px] font-bold uppercase tracking-widest text-slate-400"><span>USDA Soil Context</span><span>Property-Specific Review</span><span>Compare Repair Options</span></div>
           </div>
           <div className="relative"><SoilRiskWidget /></div>
         </div>
@@ -189,96 +97,25 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
       <main id="main-content" className="max-w-4xl mx-auto py-16 px-6">
         <TrustBadges />
         <CrackAnalyzer city={city} pi={soil?.plasticity_index} />
-
         <section className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 mb-12">
-          <div className="flex items-start gap-4 mb-6">
-            <div className="bg-blue-50 p-3 rounded-lg text-blue-600"><Info className="w-6 h-6" /></div>
-            <div>
-              <h2 className="text-2xl font-bold text-slate-900">Mapped Soil and Foundation Context for {city}</h2>
-              <p className="text-slate-500 text-sm">
-                {hasDisplayableZip(location.zip_code)
-                  ? `USDA/NRCS soil screening record for ZIP ${location.zip_code}`
-                  : "USDA/NRCS mapped soil screening context for this location"}
-              </p>
-            </div>
-          </div>
-
+          <div className="flex items-start gap-4 mb-6"><div className="bg-blue-50 p-3 rounded-lg text-blue-600"><Info className="w-6 h-6" /></div><div><h2 className="text-2xl font-bold text-slate-900">Mapped Soil and Foundation Context for {city}</h2><p className="text-slate-500 text-sm">{hasDisplayableZip(location.zip_code) ? `USDA/NRCS soil screening record for ZIP ${location.zip_code}` : "USDA/NRCS mapped soil screening context for this location"}</p></div></div>
           <div className="prose prose-slate max-w-none text-slate-600">
             <p>{getDynamicIntro(city, soil?.map_unit_name || "local soil", riskClass)}</p>
-            {soil && (
-              <div className="my-8 grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose">
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Plasticity Index (PI)</span>
-                  <div className="flex items-end gap-2 mt-1">
-                    <span className="text-3xl font-mono font-bold text-slate-900">{Number(soil.plasticity_index).toFixed(1)}</span>
-                    <span className="rounded bg-blue-100 px-2 py-0.5 text-sm font-bold text-blue-800">{riskClass}</span>
-                  </div>
-                  <p className="text-xs text-slate-500 mt-2">Mapped screening value, not a measurement from the property.</p>
-                </div>
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Shrink-Swell</span>
-                  <div className="mt-1 text-3xl font-mono font-bold text-slate-900">
-                    {soil.shrink_swell_potential === null || soil.shrink_swell_potential === undefined
-                      ? "Not reported"
-                      : `${Number(soil.shrink_swell_potential).toFixed(1)}%`}
-                  </div>
-                  <p className="text-xs text-slate-500 mt-2">Mapped linear-extensibility context, site conditions can vary.</p>
-                </div>
-              </div>
-            )}
-
-            {soilReportAvailable && (
-              <Link href={`/learn/${slug}-soil-analysis`} className="not-prose mt-8 flex items-center justify-between p-4 bg-slate-50 border border-blue-100 rounded-xl hover:bg-blue-50 transition">
-                <span><strong className="block text-slate-900">View {city} Soil Risk Report</strong><span className="text-sm text-slate-500">Review the mapped soil record and interpretation.</span></span>
-                <ChevronRight className="w-5 h-5 text-blue-600" />
-              </Link>
-            )}
+            {soil && <div className="my-8 grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose"><div className="bg-slate-50 p-4 rounded-xl border border-slate-100"><span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Plasticity Index (PI)</span><div className="flex items-end gap-2 mt-1"><span className="text-3xl font-mono font-bold text-slate-900">{Number(soil.plasticity_index).toFixed(1)}</span><span className="rounded bg-blue-100 px-2 py-0.5 text-sm font-bold text-blue-800">{riskClass}</span></div><p className="text-xs text-slate-500 mt-2">Mapped screening value, not a measurement from the property.</p></div><div className="bg-slate-50 p-4 rounded-xl border border-slate-100"><span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Shrink-Swell</span><div className="mt-1 text-3xl font-mono font-bold text-slate-900">{soil.shrink_swell_potential === null || soil.shrink_swell_potential === undefined ? "Not reported" : `${Number(soil.shrink_swell_potential).toFixed(1)}%`}</div><p className="text-xs text-slate-500 mt-2">Mapped linear-extensibility context, site conditions can vary.</p></div></div>}
+            {soilReportAvailable && <Link href={`/learn/${slug}-soil-analysis`} className="not-prose mt-8 flex items-center justify-between p-4 bg-slate-50 border border-blue-100 rounded-xl hover:bg-blue-50 transition"><span><strong className="block text-slate-900">View {city} Soil Risk Report</strong><span className="text-sm text-slate-500">Review the mapped soil record and interpretation.</span></span><ChevronRight className="w-5 h-5 text-blue-600" /></Link>}
           </div>
         </section>
 
         <FoundationDiagram />
-        <SoilActionPlan city={city} riskLevel={riskClass} />
+        <SoilActionPlan city={city} soil={soil || null} riskLevel={riskClass} />
+        {stateGuide && <section className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 mb-12"><h2 className="text-2xl font-bold text-slate-900 mb-4">Regional Foundation Guidance for {city}</h2><p className="text-slate-600 leading-relaxed mb-4">{stateGuide.summary}</p><p className="text-sm text-slate-500">Regional guidance is context only. Repair decisions should be tied to evidence from the property.</p></section>}
+        <CostEstimator city={city} pi={soil?.plasticity_index} />
 
-        {stateGuide && (
-          <section className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 mb-12">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">Regional Foundation Guidance for {city}</h2>
-            <p className="text-slate-600 leading-relaxed mb-4">{stateGuide.summary}</p>
-            <p className="text-sm text-slate-500">Regional guidance is context only. Repair decisions should be tied to evidence from the property.</p>
-          </section>
-        )}
+        <section className="bg-slate-900 text-white rounded-2xl p-8 md:p-10 mb-12"><h2 className="text-3xl font-bold mb-4">Does your {city} home need foundation repair?</h2><p className="text-slate-300 mb-6 max-w-2xl">The useful question is not whether a mapped soil class sounds risky. It is whether the property shows a consistent pattern of movement and what evidence supports the proposed repair scope.</p><Link href="/book-analysis" className="inline-flex bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-xl font-bold items-center gap-2"><ShieldCheck className="w-5 h-5" /> Request a Foundation Evaluation</Link></section>
 
-        <CostEstimator city={city} />
+        <section className="mb-12"><h2 className="text-3xl font-bold text-slate-900 mb-6">Foundation Repair Questions in {city}</h2><div className="space-y-4">{faqs.map((faq) => <details key={faq.q} className="bg-white border border-slate-200 rounded-xl p-5 group"><summary className="font-bold text-slate-900 cursor-pointer">{faq.q}</summary><p className="mt-3 text-slate-600 leading-relaxed">{faq.a}</p></details>)}</div></section>
 
-        <section className="bg-slate-900 text-white rounded-2xl p-8 md:p-10 mb-12">
-          <h2 className="text-3xl font-bold mb-4">Does your {city} home need foundation repair?</h2>
-          <p className="text-slate-300 mb-6 max-w-2xl">The useful question is not whether a mapped soil class sounds risky. It is whether the property shows a consistent pattern of movement and what evidence supports the proposed repair scope.</p>
-          <Link href="/book-analysis" className="inline-flex bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-xl font-bold items-center gap-2"><ShieldCheck className="w-5 h-5" /> Request a Foundation Evaluation</Link>
-        </section>
-
-        <section className="mb-12">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Foundation Repair Questions in {city}</h2>
-          <div className="space-y-4">
-            {faqs.map((faq) => (
-              <details key={faq.q} className="bg-white border border-slate-200 rounded-xl p-5 group">
-                <summary className="font-bold text-slate-900 cursor-pointer">{faq.q}</summary>
-                <p className="mt-3 text-slate-600 leading-relaxed">{faq.a}</p>
-              </details>
-            ))}
-          </div>
-        </section>
-
-        {neighbors.length > 0 && (
-          <section className="border-t border-slate-200 pt-10">
-            <h2 className="text-xl font-bold text-slate-900 mb-5 flex items-center gap-2"><MapPin className="w-5 h-5 text-blue-600" /> Foundation Repair Near {city}</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-              {neighbors.map((n) => (
-                <Link key={n.slug} href={`/services/foundation-repair/${n.slug}`} prefetch={false} className="border border-slate-200 rounded-lg p-3 text-sm font-semibold text-slate-700 hover:text-blue-700 hover:border-blue-200">
-                  Foundation Repair in {n.city}
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
+        {neighbors.length > 0 && <section className="border-t border-slate-200 pt-10"><h2 className="text-xl font-bold text-slate-900 mb-5 flex items-center gap-2"><MapPin className="w-5 h-5 text-blue-600" /> Foundation Repair Near {city}</h2><div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">{neighbors.map((n) => <Link key={n.slug} href={`/services/foundation-repair/${n.slug}`} prefetch={false} className="border border-slate-200 rounded-lg p-3 text-sm font-semibold text-slate-700 hover:text-blue-700 hover:border-blue-200">Foundation Repair in {n.city}</Link>)}</div></section>}
       </main>
     </div>
   );
