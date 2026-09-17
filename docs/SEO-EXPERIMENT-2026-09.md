@@ -40,6 +40,12 @@ Cedar Park query baselines:
 - `foundation repair cedar park tx`: 98 impressions, position 11.28, 0 clicks
 - `foundation repair cedar park`: 73 impressions, position 11.01, 0 clicks
 
+### Allen route correction
+
+The GSC baseline URL was reported as `/services/foundation-repair/allen-tx-75002`, but the live `target_locations` record is keyed by slug `allen-tx`. The original treatment registry used `allen-tx-75002`, so the live database-backed Allen page did not receive the experiment variant.
+
+On 2026-09-17 the treatment key was corrected to `allen-tx`. Keep the original GSC baseline numbers above for historical measurement context, but treat `/services/foundation-repair/allen-tx` as the active treatment route going forward. Do not interpret Allen's post-change window as starting before this correction.
+
 ## Control cohort
 
 Do not add these pages to `COMMERCIAL_SEO_TREATMENTS` during the initial measurement window:
