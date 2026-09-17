@@ -8,7 +8,7 @@ This file records concrete findings from the September 17, 2026 code and GSC rev
 
 The reviewed GSC export covered 2026-06-16 through 2026-09-15 and showed 145 clicks from 20,625 impressions. Search visibility improved materially through the period, with the September snapshot averaging roughly position 10.8.
 
-The immediate strategy is therefore to improve already-visible commercial URLs rather than multiply the page count indiscriminately.
+The immediate strategy is to improve already-visible commercial URLs rather than multiply page count indiscriminately.
 
 Priority treatment cohort: Cedar Park, Allen, Schertz, Boerne, Lewisville.
 Directional controls: Frisco, Richardson, Pflugerville, Carrollton, Denton.
@@ -114,7 +114,7 @@ Implemented:
 
 ## Finding 14 - Scope planner used misleading calculation theater
 
-Before change, `components/CostEstimator.tsx` showed an animated `REVIEWING SCOPE FACTORS...` state and text such as `Calculating material yield`, even though the component was not actually calculating a defensible repair quantity or cost.
+Before change, `components/CostEstimator.tsx` showed an animated `REVIEWING SCOPE FACTORS...` state and text such as `Calculating material yield`, even though it was not calculating a defensible repair quantity or cost.
 
 Implemented: the component is now explicitly a symptom-to-next-step scope planner. It does not simulate a calculation, estimate repair cost from mapped PI, or imply that symptoms alone determine repair scope.
 
@@ -131,7 +131,8 @@ Completed in the implementation branch:
 8. Replace the prescriptive repair-system diagram.
 9. Strengthen soil-report-to-commercial-page funnel links.
 10. Remove misleading calculation behavior from the scope planner.
-11. Document experiment, architecture, lead/data flow, and audit decisions.
+11. Pass actual soil data/PI into the supporting action-plan and scope-planner components so their guidance remains tied to the same page record.
+12. Document experiment, architecture, lead/data flow, and audit decisions.
 
 Still to verify/follow up:
 1. Verify the USDA first-row interpretation before any database-wide recalculation.
