@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 
-// 0. CLI Arguments
 const args = process.argv.slice(2);
 if (args.length < 3) {
     console.log(`
@@ -14,53 +13,48 @@ if (args.length < 3) {
 }
 
 const [ZIP, CITY, STATE] = args;
-
-// 1. Setup Supabase
 const envPath = path.resolve(process.cwd(), '.env.local');
 const envConfig = dotenv.parse(fs.readFileSync(envPath));
 
 let supabaseUrl = envConfig.NEXT_PUBLIC_SUPABASE_URL;
-if (supabaseUrl && !supabaseUrl.startsWith('http')) {
-    supabaseUrl = `https://${supabaseUrl}`;
-}
-
+if (supabaseUrl && !supabaseUrl.startsWith('http')) supabaseUrl = `https://${supabaseUrl}`;
 const serviceKey = envConfig.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !serviceKey) {
-    console.error("❌ Missing Supabase Credentials in .env.local");
+    console.error('Missing Supabase credentials in .env.local');
     process.exit(1);
 }
 
 const supabase = createClient(supabaseUrl, serviceKey);
+const USDA_URL = 'https://sdmdataaccess.nrcs.usda.gov/Tabular/post.rest';
 
-// 2. Constants
-const USDA_URL = "https://sdmdataaccess.nrcs.usda.gov/Tabular/post.rest";
+function classifySoilPlasticityIndex(value) {
+    if (value === null || value === undefined || value === '') return 'Not classified';
+    const pi = Number(value);
+    if (!Number.isFinite(pi) || pi < 0) return 'Not classified';
+    if (pi > 35) return 'Severe';
+    if (pi > 25) return 'High';
+    if (pi > 15) return 'Moderate';
+    return 'Lower';
+}
 
-// 3. Helper: Geocode via Nominatim
 async function getCoords(zip) {
     try {
         const url = `https://nominatim.openstreetmap.org/search?postalcode=${zip}&country=us&format=json&limit=1`;
         const res = await fetch(url, { headers: { 'User-Agent': 'FoundationRiskApp/1.0' } });
         if (!res.ok) throw new Error(res.statusText);
-
         const data = await res.json();
-        if (data && data.length > 0) {
-            return {
-                lat: parseFloat(data[0].lat),
-                lon: parseFloat(data[0].lon)
-            };
-        }
-        return null;
+        if (!data?.length) return null;
+        return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
     } catch (e) {
-        console.error(`   ❌ Geocode Error (${zip}):`, e.message);
+        console.error(`Geocode error (${zip}):`, e.message);
         return null;
     }
 }
 
-// 4. Helper: Fetch USDA Soil Data
 async function getSoilData(lat, lon) {
     const query = `
-      SELECT 
+      SELECT
         mu.musym AS map_unit_symbol,
         mu.muname AS map_unit_name,
         c.compname AS component_name,
@@ -83,31 +77,24 @@ async function getSoilData(lat, lon) {
         const res = await fetch(USDA_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query, format: "JSON+COLUMNNAME" })
+            body: JSON.stringify({ query, format: 'JSON+COLUMNNAME' })
         });
-
         if (!res.ok) throw new Error(`USDA API: ${res.statusText}`);
-
         const data = await res.json();
-        if (data.Table && data.Table.length > 1) {
-            // Row 0 = Headers, Row 1 = Values
-            const headers = data.Table[0];
-            const values = data.Table[1];
-            const rec = {};
-            headers.forEach((key, i) => rec[key] = values[i]);
-            return rec;
-        }
-        return null;
+        if (!data.Table || data.Table.length <= 1) return null;
+        const headers = data.Table[0];
+        const values = data.Table[1];
+        const rec = {};
+        headers.forEach((key, i) => rec[key] = values[i]);
+        return rec;
     } catch (e) {
-        console.error(`   ❌ USDA Error:`, e.message);
+        console.error('USDA error:', e.message);
         return null;
     }
 }
 
-// 4b. Helper: Fetch Real Neighborhoods (Overpass API)
 async function getRealNeighborhoods(lat, lon) {
-    console.log("   🏘️  Scanning OpenStreetMap for neighborhoods...");
-    // Query: Find nodes tagged as 'neighbourhood' or 'suburb' within 6km (6000m)
+    console.log('Scanning OpenStreetMap for named neighborhoods...');
     const query = `
         [out:json][timeout:10];
         (
@@ -121,79 +108,51 @@ async function getRealNeighborhoods(lat, lon) {
         const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
         const res = await fetch(url, { headers: { 'User-Agent': 'FoundationRiskApp/1.0' } });
         if (!res.ok) throw new Error(res.statusText);
-
         const data = await res.json();
-        if (data && data.elements && data.elements.length > 0) {
-            // Map to our schema
-            return data.elements.slice(0, 8).map(el => {
-                const name = el.tags.name;
-                // Randomize risk slightly to create variety (In a real app, you'd overlap soil maps)
-                const risks = ['High', 'Severe', 'Moderate'];
-                const risk = risks[Math.floor(Math.random() * risks.length)];
-                return {
-                    name: name,
-                    risk: risk,
-                    note: `Located in the ${name} sector.`
-                };
-            }).filter(n => n.name); // Ensure name exists
-        }
-        return [];
+        if (!data?.elements?.length) return [];
+
+        // Store only sourced place names. Never invent neighborhood-level soil risk,
+        // terrain, drainage, or foundation claims without a matching data source.
+        return [...new Set(data.elements.map((el) => el.tags?.name).filter(Boolean))]
+            .slice(0, 8)
+            .map((name) => ({ name }));
     } catch (e) {
-        console.warn(`   ⚠️ Overpass Error:`, e.message);
+        console.warn('Overpass error:', e.message);
         return [];
     }
 }
 
-// 5. Main Execution
 async function run() {
-    console.log(`\n🚀 Injecting City: ${CITY}, ${STATE} (${ZIP})...`);
+    console.log(`\nInjecting city: ${CITY}, ${STATE} (${ZIP})...`);
 
-    // A. Geocode
     const coords = await getCoords(ZIP);
     if (!coords) {
-        console.error("   ❌ Geocoding failed. Check Zip Code.");
+        console.error('Geocoding failed. Check ZIP code.');
         process.exit(1);
     }
-    console.log(`   📍 Coordinates: ${coords.lat}, ${coords.lon}`);
 
-    // B. Fetch Neighborhoods (Real vs Fallback)
-    let neighborhoods = await getRealNeighborhoods(coords.lat, coords.lon);
-
+    const neighborhoods = await getRealNeighborhoods(coords.lat, coords.lon);
     if (neighborhoods.length === 0) {
-        console.log("   ⚠️ No real neighborhoods found in OSM. Using Fallbacks.");
-        neighborhoods = [
-            { name: `Central ${CITY}`, risk: "High", note: "Historic downtown zone." },
-            { name: `${CITY} Heights`, risk: "Moderate", note: "Elevated terrain." },
-            { name: `North ${CITY}`, risk: "Severe", note: "Proximity to creek basins." }
-        ];
+        console.log('No sourced neighborhood names found. Storing an empty neighborhood list.');
     } else {
-        console.log(`   ✅ Found ${neighborhoods.length} real neighborhoods (e.g., "${neighborhoods[0].name}")`);
+        console.log(`Found ${neighborhoods.length} sourced neighborhood names.`);
     }
 
-    // C. Upsert Location
-    // SANITIZATION PIPELINE:
-    // 1. Lowercase
-    // 2. Remove dots/commas (St. Louis -> St Louis)
-    // 3. Trim whitespace
-    // 4. Replace spaces with dashes
-    // 5. Remove any remaining non-word chars
     const slug = CITY.toLowerCase()
-        .replace(/[\.,]/g, '') // Remove punctuation first
+        .replace(/[\.,]/g, '')
         .trim()
-        .replace(/\s+/g, '-')  // Spaces to dashes
-        .replace(/[^\w-]/g, ''); // Remove leftovers
+        .replace(/\s+/g, '-')
+        .replace(/[^\w-]/g, '');
 
-    // Verify Slug Uniqueness (Console Warning Only for now)
     const { data: existing } = await supabase
         .from('target_locations')
         .select('zip_code, city')
         .eq('slug', slug)
-        .neq('zip_code', ZIP) // Exclude self
+        .neq('zip_code', ZIP)
         .maybeSingle();
 
     if (existing) {
-        console.warn(`   ⚠️  WARNING: Slug '${slug}' is already used by ${existing.city} (${existing.zip_code}). strict_slugs policy active.`);
-        // In strict mode, we might append zip code, but for now just warn.
+        console.warn(`WARNING: slug '${slug}' is already used by ${existing.city} (${existing.zip_code}).`);
     }
 
     const { data: locData, error: locError } = await supabase
@@ -202,57 +161,45 @@ async function run() {
             city: CITY,
             state: STATE,
             zip_code: ZIP,
-            // slug: slug, // DB appears to auto-generate this column (GENERATED ALWAYS)
             latitude: coords.lat,
             longitude: coords.lon,
-            neighborhoods: neighborhoods // Uses Real Data now
+            neighborhoods
         }, { onConflict: 'slug' })
         .select()
         .single();
 
     if (locError) {
-        console.error(`   ❌ DB Insert Error:`, locError.message);
+        console.error('DB location insert error:', locError.message);
         process.exit(1);
     }
-    const locationId = locData.id;
-    console.log(`   ✅ Location Created/Updated: ${slug} (ID: ${locationId})`);
 
-    // D. Fetch Soil
-    console.log("   🌱 Querying USDA Soil Database...");
+    console.log('Querying USDA soil database...');
     const soil = await getSoilData(coords.lat, coords.lon);
-
     if (!soil) {
-        console.warn("   ⚠️ No specific soil data found at centroid. (Using Fallback Defaults)");
-        // We could insert a placeholder soil record here if we wanted, but better to warn.
-    } else {
-        console.log(`      Found: ${soil.map_unit_name} | PI: ${soil.plasticity_index}`);
-
-        // D. Upsert Soil Cache
-        const riskLevel = Number(soil.plasticity_index) > 35 ? 'Severe' :
-            Number(soil.plasticity_index) > 25 ? 'High' :
-                'Moderate';
-
-        const { error: soilError } = await supabase
-            .from('soil_cache')
-            .upsert({
-                location_id: locationId,
-                map_unit_symbol: soil.map_unit_symbol,
-                map_unit_name: soil.map_unit_name,
-                component_name: soil.component_name || 'Expansive Clay',
-                shrink_swell_potential: Number(soil.shrink_swell || 0),
-                plasticity_index: Number(soil.plasticity_index || 0),
-                drainage_class: soil.drainage_class || 'Poorly drained',
-                risk_level: riskLevel
-            }, { onConflict: 'location_id' });
-
-        if (soilError) {
-            console.error(`   ❌ Soil Insert Error:`, soilError.message);
-        } else {
-            console.log(`   ✅ Soil Data Cached Successfully.`);
-        }
+        console.warn('No mapped soil data found at the geocoded point. No placeholder soil record will be created.');
+        return;
     }
 
-    console.log(`\n🎉 Success! Visit: /services/foundation-repair/${slug}`);
+    const riskLevel = classifySoilPlasticityIndex(soil.plasticity_index);
+    const { error: soilError } = await supabase
+        .from('soil_cache')
+        .upsert({
+            location_id: locData.id,
+            map_unit_symbol: soil.map_unit_symbol,
+            map_unit_name: soil.map_unit_name,
+            component_name: soil.component_name || null,
+            shrink_swell_potential: soil.shrink_swell === null || soil.shrink_swell === undefined ? null : Number(soil.shrink_swell),
+            plasticity_index: soil.plasticity_index === null || soil.plasticity_index === undefined ? null : Number(soil.plasticity_index),
+            drainage_class: soil.drainage_class || null,
+            risk_level: riskLevel
+        }, { onConflict: 'location_id' });
+
+    if (soilError) {
+        console.error('Soil insert error:', soilError.message);
+        process.exit(1);
+    }
+
+    console.log(`Success. Visit /services/foundation-repair/${slug}`);
 }
 
 run();
