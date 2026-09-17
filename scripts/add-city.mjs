@@ -27,6 +27,7 @@ if (!supabaseUrl || !serviceKey) {
 
 const supabase = createClient(supabaseUrl, serviceKey);
 const USDA_URL = 'https://sdmdataaccess.nrcs.usda.gov/Tabular/post.rest';
+const SCREENING_DEPTH_CM = 50;
 
 function classifySoilPlasticityIndex(value) {
     if (value === null || value === undefined || value === '') return 'Not classified';
@@ -36,6 +37,45 @@ function classifySoilPlasticityIndex(value) {
     if (pi > 25) return 'High';
     if (pi > 15) return 'Moderate';
     return 'Lower';
+}
+
+function toFiniteNumber(value) {
+    if (value === null || value === undefined || value === '') return null;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+}
+
+function aggregateSoilTable(table) {
+    if (!table || table.length <= 1) return null;
+    const headers = table[0].map(String);
+    const rows = table.slice(1).map((values) => Object.fromEntries(headers.map((header, i) => [header, values[i]])));
+    const first = rows[0];
+    const componentRows = rows.filter((row) => row.component_key === first.component_key);
+
+    const weighted = (field) => {
+        let total = 0;
+        let depth = 0;
+        for (const row of componentRows) {
+            const top = toFiniteNumber(row.horizon_top_cm);
+            const bottom = toFiniteNumber(row.horizon_bottom_cm);
+            const value = toFiniteNumber(row[field]);
+            if (top === null || bottom === null || value === null) continue;
+            const thickness = Math.min(SCREENING_DEPTH_CM, bottom) - Math.max(0, top);
+            if (thickness <= 0) continue;
+            total += value * thickness;
+            depth += thickness;
+        }
+        return depth > 0 ? total / depth : null;
+    };
+
+    return {
+        map_unit_symbol: first.map_unit_symbol || null,
+        map_unit_name: first.map_unit_name || null,
+        component_name: first.component_name || null,
+        shrink_swell: weighted('shrink_swell'),
+        plasticity_index: weighted('plasticity_index'),
+        drainage_class: first.drainage_class || null,
+    };
 }
 
 async function getCoords(zip) {
@@ -57,8 +97,11 @@ async function getSoilData(lat, lon) {
       SELECT
         mu.musym AS map_unit_symbol,
         mu.muname AS map_unit_name,
+        c.cokey AS component_key,
         c.compname AS component_name,
         c.comppct_r AS component_percent,
+        ch.hzdept_r AS horizon_top_cm,
+        ch.hzdepb_r AS horizon_bottom_cm,
         ch.lep_r AS shrink_swell,
         ch.pi_r AS plasticity_index,
         c.drainagecl AS drainage_class
@@ -69,7 +112,7 @@ async function getSoilData(lat, lon) {
         SELECT mukey FROM SDA_Get_Mukey_from_intersection_with_WktWgs84('POINT(${lon} ${lat})')
       )
       AND c.majcompflag = 'Yes'
-      AND ch.hzdept_r < 50
+      AND ch.hzdept_r < ${SCREENING_DEPTH_CM}
       ORDER BY c.comppct_r DESC, ch.hzdept_r ASC
     `;
 
@@ -79,14 +122,9 @@ async function getSoilData(lat, lon) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ query, format: 'JSON+COLUMNNAME' })
         });
-        if (!res.ok) throw new Error(`USDA API: ${res.statusText}`);
+        if (!res.ok) throw new Error(`USDA API HTTP ${res.status}`);
         const data = await res.json();
-        if (!data.Table || data.Table.length <= 1) return null;
-        const headers = data.Table[0];
-        const values = data.Table[1];
-        const rec = {};
-        headers.forEach((key, i) => rec[key] = values[i]);
-        return rec;
+        return aggregateSoilTable(data.Table);
     } catch (e) {
         console.error('USDA error:', e.message);
         return null;
@@ -110,9 +148,6 @@ async function getRealNeighborhoods(lat, lon) {
         if (!res.ok) throw new Error(res.statusText);
         const data = await res.json();
         if (!data?.elements?.length) return [];
-
-        // Store only sourced place names. Never invent neighborhood-level soil risk,
-        // terrain, drainage, or foundation claims without a matching data source.
         return [...new Set(data.elements.map((el) => el.tags?.name).filter(Boolean))]
             .slice(0, 8)
             .map((name) => ({ name }));
@@ -132,17 +167,9 @@ async function run() {
     }
 
     const neighborhoods = await getRealNeighborhoods(coords.lat, coords.lon);
-    if (neighborhoods.length === 0) {
-        console.log('No sourced neighborhood names found. Storing an empty neighborhood list.');
-    } else {
-        console.log(`Found ${neighborhoods.length} sourced neighborhood names.`);
-    }
+    console.log(neighborhoods.length === 0 ? 'No sourced neighborhood names found. Storing an empty neighborhood list.' : `Found ${neighborhoods.length} sourced neighborhood names.`);
 
-    const slug = CITY.toLowerCase()
-        .replace(/[\.,]/g, '')
-        .trim()
-        .replace(/\s+/g, '-')
-        .replace(/[^\w-]/g, '');
+    const slug = CITY.toLowerCase().replace(/[\.,]/g, '').trim().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
 
     const { data: existing } = await supabase
         .from('target_locations')
@@ -151,20 +178,11 @@ async function run() {
         .neq('zip_code', ZIP)
         .maybeSingle();
 
-    if (existing) {
-        console.warn(`WARNING: slug '${slug}' is already used by ${existing.city} (${existing.zip_code}).`);
-    }
+    if (existing) console.warn(`WARNING: slug '${slug}' is already used by ${existing.city} (${existing.zip_code}).`);
 
     const { data: locData, error: locError } = await supabase
         .from('target_locations')
-        .upsert({
-            city: CITY,
-            state: STATE,
-            zip_code: ZIP,
-            latitude: coords.lat,
-            longitude: coords.lon,
-            neighborhoods
-        }, { onConflict: 'slug' })
+        .upsert({ city: CITY, state: STATE, zip_code: ZIP, latitude: coords.lat, longitude: coords.lon, neighborhoods }, { onConflict: 'slug' })
         .select()
         .single();
 
@@ -180,18 +198,17 @@ async function run() {
         return;
     }
 
-    const riskLevel = classifySoilPlasticityIndex(soil.plasticity_index);
     const { error: soilError } = await supabase
         .from('soil_cache')
         .upsert({
             location_id: locData.id,
             map_unit_symbol: soil.map_unit_symbol,
             map_unit_name: soil.map_unit_name,
-            component_name: soil.component_name || null,
-            shrink_swell_potential: soil.shrink_swell === null || soil.shrink_swell === undefined ? null : Number(soil.shrink_swell),
-            plasticity_index: soil.plasticity_index === null || soil.plasticity_index === undefined ? null : Number(soil.plasticity_index),
-            drainage_class: soil.drainage_class || null,
-            risk_level: riskLevel
+            component_name: soil.component_name,
+            shrink_swell_potential: soil.shrink_swell,
+            plasticity_index: soil.plasticity_index,
+            drainage_class: soil.drainage_class,
+            risk_level: classifySoilPlasticityIndex(soil.plasticity_index)
         }, { onConflict: 'location_id' });
 
     if (soilError) {
