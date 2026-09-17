@@ -1,47 +1,31 @@
 export default function FoundationDiagram() {
     return (
         <div className="my-12 bg-slate-900 rounded-xl p-8 text-white">
-            <h3 className="text-xl font-bold mb-8 text-center">Why Shallow Repairs Fail vs. Our Solution</h3>
+            <h3 className="text-xl font-bold mb-3 text-center">Why Foundation Repair Scope Depends on Site Evidence</h3>
+            <p className="text-sm text-slate-400 text-center max-w-2xl mx-auto mb-8">
+                Different support systems address different conditions. A mapped soil record cannot determine the correct repair type or depth for an individual property.
+            </p>
 
-            <div className="flex flex-col md:flex-row gap-12 md:gap-8 justify-center items-center md:items-end h-auto md:h-64">
-
-                {/* Failed Method */}
-                <div className="flex-1 flex flex-col items-center gap-2 group w-full">
-                    <div className="w-full max-w-[140px] h-32 bg-red-500/10 border-2 border-red-500/50 border-dashed rounded-lg relative overflow-hidden transition-all group-hover:h-36">
-                        <div className="absolute bottom-0 w-full h-12 bg-red-500/20 animate-pulse" />
-                        <div className="absolute top-2 w-full text-center text-xs font-bold text-red-400">Active Zone</div>
-                        <div className="absolute bottom-2 w-full text-center text-[10px] text-red-300">Swelling Clay</div>
-                    </div>
-                    <div className="text-center">
-                        <div className="font-bold text-red-400 text-lg">Pressed Piling</div>
-                        <div className="text-sm text-slate-400">Moves with Clay</div>
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div className="rounded-xl border border-slate-700 bg-slate-800/60 p-5">
+                    <div className="text-xs font-bold uppercase tracking-wider text-blue-300 mb-2">1. Measure movement</div>
+                    <div className="font-bold text-white mb-2">Establish the pattern</div>
+                    <p className="text-sm text-slate-400">Floor elevations, crack history, opening alignment, and repeat measurements help distinguish active, historic, and cosmetic changes.</p>
                 </div>
-
-                {/* Success Method */}
-                <div className="flex-1 flex flex-col items-center gap-2 relative w-full mt-4 md:mt-0">
-                    <div className="absolute -top-6 md:-top-12 bg-blue-600 text-xs font-bold px-3 py-1 rounded-full shadow-lg z-10 animate-bounce">
-                        The Fix
-                    </div>
-                    <div className="w-full max-w-[140px] h-48 bg-blue-500/10 border-2 border-blue-500 rounded-lg relative overflow-hidden flex flex-col justify-end shadow-2xl shadow-blue-900/50">
-                        <div className="w-full h-16 bg-slate-800 border-t border-slate-600 flex items-center justify-center relative z-10">
-                            <span className="text-[10px] text-slate-400 uppercase tracking-widest">Bedrock</span>
-                        </div>
-                        <div className="absolute inset-0 flex justify-center">
-                            <div className="w-4 h-full bg-gradient-to-t from-blue-500 to-blue-300 shadow-[0_0_20px_rgba(96,165,250,0.6)]" />
-                        </div>
-                    </div>
-                    <div className="text-center">
-                        <div className="font-bold text-blue-400 text-lg">Deep Steel Pier</div>
-                        <div className="text-sm text-slate-400">Anchored in Strata</div>
-                    </div>
+                <div className="rounded-xl border border-slate-700 bg-slate-800/60 p-5">
+                    <div className="text-xs font-bold uppercase tracking-wider text-blue-300 mb-2">2. Identify contributors</div>
+                    <div className="font-bold text-white mb-2">Review water and support</div>
+                    <p className="text-sm text-slate-400">Drainage, plumbing, grading, fill, vegetation, foundation design, and subsurface conditions can change what an appropriate response looks like.</p>
                 </div>
-
+                <div className="rounded-xl border border-slate-700 bg-slate-800/60 p-5">
+                    <div className="text-xs font-bold uppercase tracking-wider text-blue-300 mb-2">3. Compare scopes</div>
+                    <div className="font-bold text-white mb-2">Tie the proposal to evidence</div>
+                    <p className="text-sm text-slate-400">Ask why a proposed system, location, quantity, and depth match the measured problem. Compare exclusions and warranty terms as well as price.</p>
+                </div>
             </div>
 
-            <p className="text-center text-sm text-slate-400 mt-8 max-w-md mx-auto">
-                <strong>Visual Proof:</strong> While concrete cylinders sit in the &ldquo;Active Zone&rdquo; (expanding/shrinking clay),
-                our steel piers penetrate until they hit load-bearing strata (refusal).
+            <p className="text-xs text-slate-500 text-center mt-6">
+                This diagram is planning guidance, not an engineering design or recommendation for a specific repair system.
             </p>
         </div>
     );
