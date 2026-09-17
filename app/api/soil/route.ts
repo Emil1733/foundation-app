@@ -2,24 +2,28 @@ import { NextResponse } from 'next/server';
 
 const USDA_URL = "https://sdmdataaccess.nrcs.usda.gov/Tabular/post.rest";
 
+function parseCoordinate(value: unknown, min: number, max: number) {
+    if (value === null || value === undefined || value === '') return null;
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed) || parsed < min || parsed > max) return null;
+    return parsed;
+}
+
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { lat, lon } = body;
+        const safeLat = parseCoordinate(body?.lat, -90, 90);
+        const safeLon = parseCoordinate(body?.lon, -180, 180);
 
-        if (!lat || !lon) {
-            return NextResponse.json({ error: "Missing lat/lon" }, { status: 400 });
+        if (safeLat === null || safeLon === null) {
+            return NextResponse.json({ error: "Valid lat/lon coordinates are required" }, { status: 400 });
         }
 
-        const safeLat = Number(lat);
-        const safeLon = Number(lon);
-
-        if (isNaN(safeLat) || isNaN(safeLon)) {
-            return NextResponse.json({ error: "Invalid coordinates" }, { status: 400 });
-        }
-
-        // SQL Query to get Soil Map Unit + Shrink-Swell (LEP) + Liquid Limit (PI)
-        // Same query as verified in verify_usda_api.py
+        // This query intentionally returns the dominant major component first,
+        // then its shallowest horizon within the top 50 cm. The API currently
+        // exposes that first row as mapped screening context. Do not describe it
+        // as a property measurement or silently change the row-selection method
+        // without validating the scientific interpretation and existing data.
         const query = `
       SELECT 
         mu.musym AS map_unit_symbol,
@@ -35,47 +39,37 @@ export async function POST(request: Request) {
       WHERE mu.mukey IN (
         SELECT mukey FROM SDA_Get_Mukey_from_intersection_with_WktWgs84('POINT(${safeLon} ${safeLat})')
       )
-      AND c.majcompflag = 'Yes' -- Only major components
-      AND ch.hzdept_r < 50 -- Top 50cm
+      AND c.majcompflag = 'Yes'
+      AND ch.hzdept_r < 50
       ORDER BY c.comppct_r DESC, ch.hzdept_r ASC
     `;
-
-        const payload = {
-            query: query,
-            format: "JSON+COLUMNNAME"
-        };
 
         const res = await fetch(USDA_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({ query, format: "JSON+COLUMNNAME" })
         });
 
         if (!res.ok) {
-            throw new Error(`USDA API failed: ${res.statusText}`);
+            console.error(`USDA API failed with HTTP ${res.status}`);
+            return NextResponse.json({ error: "Soil data provider is temporarily unavailable" }, { status: 502 });
         }
 
         const data = await res.json() as { Table?: unknown[][] };
 
         if (data.Table && data.Table.length > 1) {
-            // Data found. 
-            // Row 0 = Headers, Row 1 = Values
             const headers = data.Table[0] as string[];
             const values = data.Table[1];
-
             const soilData: Record<string, unknown> = {};
             headers.forEach((key: string, index: number) => {
                 soilData[key] = values[index];
             });
-
             return NextResponse.json(soilData);
-        } else {
-            return NextResponse.json({ error: "No soil data found for this location" }, { status: 404 });
         }
 
+        return NextResponse.json({ error: "No soil data found for this location" }, { status: 404 });
     } catch (error: unknown) {
-        console.error("API Error:", error);
-        const message = error instanceof Error ? error.message : String(error);
-        return NextResponse.json({ error: message }, { status: 500 });
+        console.error("Soil API error:", error);
+        return NextResponse.json({ error: "Unable to process soil lookup" }, { status: 500 });
     }
 }
