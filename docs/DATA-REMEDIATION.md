@@ -50,15 +50,59 @@ If an old fallback neighborhood name itself was fabricated, the database does no
 
 If stronger cleanup is required, re-query the geographic source for each location and reconcile stored names against sourced results rather than guessing from naming patterns.
 
+## Stored PI risk-label reclassification
+
+Status: inconsistency audited; dry-run/apply tooling prepared; production values not modified automatically.
+
+A 2026-09-17 read-only audit found that historical `soil_cache.risk_level` values often do not match the centralized classifier in `lib/soilRisk.ts`. This is a label-consistency problem and must remain separate from the USDA methodology migration below.
+
+The deterministic classifier is:
+
+- PI > 35: `Severe`
+- PI > 25: `High`
+- PI > 15: `Moderate`
+- PI >= 0: `Lower`
+- missing, invalid, or negative PI: `Not classified`
+
+The boundary values 15, 25, and 35 remain in the lower class because the application classifier uses strict `>` thresholds.
+
+### Reclassification tool
+
+`scripts/reclassify-soil-risk.mjs` derives only `risk_level` from the PI already stored in the same row. It does not contact USDA and does not change PI, LEP, map units, components, coordinates, or other fields.
+
+Dry run:
+
+```bash
+node scripts/reclassify-soil-risk.mjs
+```
+
+Targeted dry run:
+
+```bash
+node scripts/reclassify-soil-risk.mjs --slugs=cedar-park-tx,allen-tx,schertz-tx,boerne-tx,lewisville-tx
+```
+
+Apply is deliberately explicit:
+
+```bash
+node scripts/reclassify-soil-risk.mjs --apply
+```
+
+Do not run `--apply` until the dry-run transition counts are reviewed. Apply mode updates rows by ID and also checks the previously observed `risk_level` so a concurrent change causes an abort instead of silently overwriting newer data.
+
+### Audit snapshot
+
+The 2026-09-17 database audit found 4,143 `soil_cache` rows and 3,912 risk-label mismatches under the centralized classifier. The largest observed transition was stored `Moderate` to calculated `Lower`. These counts are an audit snapshot, not a permanent invariant, and must be rechecked immediately before any apply run.
+
 ## USDA soil methodology migration
 
-Status: new ingestion methodology implemented; historical `soil_cache` migration not approved or performed.
+Status: new ingestion methodology implemented; historical PI/LEP migration not approved or performed.
 
 ### Why migration is separate from code deployment
 
 Older cached records were produced by selecting the first USDA major-component/horizon row. Current ingestion calculates PI and LEP for the dominant major component using horizon-thickness weighting over the 0-50 cm interval.
 
-Changing ingestion fixes new/re-ingested records, but blindly rewriting historical records could alter public soil values, screening classes, and indexed page copy at scale. Historical data therefore stays unchanged until impact is measured.
+Changing ingestion fixes new/re-ingested records, but blindly rewriting historical records could alter public soil values, screening classes, and indexed page copy at scale. Historical PI/LEP data therefore stays unchanged until impact is measured.
 
 ### Read-only comparison tool
 
@@ -81,7 +125,7 @@ node scripts/compare-soil-methodology.mjs --limit=50
 Target specific indexed/priority cities:
 
 ```bash
-node scripts/compare-soil-methodology.mjs --slugs=cedar-park-tx,allen-tx-75002,schertz-tx,boerne-tx,lewisville-tx
+node scripts/compare-soil-methodology.mjs --slugs=cedar-park-tx,allen-tx,schertz-tx,boerne-tx,lewisville-tx
 ```
 
 Change the PI delta considered material:
@@ -94,7 +138,7 @@ The output reports old/new PI, PI delta, risk-class changes, dominant-component 
 
 ### Migration decision gate
 
-Do not create or run a historical soil migration until the comparison output has been reviewed.
+Do not create or run a historical PI/LEP migration until the comparison output has been reviewed.
 
 At minimum, review:
 
