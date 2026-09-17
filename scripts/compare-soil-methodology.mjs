@@ -10,7 +10,7 @@
  * Usage:
  *   node scripts/compare-soil-methodology.mjs
  *   node scripts/compare-soil-methodology.mjs --limit=50
- *   node scripts/compare-soil-methodology.mjs --slugs=cedar-park-tx,allen-tx-75002
+ *   node scripts/compare-soil-methodology.mjs --slugs=cedar-park-tx,allen-tx
  *   node scripts/compare-soil-methodology.mjs --threshold=2
  *
  * Required env (.env.local is loaded when present):
@@ -84,17 +84,23 @@ function weighted(rows, field) {
 }
 
 function selectDominant(rows) {
-  const candidates = rows.filter((row) => asNumber(row.component_percent) !== null);
+  const candidates = rows.filter((row) => asNumber(row.component_percent) !== null && row.component_key);
   if (!candidates.length) return null;
   const maxPct = Math.max(...candidates.map((row) => asNumber(row.component_percent)));
-  const dominant = candidates.filter((row) => asNumber(row.component_percent) === maxPct);
-  if (!dominant.length) return null;
-  const componentName = dominant[0].component_name;
-  const componentRows = dominant.filter((row) => row.component_name === componentName);
+  const dominant = candidates.find((row) => asNumber(row.component_percent) === maxPct);
+  if (!dominant) return null;
+
+  // Component names are descriptive labels and are not guaranteed unique within
+  // a map unit. USDA cokey is the stable component identity used by the shared
+  // application methodology, so horizons must be grouped by component_key.
+  const componentRows = rows.filter((row) => row.component_key === dominant.component_key);
+  if (!componentRows.length) return null;
+
   return {
     map_unit_symbol: componentRows[0].map_unit_symbol ?? null,
     map_unit_name: componentRows[0].map_unit_name ?? null,
-    component_name: componentName ?? null,
+    component_key: dominant.component_key,
+    component_name: dominant.component_name ?? null,
     component_percent: maxPct,
     drainage_class: componentRows[0].drainage_class ?? null,
     plasticity_index: weighted(componentRows, 'plasticity_index'),
@@ -106,6 +112,7 @@ function selectDominant(rows) {
 async function fetchCurrentSoil(lat, lon) {
   const query = `
     SELECT mu.musym AS map_unit_symbol, mu.muname AS map_unit_name,
+      c.cokey AS component_key,
       c.compname AS component_name, c.comppct_r AS component_percent,
       ch.hzdept_r AS horizon_top_cm, ch.hzdepb_r AS horizon_bottom_cm,
       ch.lep_r AS shrink_swell, ch.pi_r AS plasticity_index,
@@ -119,7 +126,7 @@ async function fetchCurrentSoil(lat, lon) {
     AND c.majcompflag = 'Yes'
     AND ch.hzdept_r < ${DEPTH_CM}
     AND ch.hzdepb_r > 0
-    ORDER BY c.comppct_r DESC, c.compname, ch.hzdept_r ASC
+    ORDER BY c.comppct_r DESC, c.cokey, ch.hzdept_r ASC
   `;
   const response = await fetch(USDA_URL, {
     method: 'POST',
@@ -175,7 +182,7 @@ async function main() {
       }
       const piDelta = delta(cached.plasticity_index, current.plasticity_index);
       const lepDelta = delta(cached.shrink_swell_potential, current.shrink_swell);
-      const oldRisk = cached.risk_level || classifyPi(cached.plasticity_index);
+      const oldRisk = classifyPi(cached.plasticity_index);
       const newRisk = classifyPi(current.plasticity_index);
       const material = piDelta !== null && Math.abs(piDelta) >= threshold;
       const riskChanged = oldRisk !== newRisk;
