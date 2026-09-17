@@ -9,14 +9,9 @@ export type CommercialSeoTreatment = {
 
 /**
  * GSC-supported commercial SEO experiment started 2026-09-17.
- *
- * Treatment URLs were selected because they already had meaningful impressions
- * and were generally close enough to page-one visibility that CTR/relevance
- * improvements can be measured without rewriting the whole programmatic site.
- *
  * Keep this list small until the experiment has enough post-change GSC data.
- * Controls documented in docs/SEO-EXPERIMENT-2026-09.md must not be added here
- * during the measurement window.
+ * Controls in docs/SEO-EXPERIMENT-2026-09.md must not be added during the
+ * initial measurement window.
  */
 export const COMMERCIAL_SEO_TREATMENTS: Record<string, CommercialSeoTreatment> = {
   "cedar-park-tx": createTreatment(),
@@ -29,10 +24,10 @@ export const COMMERCIAL_SEO_TREATMENTS: Record<string, CommercialSeoTreatment> =
 function createTreatment(): CommercialSeoTreatment {
   return {
     cohort: "treatment",
-    title: (city, state) => `Foundation Repair ${city} ${state} | Evaluation & Options`,
+    title: (city, state) => `Foundation Repair in ${city}, ${state} | Evaluation & Options`,
     eyebrow: (city, state) => `Foundation Repair Guidance for ${city}, ${state}`,
     h1Lead: "Foundation Repair",
-    hero: (city, state) =>
+    hero: (city) =>
       `Seeing cracks, sticking doors, uneven floors, or other signs of movement in ${city}? Review warning signs, local soil context, and property-specific evaluation steps before choosing a foundation repair scope.`,
     cta: "Request a Foundation Evaluation",
   };
