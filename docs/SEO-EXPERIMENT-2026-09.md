@@ -21,7 +21,7 @@ GSC export reviewed through 2026-09-15 showed:
 - impression-weighted average position approximately 13.19
 - September 1-15 average daily position approximately 10.79
 
-The site was already receiving meaningful Google testing. The problem was not lack of indexation alone. Several commercial pages had substantial impressions around positions 8-15 but little or no click-through.
+Several commercial pages had substantial impressions around positions 8-15 but little or no click-through.
 
 ## Treatment cohort
 
@@ -49,14 +49,14 @@ Do not add these pages to `COMMERCIAL_SEO_TREATMENTS` during the initial measure
 - Carrollton, TX
 - Denton, TX
 
-These are directional controls, not a statistically randomized experiment. Search rankings are noisy and city markets differ, so results must be interpreted cautiously.
+These are directional controls, not a statistically randomized experiment.
 
 ## Treatment
 
 Only treatment URLs receive the commercial-intent hero/metadata variant.
 
 Changes include:
-1. Title begins with `Foundation Repair` plus city/state rather than leading with soil-risk language.
+1. Title uses `Foundation Repair in [City], [State] | Evaluation & Options`.
 2. H1 leads with `Foundation Repair in [City], [State]`.
 3. Eyebrow frames the page as foundation repair guidance rather than making soil context the primary product.
 4. Hero copy begins with homeowner symptoms such as cracks, sticking doors, and uneven floors.
