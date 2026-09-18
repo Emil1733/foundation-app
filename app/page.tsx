@@ -54,7 +54,7 @@ export default async function Home() {
           <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8">
             {[
               { title: "USDA Data", desc: "Sourced directly from federal soil surveys (SSURGO)." },
-              { title: "Geological Risk", desc: "Understand PI and Linear Extensibility before you dig." },
+              { title: "Mapped Soil Context", desc: "Understand PI and linear extensibility as screening context." },
               { title: "Evaluation Options", desc: "Request a local property review and compare repair scopes." }
             ].map((item, i) => (
               <div key={i} className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
@@ -85,7 +85,7 @@ export default async function Home() {
             </div>
 
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-              <h3 className="font-bold text-slate-900 mb-4">How We Audit Your Risk</h3>
+              <h3 className="font-bold text-slate-900 mb-4">How We Review Soil Context</h3>
               <ul className="space-y-3 text-sm text-slate-600">
                 <li className="flex items-start gap-2">
                   <span className="bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded text-xs">1</span>
@@ -104,10 +104,10 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Forensic Deep Dive (Pillar 5: Content Depth & E-E-A-T) */}
+        {/* Soil context deep dive */}
         <section className="w-full py-20 px-6 bg-white">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-slate-900 mb-8">The Forensic Difference: Why Soil Data Matters</h2>
+            <h2 className="text-3xl font-bold text-slate-900 mb-8">Why Soil Data Matters</h2>
             <div className="prose prose-slate max-w-none">
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
                 A crack does not automatically mean a home needs piers. The Foundation Risk Registry explains <strong>Plasticity Index (PI)</strong> and related USDA/NRCS soil-survey values so homeowners can place visible symptoms in context before requesting an evaluation or comparing repair proposals.
@@ -132,20 +132,20 @@ export default async function Home() {
                 <p className="text-slate-900 font-bold">
                   Higher-plasticity soil can be more sensitive to moisture change, but map data does not establish whether a particular foundation is moving. Repair decisions should be tied to property measurements, observed progression, and the likely cause.
                 </p>
-                <cite className="text-xs text-slate-500 block mt-2">— Foundation Risk Registry research guidance</cite>
+                <cite className="text-xs text-slate-500 block mt-2">Foundation Risk Registry research guidance</cite>
               </blockquote>
             </div>
           </div>
         </section>
 
-        {/* Geological Library Grid (PageRank Pass & Indexing Recovery) */}
+        {/* Soil report library grid */}
         {cities && cities.length > 0 && (
           <section className="w-full py-20 px-6 bg-white border-t border-slate-200">
             <div className="max-w-6xl mx-auto">
               <div className="flex items-center justify-between mb-10">
                 <div>
-                  <h2 className="text-3xl font-bold text-slate-900">Geological Library & Soil Reports</h2>
-                  <p className="text-slate-500 text-sm mt-1">Read the forensic soil analysis reports for your local area.</p>
+                  <h2 className="text-3xl font-bold text-slate-900">Soil Library & Local Reports</h2>
+                  <p className="text-slate-500 text-sm mt-1">Read mapped soil reports and foundation context for your local area.</p>
                 </div>
                 <Link href="/learn" className="text-blue-600 font-semibold flex items-center gap-2 hover:underline">
                   View Education Library <ArrowRight className="w-4 h-4" />
@@ -162,17 +162,17 @@ export default async function Home() {
                   >
                     <div>
                       <span className="bg-blue-50 text-blue-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
-                        Geological Report
+                        Soil Report
                       </span>
                       <h3 className="text-lg font-bold text-slate-900 mt-3 group-hover:text-blue-600 transition-colors">
-                        Why Foundations Fail in {city.city}, {city.state}
+                        Soil and Foundation Risk in {city.city}, {city.state}
                       </h3>
                       <p className="text-slate-500 text-xs mt-2 line-clamp-2">
-                        Engineering breakdown of expansive soil active zones, regional plasticity indexes, and foundation settlement hazards in the {city.city} area.
+                        Review mapped soil conditions, plasticity context, drainage considerations, and foundation warning signs in the {city.city} area.
                       </p>
                     </div>
                     <div className="text-blue-600 text-sm font-semibold mt-4 flex items-center gap-1">
-                      Read Soil Analysis &rarr;
+                      Read Soil Report &rarr;
                     </div>
                   </Link>
                 ))}
@@ -194,7 +194,7 @@ export default async function Home() {
 
               {/* Featured Cities Spotlight */}
               <div className="mb-10">
-                <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-3">High-Priority Analysis Zones</p>
+                <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-3">Featured Foundation Repair Guides</p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {[
                     { city: 'Cedar Park', state: 'TX', slug: 'cedar-park-tx', label: 'Foundation Repair Guide' },
