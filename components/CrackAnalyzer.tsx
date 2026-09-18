@@ -73,8 +73,8 @@ export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number 
     <div className="bg-slate-900 rounded-3xl shadow-2xl overflow-hidden my-12 border border-slate-700 font-sans">
       {/* Header */}
       <div className="bg-slate-950 px-6 py-5 border-b border-slate-800 flex items-center gap-3">
-        <Activity className="text-blue-500 w-6 h-6 animate-pulse" />
-        <h2 className="text-xl font-extrabold text-white tracking-wide uppercase">Geological Risk Simulator</h2>
+        <Activity className="text-blue-500 w-6 h-6" />
+        <h2 className="text-xl font-extrabold text-white tracking-wide uppercase">Foundation Symptom Guide</h2>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -101,7 +101,7 @@ export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number 
                   <span className={`font-bold text-lg text-left flex-1 ${isActive ? 'text-white' : 'text-slate-300'}`}>
                     {issue.label}
                   </span>
-                  {isActive && !isScanning && showResult && <CheckCircle2 className={`w-6 h-6 ${issue.iconColor} animate-in zoom-in`} />}
+                  {isActive && showResult && <CheckCircle2 className={`w-6 h-6 ${issue.iconColor} animate-in zoom-in`} />}
                 </button>
               )
             })}
@@ -110,27 +110,12 @@ export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number 
 
         {/* Right: Output Screen */}
         <div className="p-6 md:p-8 bg-slate-950 border-t lg:border-t-0 lg:border-l border-slate-800 relative">
-          <p className="text-slate-500 font-bold mb-6 uppercase tracking-widest text-xs">Diagnostic Output</p>
+          <p className="text-slate-500 font-bold mb-6 uppercase tracking-widest text-xs">Symptom Context</p>
 
-          {!selectedIssue && !isScanning && !showResult && (
+          {!selectedIssue && !showResult && (
             <div className="h-full min-h-[350px] flex flex-col items-center justify-center text-slate-600 space-y-4">
               <Search className="w-16 h-16 opacity-20" />
-              <p className="text-center px-4 font-medium text-lg">Waiting for symptom input... <br/><span className="text-sm font-normal text-slate-500">Select a crack type to run the diagnostic.</span></p>
-            </div>
-          )}
-
-          {isScanning && (
-            <div className="h-full min-h-[350px] flex flex-col items-center justify-center space-y-8 animate-in fade-in duration-300">
-              <div className="relative w-24 h-24">
-                <div className="absolute inset-0 rounded-full border-t-4 border-blue-500 animate-spin"></div>
-                <div className="absolute inset-2 rounded-full border-r-4 border-indigo-500 animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
-                <div className="absolute inset-4 rounded-full border-b-4 border-cyan-400 animate-spin" style={{ animationDuration: '2s' }}></div>
-              </div>
-              <div className="text-center">
-                <p className="text-cyan-400 font-mono font-bold tracking-widest animate-pulse">ANALYZING SOIL DATA...</p>
-                <p className="text-slate-500 text-xs mt-2 font-mono">Location: {city.toUpperCase()}</p>
-                <p className="text-slate-500 text-xs mt-1 font-mono">Plasticity Index: {plasticity === null ? "Not available" : plasticity.toFixed(1)}</p>
-              </div>
+              <p className="text-center px-4 font-medium text-lg">Waiting for symptom input... <br/><span className="text-sm font-normal text-slate-500">Select a symptom to review what it can mean and what to document next.</span></p>
             </div>
           )}
 
@@ -147,7 +132,7 @@ export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number 
                 <div className="bg-slate-900 rounded-xl p-5 border border-slate-800 mb-6 relative overflow-hidden">
                   <div className={`absolute left-0 top-0 w-1.5 h-full bg-gradient-to-b ${activeIssue.color}`}></div>
                   <p className="text-slate-400 text-sm leading-relaxed">
-                    <span className="text-white font-bold block mb-2 uppercase tracking-wider text-xs">Geological Context:</span> 
+                    <span className="text-white font-bold block mb-2 uppercase tracking-wider text-xs">Mapped Soil Context:</span> 
                     {plasticity === null ? (
                       <>No mapped Plasticity Index is available for this record. The visible pattern and whether it is changing matter more than a citywide assumption.</>
                     ) : (
@@ -165,12 +150,12 @@ export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number 
                       type="text"
                       name="address"
                       autoComplete="street-address"
-                      placeholder={`Enter ${city} Address...`}
+                      placeholder={`Enter ${city} address...`}
                       className="w-full sm:flex-1 px-5 py-4 rounded-xl bg-slate-900 text-white border border-slate-700 focus:border-blue-500 outline-none transition-colors placeholder:text-slate-600"
                       required
                   />
                   <button type="submit" className={`w-full sm:w-auto text-white font-extrabold px-6 py-4 rounded-xl transition hover:scale-105 bg-gradient-to-r ${activeIssue.color} shadow-lg`}>
-                      Get Report
+                      Continue to Evaluation
                   </button>
                 </form>
               </div>
