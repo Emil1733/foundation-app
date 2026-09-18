@@ -72,6 +72,8 @@ Changes include:
 8. Invalid placeholder ZIP values such as `00000` are suppressed from visible copy.
 9. Soil screening labels use the centralized classifier in `lib/soilRisk.ts`.
 10. Soil-report pages contain a prominent contextual link to the matching commercial foundation-repair guide, in addition to breadcrumb navigation.
+11. Treatment pages add a city-specific commercial decision section near the top of the body, while keeping all claims tied to observable symptoms, measurements, drainage, and mapped context.
+12. Treatment pages add a dedicated `Foundation Repair Options in [City]` section and direct internal jump links to repair options and cost factors.
 
 ## Soil report role in the funnel
 
@@ -132,3 +134,7 @@ Do not automatically promote them. Use fresh GSC data at the time of the decisio
 The treatment registry is intentionally separate from the page template. This prevents city-specific SEO decisions from becoming scattered conditional statements throughout JSX and gives future maintainers one auditable place to see which URLs are in the experiment.
 
 Any change to treatment membership, title/H1 wording, CTA, internal funnel links, or measurement window should be documented here in the same commit or PR.
+
+### 2026-09-18 treatment refinement
+
+After the soil-data migration and null-rendering audit were completed, the five treatment pages were strengthened without changing the control cohort. The treatment title now uses the tighter `Foundation Repair [City], [State] | Evaluation & Options` pattern, the hero explicitly includes comparing repair options and contractors, each treatment city receives a short city-specific decision paragraph, and the shared city template exposes dedicated repair-options and cost-factor sections. No new treatment cities were added.
