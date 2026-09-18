@@ -20,7 +20,7 @@
 # production
 /build
 
-# misc
+# generated remediation audit manifests\n/soil-remediation-manifests/\n\n# misc
 .DS_Store
 *.pem
 
