@@ -165,6 +165,58 @@ At minimum, review:
 
 If changes are small and scientifically coherent, a separate migration script can be designed with dry-run, explicit apply flag, audit output, and rollback/export requirements. If changes are widespread or surprising, investigate the affected USDA rows before any database mutation.
 
+### Full read-only audit, 2026-09-18
+
+After the Supabase Data API row ceiling was raised, the full comparison was rerun with `--limit=5000`.
+
+Observed result:
+
+- locations loaded: 4,231
+- comparable USDA results: 3,982
+- material PI changes >= 1: 2,600
+- risk-class changes: 1,150
+- dominant-component-name changes: 0
+- mean absolute PI change: 4.64
+- maximum absolute PI change: 36.05
+- database writes: 0
+
+The audit establishes that historical numeric PI differences are widespread, not merely a risk-label problem. It does not authorize a production rewrite. The 249 loaded locations outside the comparable set must be classified and reviewed before migration.
+
+### Canonical-query parity
+
+Before designing a write path, the shared application query was aligned with the audited methodology: horizons must intersect 0-50 cm (`hzdept_r < 50` and `hzdepb_r > 0`), and `cokey` is used as the deterministic tie-break and component identity. Comparison and remediation tooling must use the same rules.
+
+### Phase 1: immutable review manifest
+
+`scripts/prepare-soil-remediation.mjs` is intentionally read-only and has no `--apply` mode. It explicitly paginates Supabase reads in 500-row ranges, so audit completeness does not depend on a high project-wide Data API row ceiling.
+
+It fetches fresh USDA data, records expected cached values and proposed values, quarantines fresh PI or LEP nulls as `REVIEW_NULL_ATTRIBUTE`, excludes `NO_CACHE`, `NO_USDA_RESULT`, and `ERROR` from the eligible change set, records component key/percentage/horizon count, writes a local JSON manifest, and fingerprints the exact eligible changed rows with SHA-256.
+
+Run the full preparation with:
+
+```bash
+node scripts/prepare-soil-remediation.mjs --limit=5000
+```
+
+The generated manifest is run-specific audit evidence and must not be committed.
+
+### Migration gates
+
+No production PI/LEP mutation tool should be created or run until:
+
+1. the manifest script passes the validation-branch build,
+2. a fresh full manifest is generated,
+3. every non-eligible status is counted and reviewed,
+4. null PI/LEP policy is explicitly approved,
+5. large PI deltas and risk-class changes are spot-checked,
+6. the manifest fingerprint is recorded,
+7. rollback/export strategy is defined,
+8. any future apply path uses optimistic concurrency against the manifest's expected old values,
+9. apply is guarded by exact count and fingerprint,
+10. post-write verification is defined before the first production write.
+
+No production PI/LEP migration has been performed.
+
 ## Data-integrity rule
 
 Generated or stored geographic, scientific, risk, credential, engineering, contractor, or property claims must have either:
