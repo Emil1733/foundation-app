@@ -302,7 +302,7 @@ function IntakeForm() {
                                     disabled={!formData.address || !formData.zip}
                                     className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 transition-all"
                                 >
-                                    Verify Soil Data <ArrowRight className="w-4 h-4" />
+                                    Continue to Contact <ArrowRight className="w-4 h-4" />
                                 </button>
                             </div>
                         </div>
@@ -315,7 +315,7 @@ function IntakeForm() {
                                 <User className="w-5 h-5 text-green-500" />
                                 Evaluation Follow-Up
                             </h2>
-                            <p className="text-sm text-slate-500">Where should we send your soil-risk summary and follow up about evaluation availability?</p>
+                            <p className="text-sm text-slate-500">Where can a foundation professional follow up about your property concerns and evaluation options?</p>
 
                             <div className="space-y-4">
                                 <div>
@@ -421,7 +421,7 @@ function IntakeForm() {
 
 export default function BookAnalysisPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-50"><div className="animate-pulse flex flex-col items-center"><Search className="w-12 h-12 text-blue-500 mb-4" /><p className="text-slate-500 font-bold tracking-widest uppercase">Initializing Intake Protocol...</p></div></div>}>
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-50"><div className="animate-pulse flex flex-col items-center"><Search className="w-12 h-12 text-blue-500 mb-4" /><p className="text-slate-500 font-bold tracking-widest uppercase">Loading Evaluation Form...</p></div></div>}>
             <IntakeForm />
         </Suspense>
     );
