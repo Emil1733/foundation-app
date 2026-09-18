@@ -15,6 +15,18 @@ type SitemapLocation = {
         | null;
 };
 
+const STATE_SLUGS = [
+    'texas', 'florida', 'georgia', 'colorado', 'tennessee', 'north-carolina',
+    'arizona', 'kansas', 'oklahoma', 'mississippi', 'louisiana', 'missouri',
+    'south-carolina', 'virginia', 'nevada', 'utah',
+];
+
+const stateUrls: MetadataRoute.Sitemap = STATE_SLUGS.map((state) => ({
+    url: `${BASE_URL}/locations/${state}`,
+    changeFrequency: 'weekly' as const,
+    priority: 0.85,
+}));
+
 const coreUrls: MetadataRoute.Sitemap = [
     {
         url: BASE_URL,
@@ -87,7 +99,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     // Keep important static pages discoverable even if Supabase is temporarily unavailable.
-    if (locations.length === 0) return coreUrls;
+    if (locations.length === 0) return [...coreUrls, ...stateUrls];
 
     const cityUrls = locations
         .filter((loc) => shouldIndexServicePage(loc.slug, loc.soil_cache))
@@ -109,5 +121,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.8,
         }));
 
-    return [...coreUrls, ...cityUrls, ...articleUrls];
+    return [...coreUrls, ...stateUrls, ...cityUrls, ...articleUrls];
 }
