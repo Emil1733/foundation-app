@@ -298,6 +298,14 @@ node scripts/plan-soil-remediation.mjs
 
 The output `soil-remediation-manifests/verified/migration-plan.json` records the exact PI/LEP/risk rows, separately counts rows whose only fresh differences are descriptive fields, and creates a new SHA-256 fingerprint over the exact mutation plan. That plan fingerprint and row count must be frozen before an apply tool is designed.
 
+### Frozen mutation-plan result, 2026-09-18
+
+The exact mutation planner completed with zero current-state drift. All 3,121 broader manifest changes require at least one change among the deliberately limited migration fields `plasticity_index`, `shrink_swell_potential`, and `risk_level`. There are zero rows whose differences are descriptive USDA metadata only.
+
+The frozen migration-plan fingerprint is `d42075cc4be961cba849112dfb0e8081e7cbf64a9527ab6dec69d5bd406fa996`. It is chained to change-set fingerprint `bb592abac611c1a1cecde949b68cf99938a4328a95d809471d7cd22546e816d1` and rollback fingerprint `c634def54fd4dbdf9786f892d8a87472215606f8f725e0138aeee70d9660ab7e`.
+
+No database writes were performed. Any eventual apply path must require all three fingerprints, exactly 3,121 planned rows, a fresh zero-drift concurrency check, and post-write verification. The 88 `NO_CACHE`, 161 `NO_USDA_RESULT`, and 45 `REVIEW_NULL_ATTRIBUTE` populations remain excluded and unchanged.
+
 ### Migration gates
 
 No production PI/LEP mutation tool should be created or run until:
