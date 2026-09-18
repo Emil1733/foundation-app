@@ -5,18 +5,12 @@ import { CheckCircle2, Zap, TrendingDown, Layers, DoorOpen, Activity, Search } f
 
 export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number }) {
   const [selectedIssue, setSelectedIssue] = useState<string | null>(null);
-  const [isScanning, setIsScanning] = useState(false);
   const [showResult, setShowResult] = useState(false);
 
   const handleSelect = (id: string) => {
-    if (selectedIssue === id && showResult) return; // Already selected
+    if (selectedIssue === id && showResult) return;
     setSelectedIssue(id);
-    setIsScanning(true);
-    setShowResult(false);
-    setTimeout(() => {
-      setIsScanning(false);
-      setShowResult(true);
-    }, 1500); // 1.5 second "calculation" delay
+    setShowResult(true);
   };
 
   const issues = [
