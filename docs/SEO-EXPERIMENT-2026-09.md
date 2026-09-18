@@ -164,3 +164,11 @@ The mapped-soil block is labeled `Mapped Soil Context`, and the lead action now 
 A template-level audit found one treatment feature that had escaped the treatment guard: the dedicated `Foundation Repair Options in [City]` section was rendering on every city page even though the experiment specification describes it as treatment-only. The section is now gated by `getCommercialSeoTreatment(slug)`, while the shared cost planner remains available to all city pages.
 
 The treatment registry still contains exactly Cedar Park, Allen, Schertz, Boerne, and Lewisville. Frisco, Richardson, Pflugerville, Carrollton, and Denton remain outside the registry. Homepage featured links remain limited to the five treatment cities; the ordinary service-area grid and geographically precomputed nearby-city links remain neutral.
+
+### 2026-09-18 sitewide trust and claims audit
+
+The homepage and locations directory were reviewed for language that could imply authority, diagnosis, engineering work, or direct structural repair beyond the verified product behavior. The locations page no longer calls the Registry a `National Geological Authority` or claims that it provides `forensic evaluation and permanent structural stabilization`. Its metadata and hero now describe local soil/foundation guides, mapped context, evaluation guidance, and repair options.
+
+Homepage labels were also tightened. `Geological Risk`, `How We Audit Your Risk`, `The Forensic Difference`, `Geological Report`, and `forensic soil analysis` style language were replaced with plain mapped-soil and soil-report wording. Dynamic report cards no longer state `Why Foundations Fail` or promise an engineering breakdown. The remaining em dash in the Registry research-guidance citation was removed.
+
+These are sitewide trust clarifications rather than additions to the commercial treatment. Treatment and control membership are unchanged.
