@@ -138,3 +138,9 @@ Any change to treatment membership, title/H1 wording, CTA, internal funnel links
 ### 2026-09-18 treatment refinement
 
 After the soil-data migration and null-rendering audit were completed, the five treatment pages were strengthened without changing the control cohort. The treatment title now uses the tighter `Foundation Repair [City], [State] | Evaluation & Options` pattern, the hero explicitly includes comparing repair options and contractors, each treatment city receives a short city-specific decision paragraph, and the shared city template exposes dedicated repair-options and cost-factor sections. No new treatment cities were added.
+
+### 2026-09-18 internal-link treatment
+
+The homepage featured-city block was aligned with the five treatment URLs. Cedar Park, Allen, Schertz, Boerne, and Lewisville now receive direct homepage links with the neutral anchor label `Foundation Repair Guide`. Frisco and Richardson were removed from that featured block because they are controls in this experiment. They remain discoverable through the normal site architecture; this change avoids giving control URLs the same deliberate homepage authority boost as the treatment cohort.
+
+The ordinary dynamic service-area grid was not reordered or filtered. This keeps the intervention narrow and auditable rather than changing the broader sitewide link graph.
