@@ -12,7 +12,9 @@ interface SoilActionPlanProps {
 }
 
 export default function SoilActionPlan({ soil, city, riskLevel }: SoilActionPlanProps) {
-    const rawPi = soil?.plasticity_index;\n    const parsedPi = rawPi === null || rawPi === undefined || rawPi === "" ? null : Number(rawPi);\n    const pi = parsedPi !== null && Number.isFinite(parsedPi) && parsedPi >= 0 ? parsedPi : null;
+    const rawPi = soil?.plasticity_index;
+    const parsedPi = rawPi === null || rawPi === undefined || rawPi === "" ? null : Number(rawPi);
+    const pi = parsedPi !== null && Number.isFinite(parsedPi) && parsedPi >= 0 ? parsedPi : null;
     const screeningClass = riskLevel || soil?.risk_level || "Not classified";
     const isSevere = screeningClass === "Severe";
     const isHigh = screeningClass === "High";
@@ -33,7 +35,7 @@ export default function SoilActionPlan({ soil, city, riskLevel }: SoilActionPlan
                     <p className="text-slate-600 text-sm leading-relaxed mb-4">
                         {soil && pi !== null
                             ? `The mapped ${soil.map_unit_name || "soil"} record has a Plasticity Index of ${pi.toFixed(1)} and a ${screeningClass.toLowerCase()} registry screening classification. This is mapped context, not a property diagnosis or repair prescription.`
-                            : `The mapped screening class for this location is ${screeningClass.toLowerCase()}. Use it as context alongside property-specific drainage, symptoms, measurements, and construction details.`}
+                            : `No reportable mapped Plasticity Index is available for this location. Use mapped soil context alongside property-specific drainage, symptoms, measurements, and construction details.`}
                     </p>
                     <ul className="space-y-2">
                         <li className="flex items-start gap-2 text-sm text-slate-700"><CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5" /><span><strong>Document:</strong> Date and measure cracks, sticking openings, and floor changes.</span></li>
