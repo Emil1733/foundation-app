@@ -178,3 +178,11 @@ These are sitewide trust clarifications rather than additions to the commercial 
 After the trust-claims audit, the homepage and locations directory were recalibrated so Foundation Risk Registry still presents as a foundation-repair-focused service rather than an informational soil-data publication. Unsupported authority, engineering, diagnosis, and direct structural-stabilization claims remain removed.
 
 The homepage now leads with foundation problems, warning signs, repair options, and a property-specific evaluation. Soil data remains the evidence and differentiation layer. The locations directory now uses `Foundation Repair Service Areas` and `Foundation Repair Help Near You`, with symptom-led copy that directs homeowners toward getting help. This preserves commercial lead intent without claiming that the Registry itself is an engineering firm or the contractor performing structural repairs.
+
+### 2026-09-18 technical SEO and lead-funnel audit
+
+A follow-up architecture audit found that state directory pages were linked from the locations hub but were absent from the XML sitemap. The 16 supported state hubs are now explicitly included with weekly change frequency while existing city-service and usable-soil-report filtering remains unchanged.
+
+State hubs were also aligned with the foundation-repair lead positioning. Unsupported `Geological Authority` and `forensic evaluation` wording was removed, while foundation repair, warning signs, evaluation steps, and repair options remain prominent. Remaining em dashes in state pagination labels were replaced with hyphens.
+
+The evaluation intake was reviewed for promise-to-action consistency. The step-two button no longer says `Verify Soil Data` because advancing the form does not itself perform a soil verification. It now says `Continue to Contact`. Contact-step copy now explains that a foundation professional can follow up about property concerns and evaluation options, and the loading state uses plain `Loading Evaluation Form...` wording instead of the more technical `Initializing Intake Protocol...`.
