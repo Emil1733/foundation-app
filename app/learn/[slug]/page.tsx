@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation';
 import AddressAutocomplete from "@/components/AddressAutocomplete";
 import { getStateRoute } from "@/lib/stateRoutes";
 import { classifySoilPlasticityIndex } from "@/lib/soilRisk";
+import { getCommercialSeoTreatment } from "@/lib/commercialSeoTreatments";
+import { hasUsableSoilRecord } from "@/lib/serviceIndexability";
 
 export const revalidate = 86400;
 export async function generateStaticParams() { return []; }
@@ -48,9 +50,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     if (!cityData) notFound();
 
     const soil = Array.isArray(cityData.soil_cache) ? cityData.soil_cache[0] : cityData.soil_cache;
-    if (!soil?.map_unit_name) notFound();
+    if (!hasUsableSoilRecord(soil)) notFound();
 
     const citySlug = slug.replace('-soil-analysis', '');
+    const treatment = getCommercialSeoTreatment(citySlug);
     const stateRoute = getStateRoute(cityData.state);
     const rawPi = soil.plasticity_index;
     const pi = rawPi === null || rawPi === undefined || rawPi === "" ? null : Number(rawPi);
@@ -127,10 +130,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                         <p className="mt-2">Foundation Risk Registry translates mapped USDA/NRCS soil data into plain-language foundation context. The figures describe a mapped soil unit around {cityData.city}; they do not confirm the soil directly beneath an individual home or diagnose structural movement.</p>
                     </aside>
 
-                    <div className="mb-12 rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
+                    <div className={`mb-12 rounded-2xl border p-6 ${treatment ? "border-blue-200 bg-blue-50" : "border-emerald-200 bg-emerald-50"}`}>
                         <h2 className="text-xl font-bold text-slate-900">Looking for foundation repair in {cityData.city}?</h2>
-                        <p className="mt-2 text-slate-700">Use this soil report as supporting context, then review warning signs, evaluation steps, repair-scope questions, and options on the commercial city guide.</p>
-                        <Link href={`/services/foundation-repair/${citySlug}`} className="mt-4 inline-flex items-center gap-2 font-bold text-emerald-800 hover:underline">Foundation Repair in {cityData.city}, {cityData.state}<ChevronRight className="w-4 h-4" /></Link>
+                        <p className="mt-2 text-slate-700">Use this soil report as supporting context, then review warning signs, evaluation steps, repair-scope questions, and options on the foundation repair city guide.</p>
+                        <Link href={`/services/foundation-repair/${citySlug}`} className={`mt-4 inline-flex items-center gap-2 font-bold hover:underline ${treatment ? "text-blue-800" : "text-emerald-800"}`}>Foundation Repair in {cityData.city}, {cityData.state}<ChevronRight className="w-4 h-4" /></Link>
                     </div>
 
                     <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 mb-12">
