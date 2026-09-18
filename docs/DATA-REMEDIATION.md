@@ -233,6 +233,23 @@ Default input is `soil-remediation-manifests/latest.json` and default output is 
 
 Do not treat the reconciled fingerprint as production-approved while unexplained `ERROR` rows remain.
 
+### Reconciled remediation manifest result, 2026-09-18
+
+The targeted retry resolved every one of the 256 prior USDA errors. The reconciled manifest contains:
+
+- `ELIGIBLE`: 3,937
+- `NO_CACHE`: 88
+- `NO_USDA_RESULT`: 161
+- `REVIEW_NULL_ATTRIBUTE`: 45
+- remaining `ERROR`: 0
+- eligible changed rows: 3,121
+- eligible risk-class changes: 1,105
+- reconciled change-set SHA-256: `bb592abac611c1a1cecde949b68cf99938a4328a95d809471d7cd22546e816d1`
+
+The status counts sum exactly to 4,231. This is now the authoritative read-only reconciliation fingerprint for the current manifest run, but it still does **not** authorize production writes. The remaining migration blockers are the non-eligible populations and the need to define/export rollback data and exact optimistic-concurrency guards before any apply path exists.
+
+The 88 `NO_CACHE` rows are outside a historical cache rewrite because there is no existing soil row to update. The 161 `NO_USDA_RESULT` rows must remain unchanged unless a separate evidence-backed remediation path is designed. The 45 `REVIEW_NULL_ATTRIBUTE` rows remain quarantined because at least one fresh numeric attribute needed for the historical rewrite is absent.
+
 ### Migration gates
 
 No production PI/LEP mutation tool should be created or run until:
