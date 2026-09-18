@@ -250,6 +250,30 @@ The status counts sum exactly to 4,231. This is now the authoritative read-only 
 
 The 88 `NO_CACHE` rows are outside a historical cache rewrite because there is no existing soil row to update. The 161 `NO_USDA_RESULT` rows must remain unchanged unless a separate evidence-backed remediation path is designed. The 45 `REVIEW_NULL_ATTRIBUTE` rows remain quarantined because at least one fresh numeric attribute needed for the historical rewrite is absent.
 
+### Phase 3: production-state pre-flight and rollback export
+
+`scripts/verify-soil-remediation.mjs` is the next migration gate. It remains read-only and has no `--apply` mode.
+
+The verifier refuses to proceed unless the reconciled manifest recomputes to the recorded change-set fingerprint `bb592abac611c1a1cecde949b68cf99938a4328a95d809471d7cd22546e816d1`, contains zero `ERROR` rows, and contains exactly 3,121 eligible changed rows.
+
+For every proposed changed row it then re-reads the current `soil_cache` record by ID and verifies both the expected `location_id` and every manifest-tracked old value. This is the optimistic-concurrency gate: if production changed after the manifest was prepared, the row is reported as drift instead of being considered safe to mutate.
+
+A successful run exports, under the gitignored `soil-remediation-manifests/verified/` directory:
+
+- `preflight-report.json` with blocker counts and fingerprints,
+- `rollback.json` with the exact verified pre-migration values,
+- `rollback.csv` as a human-reviewable copy of the same rollback values.
+
+The rollback package covers only the exact 3,121 proposed changed rows. It is fingerprinted separately from the migration change set.
+
+Run after pulling the validated implementation branch:
+
+```bash
+node scripts/verify-soil-remediation.mjs
+```
+
+A pre-flight is successful only when all 3,121 changed rows match their expected current production state and blocker count is zero. A successful pre-flight still does not authorize a production write. The rollback files and summary must be reviewed first.
+
 ### Migration gates
 
 No production PI/LEP mutation tool should be created or run until:
