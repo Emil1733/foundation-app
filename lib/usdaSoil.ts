@@ -108,6 +108,6 @@ export function buildUsdaSoilQuery(lat: number, lon: number): string {
     )
     AND c.majcompflag = 'Yes'
     AND ch.hzdept_r < ${SCREENING_DEPTH_CM}
-    ORDER BY c.comppct_r DESC, ch.hzdept_r ASC
+    AND ch.hzdepb_r > 0\n    ORDER BY c.comppct_r DESC, c.cokey, ch.hzdept_r ASC
   `;
 }
