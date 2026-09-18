@@ -144,3 +144,11 @@ After the soil-data migration and null-rendering audit were completed, the five 
 The homepage featured-city block was aligned with the five treatment URLs. Cedar Park, Allen, Schertz, Boerne, and Lewisville now receive direct homepage links with the neutral anchor label `Foundation Repair Guide`. Frisco and Richardson were removed from that featured block because they are controls in this experiment. They remain discoverable through the normal site architecture; this change avoids giving control URLs the same deliberate homepage authority boost as the treatment cohort.
 
 The ordinary dynamic service-area grid was not reordered or filtered. This keeps the intervention narrow and auditable rather than changing the broader sitewide link graph.
+
+### 2026-09-18 soil-report and nearby-link audit
+
+The soil-report to commercial-page funnel was audited after the treatment homepage-link change. Soil reports already contained two contextual links to their matching commercial city page, so no extra sitewide links were added. Treatment reports now receive a visually distinct blue commercial-guide callout while controls keep the standard callout, preserving treatment membership without changing destination architecture.
+
+Soil-report rendering now reuses `hasUsableSoilRecord`, so blank or `unknown` map-unit records cannot render an indexable-looking soil article. The commercial city template now uses the same helper for soil-report availability and hero fallback text, preventing `unknown` from appearing as a meaningful soil name.
+
+Nearby-city links remain based on the precomputed geographic relationship table rather than treatment membership. This avoids artificially routing every nearby page toward treatment URLs and contaminating the experiment. Invalid, negative, or non-numeric stored distances are now rejected before rendering.
