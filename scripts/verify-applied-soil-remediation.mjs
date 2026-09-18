@@ -2,7 +2,12 @@
 
 /**
  * Verify production after the frozen soil migration.
- * READ-ONLY. Checks every planned row and the excluded populations.
+ * READ-ONLY. Checks every planned row and safely verifies excluded populations.
+ *
+ * NO_USDA_RESULT rows do not carry an expected-value snapshot in the reconciled
+ * manifest. For those rows, post-write safety is verified structurally: their
+ * soil_cache IDs must be disjoint from the frozen mutation plan. Rows that do
+ * carry expected snapshots are also value-checked against production.
  */
 
 import fs from 'node:fs';
@@ -29,6 +34,7 @@ async function row(id){const {data,error}=await supabase.from('soil_cache').sele
 async function main(){
  const plan=JSON.parse(fs.readFileSync(planPath,'utf8')),manifest=JSON.parse(fs.readFileSync(manifestPath,'utf8'));
  if(plan.plan_sha256!==PLAN_SHA||plan.rows.length!==EXPECTED_ROWS)throw new Error('Frozen migration plan guard failed.');
+ const planIds=new Set(plan.rows.map(r=>r.soil_cache_id));
  let proposedMatches=0,oldMatches=0,other=0;
  for(let i=0;i<plan.rows.length;i++){
   const p=plan.rows[i],c=await row(p.soil_cache_id);
@@ -38,17 +44,27 @@ async function main(){
   if((i+1)%500===0||i+1===plan.rows.length)console.log(`Verified planned ${i+1}/${plan.rows.length}`);
  }
  const excluded=manifest.rows.filter(r=>['NO_USDA_RESULT','REVIEW_NULL_ATTRIBUTE'].includes(r.status)&&r.soil_cache_id);
- let excludedChanged=0;
- for(const r of excluded){const c=await row(r.soil_cache_id);if(!c||c.location_id!==r.location_id||!same(pick(c),pick(r.expected)))excludedChanged++;}
+ let excludedPlanOverlap=0,excludedWithSnapshot=0,excludedSnapshotChanged=0,excludedWithoutSnapshot=0;
+ for(const r of excluded){
+  if(planIds.has(r.soil_cache_id))excludedPlanOverlap++;
+  if(r.expected&&typeof r.expected==='object'){
+   excludedWithSnapshot++;
+   const c=await row(r.soil_cache_id);
+   if(!c||c.location_id!==r.location_id||!same(pick(c),pick(r.expected)))excludedSnapshotChanged++;
+  }else excludedWithoutSnapshot++;
+ }
 
  console.log('\nPOST-MIGRATION VERIFICATION');
  console.log(`Planned rows at proposed values: ${proposedMatches}`);
  console.log(`Planned rows still at old values: ${oldMatches}`);
  console.log(`Planned rows in unexpected state: ${other}`);
- console.log(`Excluded cached rows checked: ${excluded.length}`);
- console.log(`Excluded cached rows changed: ${excludedChanged}`);
+ console.log(`Excluded cached rows: ${excluded.length}`);
+ console.log(`Excluded rows overlapping mutation plan: ${excludedPlanOverlap}`);
+ console.log(`Excluded rows with expected-value snapshot: ${excludedWithSnapshot}`);
+ console.log(`Snapshot-backed excluded rows changed: ${excludedSnapshotChanged}`);
+ console.log(`Excluded rows without pre-write snapshot: ${excludedWithoutSnapshot}`);
  console.log(`Plan SHA-256: ${PLAN_SHA}`);
- if(proposedMatches===EXPECTED_ROWS&&oldMatches===0&&other===0&&excludedChanged===0)console.log('VERIFICATION PASSED.');
+ if(proposedMatches===EXPECTED_ROWS&&oldMatches===0&&other===0&&excludedPlanOverlap===0&&excludedSnapshotChanged===0)console.log('VERIFICATION PASSED.');
  else{console.log('VERIFICATION FAILED. Review before any further action.');process.exitCode=2;}
 }
 main().catch(e=>{console.error('Verification failed:',e.message||e);process.exit(1);});
