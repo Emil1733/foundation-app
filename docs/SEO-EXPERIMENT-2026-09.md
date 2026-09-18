@@ -152,3 +152,9 @@ The soil-report to commercial-page funnel was audited after the treatment homepa
 Soil-report rendering now reuses `hasUsableSoilRecord`, so blank or `unknown` map-unit records cannot render an indexable-looking soil article. The commercial city template now uses the same helper for soil-report availability and hero fallback text, preventing `unknown` from appearing as a meaningful soil name.
 
 Nearby-city links remain based on the precomputed geographic relationship table rather than treatment membership. This avoids artificially routing every nearby page toward treatment URLs and contaminating the experiment. Invalid, negative, or non-numeric stored distances are now rejected before rendering.
+
+### 2026-09-18 conversion and trust cleanup
+
+The shared crack/symptom interaction was renamed from `Geological Risk Simulator` to `Foundation Symptom Guide`. Diagnostic language, the simulated soil-analysis spinner, and the artificial 1.5-second calculation delay were removed. Selecting a symptom now shows the existing cautious interpretation immediately.
+
+The mapped-soil block is labeled `Mapped Soil Context`, and the lead action now says `Continue to Evaluation` rather than `Get Report`. This keeps the interaction useful for conversion while making clear that the component organizes observable symptoms and mapped context rather than performing a property diagnosis.
