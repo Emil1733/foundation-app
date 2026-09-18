@@ -306,6 +306,24 @@ The frozen migration-plan fingerprint is `d42075cc4be961cba849112dfb0e8081e7cbf6
 
 No database writes were performed. Any eventual apply path must require all three fingerprints, exactly 3,121 planned rows, a fresh zero-drift concurrency check, and post-write verification. The 88 `NO_CACHE`, 161 `NO_USDA_RESULT`, and 45 `REVIEW_NULL_ATTRIBUTE` populations remain excluded and unchanged.
 
+### Phase 5: fail-closed atomic apply package
+
+The final mutation tooling is split deliberately so local JavaScript cannot silently perform thousands of independent non-atomic updates.
+
+- `scripts/apply-soil-remediation.mjs` validates the frozen plan and rechecks all 3,121 current rows. Its default mode is dry-run. Even with `--apply`, it refuses client-side mutation and requires the admin-SQL path.
+- `scripts/generate-soil-remediation-sql.mjs` validates the frozen plan/provenance and generates a local, gitignored one-shot SQL package containing the exact 3,121-row plan.
+- The generated SQL uses one PostgreSQL `DO` statement, loads the plan into a temporary table, locks all target rows, requires exactly 3,121 exact expected-value/location matches, updates only PI/LEP/risk, and raises an exception unless exactly 3,121 rows update. Any raised exception aborts the statement rather than leaving a partial migration.
+- `scripts/verify-applied-soil-remediation.mjs` is read-only post-write verification. It requires every planned row to equal its proposed PI/LEP/risk values and checks the cached `NO_USDA_RESULT` and `REVIEW_NULL_ATTRIBUTE` populations remained at their manifest expected values.
+
+Before final authorization, run:
+
+```bash
+node scripts/apply-soil-remediation.mjs
+node scripts/generate-soil-remediation-sql.mjs
+```
+
+Neither command writes to Supabase. The generated SQL must not be manually edited or committed. Production execution remains a separate explicitly authorized action through the admin SQL channel, followed immediately by the read-only post-migration verifier.
+
 ### Migration gates
 
 No production PI/LEP mutation tool should be created or run until:
