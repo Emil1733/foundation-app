@@ -274,6 +274,30 @@ node scripts/verify-soil-remediation.mjs
 
 A pre-flight is successful only when all 3,121 changed rows match their expected current production state and blocker count is zero. A successful pre-flight still does not authorize a production write. The rollback files and summary must be reviewed first.
 
+### Pre-flight result, 2026-09-18
+
+The production-state pre-flight passed with all 3,121 proposed changed rows matching the manifest exactly. Duplicate soil-cache IDs: 0. Missing soil-cache rows: 0. Current-state drift rows: 0. Blockers: 0.
+
+The change-set fingerprint remained `bb592abac611c1a1cecde949b68cf99938a4328a95d809471d7cd22546e816d1`. The exported rollback package fingerprint is `c634def54fd4dbdf9786f892d8a87472215606f8f725e0138aeee70d9660ab7e`.
+
+No database writes were performed.
+
+### Phase 4: exact mutation-plan freeze
+
+`scripts/plan-soil-remediation.mjs` converts the broader audited change set into the exact intended historical methodology migration. It remains read-only and intentionally has no `--apply` mode.
+
+The historical methodology rewrite is deliberately limited to `plasticity_index`, `shrink_swell_potential`, and the deterministic `risk_level` derived from PI. Descriptive USDA fields such as map-unit name/symbol, component name, and drainage class remain audit evidence and are not rewritten merely because the fresh USDA response differs.
+
+Before producing a plan, the script verifies the reconciled change-set fingerprint, the zero-blocker pre-flight report, the rollback fingerprint, and the rollback file contents. It then re-checks current production values once more. Any drift blocks the plan.
+
+Run after this phase passes branch validation:
+
+```bash
+node scripts/plan-soil-remediation.mjs
+```
+
+The output `soil-remediation-manifests/verified/migration-plan.json` records the exact PI/LEP/risk rows, separately counts rows whose only fresh differences are descriptive fields, and creates a new SHA-256 fingerprint over the exact mutation plan. That plan fingerprint and row count must be frozen before an apply tool is designed.
+
 ### Migration gates
 
 No production PI/LEP mutation tool should be created or run until:
