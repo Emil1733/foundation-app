@@ -11,7 +11,7 @@ import CrackAnalyzer from "@/components/CrackAnalyzer";
 import CostEstimator from "@/components/CostEstimator";
 import { getNearbyLocations } from "@/lib/nearbyLocations";
 import { STATE_FOUNDATION_GUIDES } from "@/lib/stateFoundationGuides";
-import { shouldIndexServicePage } from "@/lib/serviceIndexability";
+import { hasUsableSoilRecord, shouldIndexServicePage } from "@/lib/serviceIndexability";
 import { getTexasFoundationGuide } from "@/lib/texasFoundationGuides";
 import { getStateRoute } from "@/lib/stateRoutes";
 import { classifySoilPlasticityIndex, hasDisplayableZip } from "@/lib/soilRisk";
@@ -59,7 +59,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
   const stateGuide = state === "TX" ? getTexasFoundationGuide(Number(location.latitude), Number(location.longitude)) : STATE_FOUNDATION_GUIDES[state];
   const stateRoute = getStateRoute(state);
   const neighbors = await getNearbyLocations(location.id, state);
-  const soilReportAvailable = Boolean(soil?.map_unit_name?.trim() && soil.map_unit_name.trim().toLowerCase() !== "unknown");
+  const soilReportAvailable = hasUsableSoilRecord(soil);
   const piNumber = soil?.plasticity_index === null || soil?.plasticity_index === undefined || soil?.plasticity_index === "" ? null : Number(soil.plasticity_index);
   const hasPi = piNumber !== null && Number.isFinite(piNumber) && piNumber >= 0;
   const piDisplay = hasPi ? piNumber.toFixed(1) : "Not reported";
@@ -89,7 +89,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             <nav aria-label="Breadcrumb" className="mb-6 text-sm text-slate-400"><ol className="flex flex-wrap items-center gap-2"><li><Link href="/" className="hover:text-white">Home</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li><li><Link href="/locations" className="hover:text-white">Service Areas</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li><li><Link href={stateRoute.href} className="hover:text-white">{stateRoute.name}</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li><li aria-current="page" className="text-slate-200">{city}</li></ol></nav>
             <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 px-4 py-1.5 rounded-full text-blue-200 text-sm font-semibold mb-8"><ShieldCheck className="w-4 h-4 text-blue-400" /><span>{treatment ? treatment.eyebrow(city, state) : `Local Soil Context for ${city}, ${state}`}</span></div>
             <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">{treatment ? treatment.h1Lead : "Foundation Repair Evaluation & Options"}{" "}<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">in {city}, {state}</span></h1>
-            <p className="text-slate-300 text-lg mb-6 leading-relaxed max-w-xl">{treatment ? treatment.hero(city, state) : <>Review mapped <strong>{soil?.map_unit_name || "soil conditions"}</strong>, understand warning signs, and request a property-specific evaluation before choosing a repair plan.</>}</p>
+            <p className="text-slate-300 text-lg mb-6 leading-relaxed max-w-xl">{treatment ? treatment.hero(city, state) : <>Review mapped <strong>{soilReportAvailable ? soil.map_unit_name : "soil conditions"}</strong>, understand warning signs, and request a property-specific evaluation before choosing a repair plan.</>}</p>
             <Link href="/book-analysis" className="inline-flex bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold items-center justify-center gap-2 transition hover:shadow-lg"><ShieldCheck className="w-5 h-5" /> {treatment?.cta || "Request a Foundation Evaluation"}</Link>
             <div className="mt-6 pt-6 border-t border-slate-700/50 flex flex-wrap gap-6 text-[11px] font-bold uppercase tracking-widest text-slate-400"><span>USDA Soil Context</span><span>Property-Specific Review</span><span>Compare Repair Options</span></div>
           </div>
@@ -104,7 +104,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
         <section className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 mb-12">
           <div className="flex items-start gap-4 mb-6"><div className="bg-blue-50 p-3 rounded-lg text-blue-600"><Info className="w-6 h-6" /></div><div><h2 className="text-2xl font-bold text-slate-900">Mapped Soil and Foundation Context for {city}</h2><p className="text-slate-500 text-sm">{hasDisplayableZip(location.zip_code) ? `USDA/NRCS soil screening record for ZIP ${location.zip_code}` : "USDA/NRCS mapped soil screening context for this location"}</p></div></div>
           <div className="prose prose-slate max-w-none text-slate-600">
-            <p>{getDynamicIntro(city, soil?.map_unit_name || "local soil", riskClass)}</p>
+            <p>{getDynamicIntro(city, soilReportAvailable ? soil.map_unit_name : "local soil", hasPi ? riskClass : "unclassified")}</p>
             {soil && <div className="my-8 grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose"><div className="bg-slate-50 p-4 rounded-xl border border-slate-100"><span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Plasticity Index (PI)</span><div className="flex items-end gap-2 mt-1"><span className="text-3xl font-mono font-bold text-slate-900">{piDisplay}</span>{hasPi && <span className="rounded bg-blue-100 px-2 py-0.5 text-sm font-bold text-blue-800">{riskClass}</span>}</div><p className="text-xs text-slate-500 mt-2">{hasPi ? "Mapped screening value, not a measurement from the property." : "No reportable mapped PI is available for this record."}</p></div><div className="bg-slate-50 p-4 rounded-xl border border-slate-100"><span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Shrink-Swell</span><div className="mt-1 text-3xl font-mono font-bold text-slate-900">{soil.shrink_swell_potential === null || soil.shrink_swell_potential === undefined ? "Not reported" : `${Number(soil.shrink_swell_potential).toFixed(1)}%`}</div><p className="text-xs text-slate-500 mt-2">Mapped linear-extensibility context, site conditions can vary.</p></div></div>}
             {soilReportAvailable && <Link href={`/learn/${slug}-soil-analysis`} className="not-prose mt-8 flex items-center justify-between p-4 bg-slate-50 border border-blue-100 rounded-xl hover:bg-blue-50 transition"><span><strong className="block text-slate-900">View {city} Soil Risk Report</strong><span className="text-sm text-slate-500">Review the mapped soil record and interpretation.</span></span><ChevronRight className="w-5 h-5 text-blue-600" /></Link>}
           </div>
