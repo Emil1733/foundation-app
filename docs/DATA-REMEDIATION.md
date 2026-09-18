@@ -200,6 +200,39 @@ node scripts/prepare-soil-remediation.mjs --limit=5000
 
 The generated manifest is run-specific audit evidence and must not be committed.
 
+### First remediation manifest result, 2026-09-18
+
+The first full manifest run loaded 4,231 locations and produced:
+
+- `ELIGIBLE`: 3,693
+- `ERROR`: 256
+- `NO_CACHE`: 88
+- `NO_USDA_RESULT`: 151
+- `REVIEW_NULL_ATTRIBUTE`: 43
+- eligible changed rows: 2,922
+- eligible risk-class changes: 1,038
+- intermediate change-set SHA-256: `7baf675c6bfbbff75b729692dd902c0680d28c4246584b87099e6407285ed370`
+
+The status counts sum exactly to 4,231. This fingerprint is explicitly **intermediate**, not production-approved, because 256 USDA requests remained in `ERROR`. Resolving any of those errors can change the eligible set, counts, and fingerprint.
+
+### Phase 2: targeted error reconciliation
+
+`scripts/retry-soil-remediation-errors.mjs` consumes the existing local manifest and retries only rows whose status is `ERROR`. It preserves every successful/non-error row from the prior run rather than re-querying thousands of already-resolved locations.
+
+For each failed row it re-reads the current target/cache record before retrying USDA, uses five bounded attempts with a longer timeout, groups error types, replaces resolved errors with the appropriate canonical status, recalculates the eligible change set, and creates a new SHA-256 fingerprint.
+
+It remains strictly read-only with respect to Supabase and intentionally has no `--apply` mode.
+
+After this code passes the normal validation branch:
+
+```bash
+node scripts/retry-soil-remediation-errors.mjs
+```
+
+Default input is `soil-remediation-manifests/latest.json` and default output is `soil-remediation-manifests/reconciled.json`.
+
+Do not treat the reconciled fingerprint as production-approved while unexplained `ERROR` rows remain.
+
 ### Migration gates
 
 No production PI/LEP mutation tool should be created or run until:
