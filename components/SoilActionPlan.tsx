@@ -2,10 +2,10 @@ import { AlertTriangle, Droplets, ArrowDown, CheckCircle2 } from "lucide-react";
 
 interface SoilActionPlanProps {
     soil?: {
-        plasticity_index: number;
-        shrink_swell_potential: number;
-        risk_level: string;
-        map_unit_name: string;
+        plasticity_index: number | string | null;
+        shrink_swell_potential: number | string | null;
+        risk_level: string | null;
+        map_unit_name: string | null;
     } | null;
     city: string;
     riskLevel?: string;
@@ -32,7 +32,7 @@ export default function SoilActionPlan({ soil, city, riskLevel }: SoilActionPlan
                     </h4>
                     <p className="text-slate-600 text-sm leading-relaxed mb-4">
                         {soil && pi !== null
-                            ? `The mapped ${soil.map_unit_name} record has a Plasticity Index of ${pi.toFixed(1)} and a ${screeningClass.toLowerCase()} registry screening classification. This is mapped context, not a property diagnosis or repair prescription.`
+                            ? `The mapped ${soil.map_unit_name || "soil"} record has a Plasticity Index of ${pi.toFixed(1)} and a ${screeningClass.toLowerCase()} registry screening classification. This is mapped context, not a property diagnosis or repair prescription.`
                             : `The mapped screening class for this location is ${screeningClass.toLowerCase()}. Use it as context alongside property-specific drainage, symptoms, measurements, and construction details.`}
                     </p>
                     <ul className="space-y-2">
