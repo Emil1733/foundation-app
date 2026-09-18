@@ -5,8 +5,8 @@ import PartnerLogos from "@/components/PartnerLogos";
 import { supabase } from '@/lib/supabase';
 
 export const metadata = {
-  title: "The Foundation Risk Registry | Soil Risk & Foundation Evaluation",
-  description: "Check mapped USDA soil conditions, understand foundation warning signs, and request a property-specific evaluation before choosing a repair plan.",
+  title: "Foundation Repair Help & Evaluation | Foundation Risk Registry",
+  description: "Concerned about cracks, uneven floors, or foundation movement? Review local soil context, understand repair options, and request a property-specific foundation evaluation.",
   alternates: {
     canonical: 'https://foundationrisk.org',
   },
@@ -33,11 +33,11 @@ export default async function Home() {
               🇺🇸 Serving Texas, Oklahoma & Missouri
             </div>
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 leading-tight">
-              Fix the <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Soil</span>, <br />
-              Not Just The Crack.
+              Foundation <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Problems?</span> <br />
+              Start With the Evidence.
             </h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              Understand the soil context behind common foundation symptoms.
+              Cracks, uneven floors, sticking doors, or signs of movement? Understand what may be happening, review foundation repair options, and
               <strong> Request a property-specific evaluation</strong> before choosing a repair plan.
             </p>
           </div>
@@ -53,9 +53,9 @@ export default async function Home() {
         <section className="w-full py-16 px-6 bg-slate-50">
           <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8">
             {[
-              { title: "USDA Data", desc: "Sourced directly from federal soil surveys (SSURGO)." },
-              { title: "Mapped Soil Context", desc: "Understand PI and linear extensibility as screening context." },
-              { title: "Evaluation Options", desc: "Request a local property review and compare repair scopes." }
+              { title: "Foundation Warning Signs", desc: "Understand cracks, uneven floors, sticking doors, and other movement symptoms." },
+              { title: "Local Soil Context", desc: "Use mapped USDA soil data to add context to what you are seeing at the property." },
+              { title: "Foundation Evaluation", desc: "Request a property review and compare repair options before choosing a scope." }
             ].map((item, i) => (
               <div key={i} className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
                 <h3 className="font-bold text-slate-900 text-lg mb-2">{item.title}</h3>
@@ -144,11 +144,11 @@ export default async function Home() {
             <div className="max-w-6xl mx-auto">
               <div className="flex items-center justify-between mb-10">
                 <div>
-                  <h2 className="text-3xl font-bold text-slate-900">Soil Library & Local Reports</h2>
-                  <p className="text-slate-500 text-sm mt-1">Read mapped soil reports and foundation context for your local area.</p>
+                  <h2 className="text-3xl font-bold text-slate-900">Foundation Repair Resources & Local Soil Reports</h2>
+                  <p className="text-slate-500 text-sm mt-1">Use local soil reports to understand foundation conditions, then review repair guidance for your area.</p>
                 </div>
                 <Link href="/learn" className="text-blue-600 font-semibold flex items-center gap-2 hover:underline">
-                  View Education Library <ArrowRight className="w-4 h-4" />
+                  View Foundation Resources <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
 
