@@ -110,7 +110,7 @@ These counts document the completed migration and are not intended as permanent 
 
 ## USDA soil methodology migration
 
-Status: new ingestion methodology implemented; historical PI/LEP migration not approved or performed.
+Status: historical PI/LEP/risk methodology migration completed in production on 2026-09-18 and independently verified.
 
 ### Why migration is separate from code deployment
 
@@ -313,7 +313,7 @@ The final mutation tooling is split deliberately so local JavaScript cannot sile
 - `scripts/apply-soil-remediation.mjs` validates the frozen plan and rechecks all 3,121 current rows. Its default mode is dry-run. Even with `--apply`, it refuses client-side mutation and requires the admin-SQL path.
 - `scripts/generate-soil-remediation-sql.mjs` validates the frozen plan/provenance and generates a local, gitignored one-shot SQL package containing the exact 3,121-row plan.
 - The generated SQL uses one PostgreSQL `DO` statement, loads the plan into a temporary table, locks all target rows, requires exactly 3,121 exact expected-value/location matches, updates only PI/LEP/risk, and raises an exception unless exactly 3,121 rows update. Any raised exception aborts the statement rather than leaving a partial migration.
-- `scripts/verify-applied-soil-remediation.mjs` is read-only post-write verification. It requires every planned row to equal its proposed PI/LEP/risk values and checks the cached `NO_USDA_RESULT` and `REVIEW_NULL_ATTRIBUTE` populations remained at their manifest expected values.
+- `scripts/verify-applied-soil-remediation.mjs` is read-only post-write verification. It requires every planned row to equal its proposed PI/LEP/risk values. Excluded IDs must be disjoint from the frozen mutation plan; excluded rows that carry a pre-write expected-value snapshot are also checked value-by-value. `NO_USDA_RESULT` rows have no expected-value snapshot in the reconciled manifest, so the verifier does not fabricate one.
 
 Before final authorization, run:
 
@@ -324,9 +324,31 @@ node scripts/generate-soil-remediation-sql.mjs
 
 Neither command writes to Supabase. The generated SQL must not be manually edited or committed. Production execution remains a separate explicitly authorized action through the admin SQL channel, followed immediately by the read-only post-migration verifier.
 
-### Migration gates
+### Production execution and final verification, 2026-09-18
 
-No production PI/LEP mutation tool should be created or run until:
+Immediately before production execution, `scripts/apply-soil-remediation.mjs` rechecked all 3,121 planned rows against their frozen expected state. Exact current-state matches were 3,121 of 3,121, with plan SHA-256 `d42075cc4be961cba849112dfb0e8081e7cbf64a9527ab6dec69d5bd406fa996`. No database writes were performed by that dry run.
+
+`scripts/generate-soil-remediation-sql.mjs` then generated the guarded atomic admin SQL package for exactly 3,121 rows using the same frozen plan fingerprint. The generated SQL was executed successfully against production. Its fail-closed statement required all 3,121 target rows to match the frozen old state before mutation and required exactly 3,121 updates.
+
+The first post-write verifier run confirmed all 3,121 planned rows at their proposed values, zero rows at old values, and zero unexpected planned-row states. It incorrectly reported 161 excluded rows as changed because `NO_USDA_RESULT` manifest rows intentionally do not contain an `expected` value snapshot, while the verifier treated the missing snapshot as if it were an expected null-valued record. This was a verifier defect, not a migration discrepancy.
+
+The verifier was corrected to distinguish structural exclusion from snapshot-backed value verification. The corrected read-only verification then passed with:
+
+- planned rows at proposed values: 3,121
+- planned rows still at old values: 0
+- planned rows in unexpected state: 0
+- excluded cached rows: 206
+- excluded rows overlapping the mutation plan: 0
+- excluded rows with an expected-value snapshot: 45
+- snapshot-backed excluded rows changed: 0
+- excluded rows without a pre-write snapshot: 161
+- frozen plan SHA-256: `d42075cc4be961cba849112dfb0e8081e7cbf64a9527ab6dec69d5bd406fa996`
+
+The migration is therefore complete. No rollback was required. The 88 `NO_CACHE` locations remained outside the historical cache rewrite, the 161 `NO_USDA_RESULT` cached rows were outside the mutation plan, and the 45 `REVIEW_NULL_ATTRIBUTE` cached rows with snapshots were verified unchanged.
+
+### Historical migration gates
+
+The production migration was not permitted until:
 
 1. the manifest script passes the validation-branch build,
 2. a fresh full manifest is generated,
@@ -339,7 +361,7 @@ No production PI/LEP mutation tool should be created or run until:
 9. apply is guarded by exact count and fingerprint,
 10. post-write verification is defined before the first production write.
 
-No production PI/LEP migration has been performed.
+All of these gates were satisfied for the frozen 2026-09-18 migration described above. Future bulk soil-data migrations must establish a new manifest, fingerprints, rollback package, concurrency checks, and post-write verification rather than reusing this completed plan.
 
 ## Data-integrity rule
 
