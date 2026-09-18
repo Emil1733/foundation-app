@@ -197,9 +197,11 @@ export default async function Home() {
                 <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-3">High-Priority Analysis Zones</p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {[
-                    { city: 'Lewisville', state: 'TX', zip: '75067', slug: 'lewisville-tx', label: 'Foundation Evaluation' },
-                    { city: 'Frisco', state: 'TX', zip: '75035', slug: 'frisco-tx', label: 'Distress Analysis' },
-                    { city: 'Richardson', state: 'TX', zip: '75080', slug: 'richardson-tx', label: 'Settling Report' },
+                    { city: 'Cedar Park', state: 'TX', slug: 'cedar-park-tx', label: 'Foundation Repair Guide' },
+                    { city: 'Allen', state: 'TX', slug: 'allen-tx', label: 'Foundation Repair Guide' },
+                    { city: 'Schertz', state: 'TX', slug: 'schertz-tx', label: 'Foundation Repair Guide' },
+                    { city: 'Boerne', state: 'TX', slug: 'boerne-tx', label: 'Foundation Repair Guide' },
+                    { city: 'Lewisville', state: 'TX', slug: 'lewisville-tx', label: 'Foundation Repair Guide' },
                   ].map((city) => (
                     <Link
                       key={city.slug}
@@ -210,7 +212,7 @@ export default async function Home() {
                         <MapPin className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="font-bold text-blue-900 text-sm">{city.city}, {city.state} {city.zip}</div>
+                        <div className="font-bold text-blue-900 text-sm">{city.city}, {city.state}</div>
                         <div className="text-xs text-blue-600">{city.label} &rarr;</div>
                       </div>
                     </Link>
