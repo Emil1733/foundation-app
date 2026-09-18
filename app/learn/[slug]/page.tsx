@@ -52,11 +52,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
     const citySlug = slug.replace('-soil-analysis', '');
     const stateRoute = getStateRoute(cityData.state);
-    const pi = Number(soil.plasticity_index);
-    const hasPi = Number.isFinite(pi) && pi >= 0;
+    const rawPi = soil.plasticity_index;
+    const pi = rawPi === null || rawPi === undefined || rawPi === "" ? null : Number(rawPi);
+    const hasPi = pi !== null && Number.isFinite(pi) && pi >= 0;
     const riskClass = classifySoilPlasticityIndex(soil.plasticity_index);
-    const shrinkSwellNumber = Number(soil.shrink_swell_potential);
-    const shrinkSwell = Number.isFinite(shrinkSwellNumber) ? `${shrinkSwellNumber.toFixed(1)}% LEP` : 'Not reported';
+    const rawShrinkSwell = soil.shrink_swell_potential;
+    const shrinkSwellNumber = rawShrinkSwell === null || rawShrinkSwell === undefined || rawShrinkSwell === "" ? null : Number(rawShrinkSwell);
+    const shrinkSwell = shrinkSwellNumber !== null && Number.isFinite(shrinkSwellNumber) ? `${shrinkSwellNumber.toFixed(1)}% LEP` : 'Not reported';
     const mapUnitName = soil.map_unit_name;
     const componentName = soil.component_name || 'Not reported';
     const drainageClass = soil.drainage_class || 'Not reported';
@@ -67,10 +69,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     const riskContext = !hasPi
         ? 'A plasticity value was not available for this record, so no PI-based interpretation should be inferred.'
         : riskClass === 'Severe' || riskClass === 'High'
-            ? `The recorded PI of ${pi.toFixed(1)} makes moisture sensitivity worth considering alongside property-specific evidence. This is a screening signal, not proof that a foundation is moving.`
+            ? `The recorded PI of ${pi!.toFixed(1)} makes moisture sensitivity worth considering alongside property-specific evidence. This is a screening signal, not proof that a foundation is moving.`
             : riskClass === 'Moderate'
-                ? `The recorded PI of ${pi.toFixed(1)} indicates some potential for moisture-related volume change. Drainage and site history remain important when interpreting symptoms.`
-                : `The recorded PI of ${pi.toFixed(1)} indicates lower mapped plasticity. Drainage, erosion, fill, plumbing leaks, and construction details can still affect support.`;
+                ? `The recorded PI of ${pi!.toFixed(1)} indicates some potential for moisture-related volume change. Drainage and site history remain important when interpreting symptoms.`
+                : `The recorded PI of ${pi!.toFixed(1)} indicates lower mapped plasticity. Drainage, erosion, fill, plumbing leaks, and construction details can still affect support.`;
 
     const jsonLd = {
         "@context": "https://schema.org",
@@ -135,7 +137,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                         <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2"><Activity className="w-5 h-5 text-blue-600" /> Mapped Soil Profile: {cityData.city}, {cityData.state}</h2>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                             <div><span className="block text-xs text-slate-500 uppercase font-bold">Soil Type</span><span className="font-bold text-slate-900">{componentName}</span></div>
-                            <div><span className="block text-xs text-slate-500 uppercase font-bold">Plasticity (PI)</span><span className="font-mono text-xl font-bold text-slate-900">{hasPi ? pi.toFixed(1) : 'N/A'}</span></div>
+                            <div><span className="block text-xs text-slate-500 uppercase font-bold">Plasticity (PI)</span><span className="font-mono text-xl font-bold text-slate-900">{hasPi ? pi!.toFixed(1) : 'N/A'}</span></div>
                             <div><span className="block text-xs text-slate-500 uppercase font-bold">Expansion Potential</span><span className="font-bold text-slate-900">{shrinkSwell}</span></div>
                             <div><span className="block text-xs text-slate-500 uppercase font-bold">Screening Class</span><span className="font-bold text-slate-900">{riskClass}</span></div>
                         </div>
@@ -144,7 +146,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                     <div className="prose prose-slate prose-lg max-w-none">
                         <h2>What the mapped data shows</h2>
                         <p>The USDA map unit associated with this {cityData.city} record is <strong>{mapUnitName}</strong>. Its listed component is <strong>{componentName}</strong>, with drainage reported as <strong>{drainageClass.toLowerCase()}</strong>. These labels describe an area on a survey map. Conditions can change within a lot and may be altered by grading, imported fill, construction, or drainage work.</p>
-                        <p>{hasPi ? <>For this record, the Plasticity Index is <strong>{pi.toFixed(1)}</strong> and the registry screening class is <strong>{riskClass}</strong>. </> : null}{riskContext}</p>
+                        <p>{hasPi ? <>For this record, the Plasticity Index is <strong>{pi!.toFixed(1)}</strong> and the registry screening class is <strong>{riskClass}</strong>. </> : null}{riskContext}</p>
 
                         <h2>How to interpret this for a home in {cityData.city}</h2>
                         <p>A mapped screening class is context, not a diagnosis. Two houses in the same map unit can perform differently because of roof runoff, plumbing leaks, tree placement, slope, foundation design, and previous repairs.</p>
