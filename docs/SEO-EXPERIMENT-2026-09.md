@@ -172,3 +172,9 @@ The homepage and locations directory were reviewed for language that could imply
 Homepage labels were also tightened. `Geological Risk`, `How We Audit Your Risk`, `The Forensic Difference`, `Geological Report`, and `forensic soil analysis` style language were replaced with plain mapped-soil and soil-report wording. Dynamic report cards no longer state `Why Foundations Fail` or promise an engineering breakdown. The remaining em dash in the Registry research-guidance citation was removed.
 
 These are sitewide trust clarifications rather than additions to the commercial treatment. Treatment and control membership are unchanged.
+
+### 2026-09-18 lead-generation positioning calibration
+
+After the trust-claims audit, the homepage and locations directory were recalibrated so Foundation Risk Registry still presents as a foundation-repair-focused service rather than an informational soil-data publication. Unsupported authority, engineering, diagnosis, and direct structural-stabilization claims remain removed.
+
+The homepage now leads with foundation problems, warning signs, repair options, and a property-specific evaluation. Soil data remains the evidence and differentiation layer. The locations directory now uses `Foundation Repair Service Areas` and `Foundation Repair Help Near You`, with symptom-led copy that directs homeowners toward getting help. This preserves commercial lead intent without claiming that the Registry itself is an engineering firm or the contractor performing structural repairs.
