@@ -158,3 +158,9 @@ Nearby-city links remain based on the precomputed geographic relationship table 
 The shared crack/symptom interaction was renamed from `Geological Risk Simulator` to `Foundation Symptom Guide`. Diagnostic language, the simulated soil-analysis spinner, and the artificial 1.5-second calculation delay were removed. Selecting a symptom now shows the existing cautious interpretation immediately.
 
 The mapped-soil block is labeled `Mapped Soil Context`, and the lead action now says `Continue to Evaluation` rather than `Get Report`. This keeps the interaction useful for conversion while making clear that the component organizes observable symptoms and mapped context rather than performing a property diagnosis.
+
+### 2026-09-18 experiment contamination audit
+
+A template-level audit found one treatment feature that had escaped the treatment guard: the dedicated `Foundation Repair Options in [City]` section was rendering on every city page even though the experiment specification describes it as treatment-only. The section is now gated by `getCommercialSeoTreatment(slug)`, while the shared cost planner remains available to all city pages.
+
+The treatment registry still contains exactly Cedar Park, Allen, Schertz, Boerne, and Lewisville. Frisco, Richardson, Pflugerville, Carrollton, and Denton remain outside the registry. Homepage featured links remain limited to the five treatment cities; the ordinary service-area grid and geographically precomputed nearby-city links remain neutral.
