@@ -7,8 +7,8 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export const metadata = {
-    title: "Foundation Repair Guides by Location | Foundation Risk Registry",
-    description: "Explore local soil reports, foundation warning signs, evaluation guidance, and repair options across Foundation Risk Registry locations.",
+    title: "Foundation Repair Service Areas | Foundation Risk Registry",
+    description: "Find foundation repair help in your area. Review warning signs, local soil context, evaluation options, and the next steps for your property.",
     alternates: {
         canonical: 'https://foundationrisk.org/locations',
     },
@@ -62,9 +62,9 @@ export default async function LocationsMap() {
                 <div className="max-w-7xl mx-auto text-center">
                     <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 px-4 py-1.5 rounded-full text-blue-200 text-sm font-semibold mb-6 backdrop-blur-sm">
                         <ShieldAlert className="w-4 h-4 text-blue-400" />
-                        <span>Local Soil & Foundation Guides</span>
+                        <span>Foundation Repair Help Near You</span>
                     </div>
-                    <h1 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight">Foundation Risk Service Areas</h1>
+                    <h1 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight">Foundation Repair Service Areas</h1>
                     <p className="text-slate-300 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
                         We provide forensic evaluation and permanent structural stabilization across the most high-risk geological zones in the United States. 
                         Select your state below.
