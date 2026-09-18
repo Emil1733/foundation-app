@@ -12,7 +12,7 @@ interface SoilActionPlanProps {
 }
 
 export default function SoilActionPlan({ soil, city, riskLevel }: SoilActionPlanProps) {
-    const pi = soil ? Number(soil.plasticity_index) : null;
+    const rawPi = soil?.plasticity_index;\n    const parsedPi = rawPi === null || rawPi === undefined || rawPi === "" ? null : Number(rawPi);\n    const pi = parsedPi !== null && Number.isFinite(parsedPi) && parsedPi >= 0 ? parsedPi : null;
     const screeningClass = riskLevel || soil?.risk_level || "Not classified";
     const isSevere = screeningClass === "Severe";
     const isHigh = screeningClass === "High";
