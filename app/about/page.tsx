@@ -11,7 +11,7 @@ export const metadata = {
 export default function AboutPage() {
     return (
         <div className="min-h-screen bg-white font-[family-name:var(--font-geist-sans)]">
-            <header className="bg-slate-900 text-white py-20 px-6">
+            <header className="relative overflow-hidden bg-slate-950 text-white py-20 px-6">
                 <div className="max-w-4xl mx-auto text-center">
                     <h1 className="text-4xl md:text-5xl font-extrabold mb-6">Clearer Foundation Decisions</h1>
                     <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
