@@ -186,3 +186,11 @@ A follow-up architecture audit found that state directory pages were linked from
 State hubs were also aligned with the foundation-repair lead positioning. Unsupported `Geological Authority` and `forensic evaluation` wording was removed, while foundation repair, warning signs, evaluation steps, and repair options remain prominent. Remaining em dashes in state pagination labels were replaced with hyphens.
 
 The evaluation intake was reviewed for promise-to-action consistency. The step-two button no longer says `Verify Soil Data` because advancing the form does not itself perform a soil verification. It now says `Continue to Contact`. Contact-step copy now explains that a foundation professional can follow up about property concerns and evaluation options, and the loading state uses plain `Loading Evaluation Form...` wording instead of the more technical `Initializing Intake Protocol...`.
+
+### 2026-09-19 lead funnel and policy consistency audit
+
+The evaluation funnel was reviewed against the actual server-side submission behavior and lead fields. The homeowner-facing intake now emphasizes a foundation evaluation or repair next step rather than presenting the form as a technical soil-analysis workflow. The property-location explanation no longer promises a parcel-specific USDA lookup, and the intake label is now `Foundation Evaluation Request`.
+
+The privacy policy was reconciled with the current lead workflow. Outdated claims about generated PDF forensic reports, geological-shift updates, proprietary forensic models, guaranteed AES-256 storage language, a fixed 30-day anonymous address cache, and a dedicated Data Protection Officer were removed. The policy now describes the information the form actually collects: property details, contact details, symptoms/notes, and limited request metadata. Provider sharing remains disclosed.
+
+The Terms intellectual-property section was also corrected so it no longer claims ownership of unspecified `forensic analysis algorithms` or PDF report layouts. These changes improve trust and disclosure consistency without weakening the foundation-repair lead-generation path.
