@@ -34,12 +34,12 @@ export default function DisclaimerPage() {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <header className="bg-slate-50 border-b border-slate-200 py-12 px-6">
+            <header className="bg-slate-950 border-b border-white/10 py-12 px-6 text-white">
                 <div className="max-w-3xl mx-auto">
                     <Link href="/" className="inline-flex items-center text-slate-500 hover:text-blue-600 mb-8 transition gap-2 text-sm font-medium">
                         <ArrowLeft className="w-4 h-4" /> Back to Registry
                     </Link>
-                    <h1 className="text-4xl font-bold text-slate-900 mb-4">Legal Disclaimer</h1>
+                    <h1 className="text-4xl font-bold text-white mb-4">Legal Disclaimer</h1>
                     <p className="text-slate-600">Strict Data Usage Limitations</p>
                 </div>
             </header>
@@ -56,7 +56,7 @@ export default function DisclaimerPage() {
 
                     <h2>Geological Data Source</h2>
                     <p>
-                        All soil taxonomy and plasticity data displayed via the Foundation Risk Registry is derived from the **USDA SSURGO** (Soil Survey Geographic Database). This data is typically mapped at a scale of 1:12,000 to 1:63,360 and may not accurately reflect sub-surface conditions at a precise residential address level.
+                        Soil taxonomy and mapped soil attributes displayed by the Foundation Risk Registry are derived from USDA/NRCS SSURGO (Soil Survey Geographic Database) records. This data is typically mapped at a scale of 1:12,000 to 1:63,360 and may not accurately reflect sub-surface conditions at a precise residential address level.
                     </p>
 
                     <h2>Plasticity Index interpretation</h2>

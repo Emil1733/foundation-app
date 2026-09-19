@@ -1,183 +1,88 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, Zap, TrendingDown, Layers, DoorOpen, Activity, Search } from "lucide-react";
+import { Check, DoorOpen, Layers3, MoveDownRight, ScanSearch, Zap } from "lucide-react";
+
+const issues = [
+  { id: "stair-step", label: "Stair-Step Cracks", detail: "Brick or masonry", icon: MoveDownRight, status: "Evaluation recommended", desc: "A stair-step pattern can accompany differential movement, but its cause and significance depend on location, width, progression, and the surrounding structure." },
+  { id: "horizontal", label: "Horizontal Wall Cracks", detail: "Wall or masonry", icon: Layers3, status: "Prompt review", desc: "A horizontal crack deserves prompt review, particularly if it is widening, bowing, leaking, or accompanied by other movement. Several causes are possible." },
+  { id: "doors", label: "Sticking Doors / Windows", detail: "Openings changing", icon: DoorOpen, status: "Track the pattern", desc: "A sticking opening can result from humidity, hardware, framing, or foundation movement. Multiple changing openings make a property evaluation more useful." },
+  { id: "hairline", label: "Vertical Hairline Cracks", detail: "Narrow or stable", icon: Zap, status: "Monitor changes", desc: "A narrow, stable crack may be cosmetic. Photograph and measure it so widening, displacement, or related symptoms are easier to identify." },
+];
 
 export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number }) {
   const [selectedIssue, setSelectedIssue] = useState<string | null>(null);
-  const [isScanning, setIsScanning] = useState(false);
-  const [showResult, setShowResult] = useState(false);
-
-  const handleSelect = (id: string) => {
-    if (selectedIssue === id && showResult) return; // Already selected
-    setSelectedIssue(id);
-    setIsScanning(true);
-    setShowResult(false);
-    setTimeout(() => {
-      setIsScanning(false);
-      setShowResult(true);
-    }, 1500); // 1.5 second "calculation" delay
-  };
-
-  const issues = [
-    {
-      id: "stair-step",
-      label: "Stair-Step Cracks (Brick)",
-      icon: TrendingDown,
-      risk: "Evaluation Recommended",
-      desc: "A stair-step pattern can accompany differential movement, but its cause and significance depend on location, width, progression, and the surrounding structure.",
-      color: "from-orange-500 to-red-500",
-      bg: "bg-orange-500/10",
-      iconColor: "text-orange-500",
-      border: "border-orange-500"
-    },
-    {
-      id: "horizontal",
-      label: "Horizontal Wall Cracks",
-      icon: Layers,
-      risk: "Prompt Review",
-      desc: "A horizontal crack deserves prompt review, particularly if it is widening, bowing, leaking, or accompanied by other movement. Several causes are possible.",
-      color: "from-red-600 to-rose-600",
-      bg: "bg-red-500/10",
-      iconColor: "text-red-500",
-      border: "border-red-600"
-    },
-    {
-      id: "doors",
-      label: "Sticking Doors / Windows",
-      icon: DoorOpen,
-      risk: "Track the Pattern",
-      desc: "A sticking opening can result from humidity, hardware, framing, or foundation movement. Multiple changing openings make a property evaluation more useful.",
-      color: "from-yellow-400 to-orange-400",
-      bg: "bg-yellow-500/10",
-      iconColor: "text-yellow-500",
-      border: "border-yellow-500"
-    },
-    {
-      id: "hairline",
-      label: "Vertical Hairline Cracks",
-      icon: Zap,
-      risk: "Monitor",
-      desc: "A narrow, stable crack may be cosmetic. Photograph and measure it so widening, displacement, or related symptoms are easier to identify.",
-      color: "from-blue-400 to-cyan-500",
-      bg: "bg-blue-500/10",
-      iconColor: "text-blue-400",
-      border: "border-blue-500"
-    },
-  ];
-
-  const activeIssue = issues.find((i) => i.id === selectedIssue);
+  const activeIssue = issues.find((issue) => issue.id === selectedIssue);
   const plasticity = Number.isFinite(pi) ? Number(pi) : null;
 
   return (
-    <div className="bg-slate-900 rounded-3xl shadow-2xl overflow-hidden my-12 border border-slate-700 font-sans">
-      {/* Header */}
-      <div className="bg-slate-950 px-6 py-5 border-b border-slate-800 flex items-center gap-3">
-        <Activity className="text-blue-500 w-6 h-6 animate-pulse" />
-        <h2 className="text-xl font-extrabold text-white tracking-wide uppercase">Geological Risk Simulator</h2>
+    <section className="my-12 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.07)]">
+      <div className="border-b border-slate-200 px-6 py-7 md:px-8">
+        <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.22em] text-blue-700">Foundation Signs</p>
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight text-slate-950 md:text-3xl">What are you seeing?</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Select an observable sign to understand what it may mean and what evidence is useful before choosing a repair.</p>
+          </div>
+          <div className="hidden items-center gap-2 text-xs font-semibold text-slate-500 md:flex"><ScanSearch className="h-4 w-4 text-blue-700" aria-hidden="true" />Property evaluation guide</div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2">
-        {/* Left: Inputs */}
-        <div className="p-6 md:p-8 bg-slate-900">
-          <p className="text-slate-400 font-bold mb-6 uppercase tracking-widest text-xs">Step 1: Select Observable Symptom</p>
-          <div className="flex flex-col gap-3">
+      <div className="grid lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="bg-slate-50/70 p-5 md:p-7">
+          <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">Select a sign</p>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
             {issues.map((issue) => {
               const Icon = issue.icon;
-              const isActive = selectedIssue === issue.id;
+              const active = issue.id === selectedIssue;
               return (
-                <button
-                  key={issue.id}
-                  onClick={() => handleSelect(issue.id)}
-                  className={`flex items-center gap-4 p-4 rounded-xl border-2 transition-all duration-300 ${
-                    isActive 
-                      ? `${issue.border} bg-slate-800 shadow-[0_0_15px_rgba(59,130,246,0.1)]` 
-                      : "border-slate-800 bg-slate-900 hover:bg-slate-800 hover:border-slate-700"
-                  }`}
-                >
-                  <div className={`p-3 rounded-xl ${isActive ? issue.bg : 'bg-slate-800'}`}>
-                    <Icon className={`w-6 h-6 ${isActive ? issue.iconColor : 'text-slate-400'}`} />
-                  </div>
-                  <span className={`font-bold text-lg text-left flex-1 ${isActive ? 'text-white' : 'text-slate-300'}`}>
-                    {issue.label}
-                  </span>
-                  {isActive && !isScanning && showResult && <CheckCircle2 className={`w-6 h-6 ${issue.iconColor} animate-in zoom-in`} />}
+                <button key={issue.id} type="button" onClick={() => setSelectedIssue(issue.id)} aria-pressed={active}
+                  className={`group flex min-h-20 items-center gap-4 rounded-2xl border p-4 text-left transition ${active ? "border-blue-300 bg-white shadow-[0_10px_30px_rgba(37,99,235,0.10)]" : "border-slate-200 bg-white/70 hover:border-slate-300 hover:bg-white"}`}>
+                  <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition ${active ? "border-blue-200 bg-blue-50 text-blue-700" : "border-slate-200 bg-slate-50 text-slate-500"}`}><Icon className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" /></span>
+                  <span className="min-w-0 flex-1"><span className="block text-sm font-bold text-slate-900">{issue.label}</span><span className="mt-1 block text-xs text-slate-500">{issue.detail}</span></span>
+                  <span className={`flex h-6 w-6 items-center justify-center rounded-full border ${active ? "border-blue-600 bg-blue-600 text-white" : "border-slate-300 text-transparent"}`}><Check className="h-3.5 w-3.5" aria-hidden="true" /></span>
                 </button>
-              )
+              );
             })}
           </div>
         </div>
 
-        {/* Right: Output Screen */}
-        <div className="p-6 md:p-8 bg-slate-950 border-t lg:border-t-0 lg:border-l border-slate-800 relative">
-          <p className="text-slate-500 font-bold mb-6 uppercase tracking-widest text-xs">Diagnostic Output</p>
-
-          {!selectedIssue && !isScanning && !showResult && (
-            <div className="h-full min-h-[350px] flex flex-col items-center justify-center text-slate-600 space-y-4">
-              <Search className="w-16 h-16 opacity-20" />
-              <p className="text-center px-4 font-medium text-lg">Waiting for symptom input... <br/><span className="text-sm font-normal text-slate-500">Select a crack type to run the diagnostic.</span></p>
-            </div>
-          )}
-
-          {isScanning && (
-            <div className="h-full min-h-[350px] flex flex-col items-center justify-center space-y-8 animate-in fade-in duration-300">
-              <div className="relative w-24 h-24">
-                <div className="absolute inset-0 rounded-full border-t-4 border-blue-500 animate-spin"></div>
-                <div className="absolute inset-2 rounded-full border-r-4 border-indigo-500 animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
-                <div className="absolute inset-4 rounded-full border-b-4 border-cyan-400 animate-spin" style={{ animationDuration: '2s' }}></div>
+        <div className="relative min-h-[420px] bg-slate-950 p-6 text-white md:p-8">
+          <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(circle_at_90%_10%,rgba(37,99,235,0.16),transparent_35%)]" />
+          <div className="relative flex h-full flex-col">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-300">What this may mean</p>
+            {!activeIssue ? (
+              <div className="flex flex-1 flex-col justify-center py-12">
+                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-blue-300"><ScanSearch className="h-7 w-7" aria-hidden="true" /></div>
+                <h3 className="max-w-md text-2xl font-bold">Start with the pattern, not the repair.</h3>
+                <p className="mt-3 max-w-lg text-sm leading-6 text-slate-400">A single symptom rarely tells the whole story. Choose what you are seeing, then compare it with drainage, measurements, and changes over time.</p>
               </div>
-              <div className="text-center">
-                <p className="text-cyan-400 font-mono font-bold tracking-widest animate-pulse">ANALYZING SOIL DATA...</p>
-                <p className="text-slate-500 text-xs mt-2 font-mono">Location: {city.toUpperCase()}</p>
-                <p className="text-slate-500 text-xs mt-1 font-mono">Plasticity Index: {plasticity === null ? "Not available" : plasticity.toFixed(1)}</p>
-              </div>
-            </div>
-          )}
+            ) : (
+              <div className="flex flex-1 flex-col pt-6">
+                <span className="mb-5 w-fit rounded-full border border-blue-400/25 bg-blue-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-blue-200">{activeIssue.status}</span>
+                <h3 className="text-2xl font-bold md:text-3xl">{activeIssue.label}</h3>
+                <p className="mt-4 max-w-xl text-base leading-7 text-slate-300">{activeIssue.desc}</p>
 
-          {showResult && activeIssue && (
-            <div className="animate-in fade-in zoom-in-95 duration-500 h-full flex flex-col min-h-[350px]">
-              <div>
-                <div className={`inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-5 bg-gradient-to-r ${activeIssue.color} text-white shadow-lg`}>
-                  {activeIssue.risk}
-                </div>
-                
-                <h3 className="text-2xl font-extrabold text-white mb-3">Symptom Context</h3>
-                <p className="text-slate-300 leading-relaxed mb-6 text-lg">{activeIssue.desc}</p>
-                
-                <div className="bg-slate-900 rounded-xl p-5 border border-slate-800 mb-6 relative overflow-hidden">
-                  <div className={`absolute left-0 top-0 w-1.5 h-full bg-gradient-to-b ${activeIssue.color}`}></div>
-                  <p className="text-slate-400 text-sm leading-relaxed">
-                    <span className="text-white font-bold block mb-2 uppercase tracking-wider text-xs">Geological Context:</span> 
-                    {plasticity === null ? (
-                      <>No mapped Plasticity Index is available for this record. The visible pattern and whether it is changing matter more than a citywide assumption.</>
-                    ) : (
-                      <>The mapped soil record for {city} has a PI of <span className="text-red-400 font-mono font-bold bg-red-400/10 px-1.5 py-0.5 rounded">{plasticity.toFixed(1)}</span>. This provides moisture-sensitivity context, but it cannot diagnose the cause of a crack at a specific property.</>
-                    )}
+                <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Mapped soil context</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-300">
+                    {plasticity === null ? <>No mapped Plasticity Index is available for this record. The visible pattern and whether it is changing matter more than a citywide assumption.</> : <>The mapped soil record for {city} has a PI of <strong className="font-mono text-white">{plasticity.toFixed(1)}</strong>. This adds moisture-sensitivity context, but it cannot diagnose the cause of a crack at a specific property.</>}
                   </p>
                 </div>
-              </div>
 
-              <div className="mt-8 pt-6 border-t border-slate-800 mb-2">
-                <p className="text-slate-400 font-bold mb-3 text-xs uppercase tracking-widest">Request a Property Review</p>
-                <form action="/book-analysis" className="flex flex-col sm:flex-row gap-3">
+                <form action="/book-analysis" className="mt-auto pt-7">
                   <input type="hidden" name="symptom" value={activeIssue.id} />
-                  <input
-                      type="text"
-                      name="address"
-                      autoComplete="street-address"
-                      placeholder={`Enter ${city} Address...`}
-                      className="w-full sm:flex-1 px-5 py-4 rounded-xl bg-slate-900 text-white border border-slate-700 focus:border-blue-500 outline-none transition-colors placeholder:text-slate-600"
-                      required
-                  />
-                  <button type="submit" className={`w-full sm:w-auto text-white font-extrabold px-6 py-4 rounded-xl transition hover:scale-105 bg-gradient-to-r ${activeIssue.color} shadow-lg`}>
-                      Get Report
-                  </button>
+                  <label htmlFor="foundation-sign-address" className="mb-2 block text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Get help with your foundation</label>
+                  <div className="flex flex-col gap-3 sm:flex-row">
+                    <input id="foundation-sign-address" type="text" name="address" autoComplete="street-address" placeholder={`Enter ${city} address...`} className="min-w-0 flex-1 rounded-xl border border-white/15 bg-white/[0.06] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20" required />
+                    <button type="submit" className="rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-bold text-white transition hover:bg-blue-500">Request Evaluation</button>
+                  </div>
                 </form>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

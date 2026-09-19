@@ -30,7 +30,8 @@ function IntakeForm() {
         email: '',
         phone: '',
         notes: '',
-        tcpaConsent: false
+        tcpaConsent: false,
+        source: 'web_intake'
     });
 
     const steps = [
@@ -53,6 +54,7 @@ function IntakeForm() {
     useEffect(() => {
         const addressParam = searchParams.get('address');
         const symptomParam = searchParams.get('symptom');
+        const sourceParam = searchParams.get('source');
         
         if (addressParam || symptomParam) {
             setFormData(prev => ({
@@ -62,7 +64,8 @@ function IntakeForm() {
                     && ALLOWED_SYMPTOMS.includes(symptomParam as typeof ALLOWED_SYMPTOMS[number])
                     && !prev.symptoms.includes(symptomParam)
                     ? [...prev.symptoms, symptomParam]
-                    : prev.symptoms
+                    : prev.symptoms,
+                source: sourceParam === 'soil_risk_widget' ? 'soil_risk_widget' : prev.source
             }));
             
             // If they provided an address, jump them to step 2 automatically!
@@ -95,7 +98,7 @@ function IntakeForm() {
         setFormError('');
     };
 
-    const updateField = <Field extends keyof LeadSubmissionInput>(
+    const updateField = <Field extends LeadField>(
         field: Field,
         value: LeadSubmissionInput[Field],
     ) => {
@@ -143,7 +146,7 @@ function IntakeForm() {
                         The registry team or a participating local service provider will review the request and follow up using the contact information you provided. The provider should explain their qualifications and scope before any service begins.
                     </p>
                     <Link href="/" className="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-slate-800 transition">
-                        Return to Registry
+                        Return Home
                     </Link>
                 </main>
              </div>
@@ -151,29 +154,29 @@ function IntakeForm() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)]">
-            <header className="bg-white border-b border-slate-200 py-4 px-6 md:px-12 flex items-center justify-between">
-                <Link href="/" className="font-bold text-slate-900 text-xl flex items-center gap-2">
-                    <ShieldCheck className="w-6 h-6 text-blue-600" />
-                    Foundation Risk Registry
-                </Link>
-                <div className="hidden md:flex text-sm text-slate-500 font-medium">
-                    Property Evaluation Request
-                </div>
-            </header>
+        <div className="min-h-screen bg-slate-950 font-[family-name:var(--font-geist-sans)]">
+            <div className="relative isolate overflow-hidden">
+                <div aria-hidden="true" className="absolute inset-0 -z-30 bg-cover bg-[position:center_48%] opacity-35" style={{ backgroundImage: "url('/foundation-hero-generated.webp')" }} />
+                <div aria-hidden="true" className="absolute inset-0 -z-20 bg-slate-950/70" />
+                <header className="border-b border-white/10 px-6 py-4 md:px-12">
+                    <Link href="/" className="font-bold text-white text-xl flex items-center gap-2">
+                        <ShieldCheck className="w-6 h-6 text-blue-400" />
+                        Foundation Risk Registry
+                    </Link>
+                </header>
 
             <main className="max-w-2xl mx-auto py-12 px-6">
-                <div className="mb-8 text-center">
+                <div className="mb-8 text-center text-white">
                     <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-sm font-bold mb-6">
                         <CheckCircle className="w-4 h-4" />
-                        Preliminary Assessment
+                        Foundation Evaluation Request
                     </div>
-                    <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-4 leading-tight">
+                    <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 leading-tight">
                         Request a Foundation Evaluation
                     </h1>
-                    <p className="text-slate-600 text-lg max-w-lg mx-auto">
-                        Share your symptoms and property details so the soil context can be reviewed and the appropriate local next step can be identified.
-                        <span className="block mt-2 font-bold text-slate-800">No obligation to purchase a repair.</span>
+                    <p className="text-slate-300 text-lg max-w-lg mx-auto">
+                        Tell us what you are seeing at the property so your request can be reviewed and the right foundation evaluation or repair next step can be identified.
+                        <span className="block mt-2 font-bold text-white">No obligation to purchase a repair.</span>
                     </p>
                 </div>
 
@@ -193,7 +196,7 @@ function IntakeForm() {
                     ))}
                 </div>
 
-                <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8">
+                <form onSubmit={handleSubmit} className="bg-white rounded-3xl shadow-2xl border border-white/20 p-6 sm:p-8">
                     {formError && (
                         <div role="alert" className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-800">
                             {formError}
@@ -250,7 +253,7 @@ function IntakeForm() {
                                 <MapPin className="w-5 h-5 text-blue-500" />
                                 Property Location
                             </h2>
-                            <p className="text-sm text-slate-500">We use this to pull the USDA Soil Map Unit for your specific lot.</p>
+                            <p className="text-sm text-slate-500">We use the property location to organize your request and review relevant mapped soil context for the area.</p>
 
                             <div className="space-y-4">
                                 <div>
@@ -302,7 +305,7 @@ function IntakeForm() {
                                     disabled={!formData.address || !formData.zip}
                                     className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 transition-all"
                                 >
-                                    Verify Soil Data <ArrowRight className="w-4 h-4" />
+                                    Continue to Contact <ArrowRight className="w-4 h-4" />
                                 </button>
                             </div>
                         </div>
@@ -313,9 +316,9 @@ function IntakeForm() {
                         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                              <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
                                 <User className="w-5 h-5 text-green-500" />
-                                Evaluation Follow-Up
+                                Your Contact Details
                             </h2>
-                            <p className="text-sm text-slate-500">Where should we send your soil-risk summary and follow up about evaluation availability?</p>
+                            <p className="text-sm text-slate-500">Where can a foundation professional follow up about your property concerns and evaluation options?</p>
 
                             <div className="space-y-4">
                                 <div>
@@ -415,13 +418,14 @@ function IntakeForm() {
                     <p>Secure transmission. Property details are used to process this request and provide relevant follow-up.</p>
                 </div>
             </main>
+            </div>
         </div>
     );
 }
 
 export default function BookAnalysisPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-50"><div className="animate-pulse flex flex-col items-center"><Search className="w-12 h-12 text-blue-500 mb-4" /><p className="text-slate-500 font-bold tracking-widest uppercase">Initializing Intake Protocol...</p></div></div>}>
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-50"><div className="animate-pulse flex flex-col items-center"><Search className="w-12 h-12 text-blue-500 mb-4" /><p className="text-slate-500 font-bold tracking-widest uppercase">Loading Evaluation Form...</p></div></div>}>
             <IntakeForm />
         </Suspense>
     );

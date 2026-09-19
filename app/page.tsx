@@ -1,12 +1,14 @@
 import SoilRiskWidget from "@/components/SoilRiskWidget";
+import HeroLeadForm from "@/components/foundation/HeroLeadForm";
+import { CheckCircle2, ShieldCheck } from "lucide-react";
 import Link from 'next/link';
 import { MapPin, ArrowRight } from 'lucide-react';
 import PartnerLogos from "@/components/PartnerLogos";
 import { supabase } from '@/lib/supabase';
 
 export const metadata = {
-  title: "The Foundation Risk Registry | Soil Risk & Foundation Evaluation",
-  description: "Check mapped USDA soil conditions, understand foundation warning signs, and request a property-specific evaluation before choosing a repair plan.",
+  title: "Foundation Repair Help & Evaluation | Foundation Risk Registry",
+  description: "Concerned about cracks, uneven floors, or foundation movement? Review local soil context, understand repair options, and request a property-specific foundation evaluation.",
   alternates: {
     canonical: 'https://foundationrisk.org',
   },
@@ -27,23 +29,48 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)] flex flex-col items-center">
-        <section className="w-full flex flex-col items-center justify-center pb-8 px-6 bg-white border-b border-slate-100">
-          <div className="max-w-4xl w-full text-center space-y-6 mb-12">
-            <div className="inline-block bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
-              🇺🇸 Serving Texas, Oklahoma & Missouri
-            </div>
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 leading-tight">
-              Fix the <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Soil</span>, <br />
-              Not Just The Crack.
-            </h1>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              Understand the soil context behind common foundation symptoms.
-              <strong> Request a property-specific evaluation</strong> before choosing a repair plan.
-            </p>
-          </div>
+        <section className="relative isolate w-full overflow-hidden bg-slate-950 px-6 py-12 text-white md:py-16 lg:py-20">
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 -z-30 bg-cover bg-[position:64%_center] lg:bg-[position:center_48%]"
+            style={{ backgroundImage: "url('/foundation-hero-generated.webp')" }}
+          />
+          <div aria-hidden="true" className="absolute inset-0 -z-20 bg-slate-950/28" />
+          <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(2,6,23,0.88)_0%,rgba(2,6,23,0.70)_38%,rgba(2,6,23,0.22)_70%,rgba(2,6,23,0.34)_100%)]" />
 
-          <div className="w-full flex justify-center relative z-10">
-            <SoilRiskWidget />
+          <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:gap-12">
+            <div>
+              <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-blue-400/25 bg-blue-400/10 px-4 py-1.5 text-sm font-semibold text-blue-200">
+                <ShieldCheck className="h-4 w-4 text-blue-300" aria-hidden="true" />
+                Foundation Evaluation & Repair Guidance
+              </div>
+
+              <h1 className="max-w-2xl text-4xl font-extrabold leading-[1.06] tracking-tight sm:text-5xl lg:text-[3.7rem]">
+                Foundation problems? <span className="bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent">Get clarity before choosing a repair.</span>
+              </h1>
+              <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
+                Cracks, uneven floors, sticking doors, or other signs of movement? Request a property-specific foundation evaluation and understand the next step before committing to a repair.
+              </p>
+
+              <div className="mt-7 grid max-w-xl gap-3 sm:grid-cols-3">
+                {[
+                  'Property-specific review',
+                  'Foundation-focused help',
+                  'Compare repair options',
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-2 text-sm font-semibold text-slate-200">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-blue-300" aria-hidden="true" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <p className="mt-7 max-w-xl border-t border-white/10 pt-5 text-xs leading-5 text-slate-400">
+                Mapped soil data can add useful context, but repair decisions should be based on evidence from the property itself.
+              </p>
+            </div>
+
+            <HeroLeadForm city="your area" source="homepage_hero" />
           </div>
         </section>
 
@@ -53,15 +80,31 @@ export default async function Home() {
         <section className="w-full py-16 px-6 bg-slate-50">
           <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8">
             {[
-              { title: "USDA Data", desc: "Sourced directly from federal soil surveys (SSURGO)." },
-              { title: "Geological Risk", desc: "Understand PI and Linear Extensibility before you dig." },
-              { title: "Evaluation Options", desc: "Request a local property review and compare repair scopes." }
+              { title: "Foundation Warning Signs", desc: "Understand cracks, uneven floors, sticking doors, and other movement symptoms." },
+              { title: "Local Soil Context", desc: "Use mapped USDA soil data to add context to what you are seeing at the property." },
+              { title: "Foundation Evaluation", desc: "Request a property review and compare repair options before choosing a scope." }
             ].map((item, i) => (
               <div key={i} className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
                 <h3 className="font-bold text-slate-900 text-lg mb-2">{item.title}</h3>
                 <p className="text-slate-500 leading-relaxed">{item.desc}</p>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className="w-full bg-slate-950 px-6 py-16 text-white">
+          <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[0.78fr_1.22fr]">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-300">Free Property Tool</p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight">Check Your Foundation Risk</h2>
+              <p className="mt-4 max-w-md text-sm leading-6 text-slate-300">
+                Look up mapped USDA soil context for a property address. Use the result as one piece of evidence when evaluating foundation symptoms and repair recommendations.
+              </p>
+              <p className="mt-4 text-xs leading-5 text-slate-500">Mapped soil screening is not a diagnosis of the foundation.</p>
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-2 shadow-2xl">
+              <SoilRiskWidget />
+            </div>
           </div>
         </section>
 
@@ -85,7 +128,7 @@ export default async function Home() {
             </div>
 
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-              <h3 className="font-bold text-slate-900 mb-4">How We Audit Your Risk</h3>
+              <h3 className="font-bold text-slate-900 mb-4">How We Review Soil Context</h3>
               <ul className="space-y-3 text-sm text-slate-600">
                 <li className="flex items-start gap-2">
                   <span className="bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded text-xs">1</span>
@@ -104,10 +147,10 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Forensic Deep Dive (Pillar 5: Content Depth & E-E-A-T) */}
+        {/* Soil context deep dive */}
         <section className="w-full py-20 px-6 bg-white">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-slate-900 mb-8">The Forensic Difference: Why Soil Data Matters</h2>
+            <h2 className="text-3xl font-bold text-slate-900 mb-8">Why Soil Data Matters</h2>
             <div className="prose prose-slate max-w-none">
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
                 A crack does not automatically mean a home needs piers. The Foundation Risk Registry explains <strong>Plasticity Index (PI)</strong> and related USDA/NRCS soil-survey values so homeowners can place visible symptoms in context before requesting an evaluation or comparing repair proposals.
@@ -132,23 +175,23 @@ export default async function Home() {
                 <p className="text-slate-900 font-bold">
                   Higher-plasticity soil can be more sensitive to moisture change, but map data does not establish whether a particular foundation is moving. Repair decisions should be tied to property measurements, observed progression, and the likely cause.
                 </p>
-                <cite className="text-xs text-slate-500 block mt-2">— Foundation Risk Registry research guidance</cite>
+                <cite className="text-xs text-slate-500 block mt-2">Foundation Risk Registry research guidance</cite>
               </blockquote>
             </div>
           </div>
         </section>
 
-        {/* Geological Library Grid (PageRank Pass & Indexing Recovery) */}
+        {/* Soil report library grid */}
         {cities && cities.length > 0 && (
           <section className="w-full py-20 px-6 bg-white border-t border-slate-200">
             <div className="max-w-6xl mx-auto">
               <div className="flex items-center justify-between mb-10">
                 <div>
-                  <h2 className="text-3xl font-bold text-slate-900">Geological Library & Soil Reports</h2>
-                  <p className="text-slate-500 text-sm mt-1">Read the forensic soil analysis reports for your local area.</p>
+                  <h2 className="text-3xl font-bold text-slate-900">Foundation Repair Resources & Local Soil Reports</h2>
+                  <p className="text-slate-500 text-sm mt-1">Use local soil reports to understand foundation conditions, then review repair guidance for your area.</p>
                 </div>
                 <Link href="/learn" className="text-blue-600 font-semibold flex items-center gap-2 hover:underline">
-                  View Education Library <ArrowRight className="w-4 h-4" />
+                  View Foundation Resources <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
 
@@ -162,17 +205,17 @@ export default async function Home() {
                   >
                     <div>
                       <span className="bg-blue-50 text-blue-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
-                        Geological Report
+                        Soil Report
                       </span>
                       <h3 className="text-lg font-bold text-slate-900 mt-3 group-hover:text-blue-600 transition-colors">
-                        Why Foundations Fail in {city.city}, {city.state}
+                        Soil and Foundation Risk in {city.city}, {city.state}
                       </h3>
                       <p className="text-slate-500 text-xs mt-2 line-clamp-2">
-                        Engineering breakdown of expansive soil active zones, regional plasticity indexes, and foundation settlement hazards in the {city.city} area.
+                        Review mapped soil conditions, plasticity context, drainage considerations, and foundation warning signs in the {city.city} area.
                       </p>
                     </div>
                     <div className="text-blue-600 text-sm font-semibold mt-4 flex items-center gap-1">
-                      Read Soil Analysis &rarr;
+                      Read Soil Report &rarr;
                     </div>
                   </Link>
                 ))}
@@ -194,12 +237,14 @@ export default async function Home() {
 
               {/* Featured Cities Spotlight */}
               <div className="mb-10">
-                <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-3">High-Priority Analysis Zones</p>
+                <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-3">Featured Foundation Repair Guides</p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {[
-                    { city: 'Lewisville', state: 'TX', zip: '75067', slug: 'lewisville-tx', label: 'Foundation Evaluation' },
-                    { city: 'Frisco', state: 'TX', zip: '75035', slug: 'frisco-tx', label: 'Distress Analysis' },
-                    { city: 'Richardson', state: 'TX', zip: '75080', slug: 'richardson-tx', label: 'Settling Report' },
+                    { city: 'Cedar Park', state: 'TX', slug: 'cedar-park-tx', label: 'Foundation Repair Guide' },
+                    { city: 'Allen', state: 'TX', slug: 'allen-tx', label: 'Foundation Repair Guide' },
+                    { city: 'Schertz', state: 'TX', slug: 'schertz-tx', label: 'Foundation Repair Guide' },
+                    { city: 'Boerne', state: 'TX', slug: 'boerne-tx', label: 'Foundation Repair Guide' },
+                    { city: 'Lewisville', state: 'TX', slug: 'lewisville-tx', label: 'Foundation Repair Guide' },
                   ].map((city) => (
                     <Link
                       key={city.slug}
@@ -210,7 +255,7 @@ export default async function Home() {
                         <MapPin className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="font-bold text-blue-900 text-sm">{city.city}, {city.state} {city.zip}</div>
+                        <div className="font-bold text-blue-900 text-sm">{city.city}, {city.state}</div>
                         <div className="text-xs text-blue-600">{city.label} &rarr;</div>
                       </div>
                     </Link>

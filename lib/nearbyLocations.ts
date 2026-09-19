@@ -103,7 +103,9 @@ export async function getNearbyLocations(
   // directory connections even where the stored locations are farther apart.
   return resolvedNeighbors.filter(
     (neighbor) =>
-      neighbor.state === sourceState ||
-      neighbor.distanceMiles <= MAX_CROSS_STATE_DISTANCE_MILES,
+      Number.isFinite(neighbor.distanceMiles) &&
+      neighbor.distanceMiles >= 0 &&
+      (neighbor.state === sourceState ||
+        neighbor.distanceMiles <= MAX_CROSS_STATE_DISTANCE_MILES),
   );
 }

@@ -47,7 +47,7 @@ export async function generateMetadata({
     const url = paginatedUrl(baseUrl, page);
     const title = page === 1
         ? `${fullStateName} Foundation Repair Service Areas | Foundation Risk Registry`
-        : `${fullStateName} Foundation Repair Areas – Page ${page}`;
+        : `${fullStateName} Foundation Repair Areas - Page ${page}`;
     const description = page === 1
         ? `Explore foundation repair service areas and local soil-risk profiles across ${fullStateName}. Select a city to review settlement conditions and evaluation options.`
         : `Browse page ${page} of foundation repair service areas and local soil-risk profiles across ${fullStateName}.`;
@@ -119,7 +119,7 @@ export default async function StateHubPage({
             {
                 "@type": "ListItem",
                 "position": 3,
-                "name": currentPage === 1 ? fullStateName : `${fullStateName} – Page ${currentPage}`,
+                "name": currentPage === 1 ? fullStateName : `${fullStateName} - Page ${currentPage}`,
                 "item": currentPageUrl,
             }
         ]
@@ -129,21 +129,23 @@ export default async function StateHubPage({
         <div className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)]">
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
             
-            <header className="bg-slate-900 text-white py-16 px-6 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-800 to-slate-950 -z-10" />
+            <header className="relative isolate overflow-hidden bg-slate-950 px-6 py-16 text-white md:py-20">
+                <div aria-hidden="true" className="absolute inset-0 -z-30 bg-cover bg-[position:center_48%]" style={{ backgroundImage: "url('/foundation-hero-generated.webp')" }} />
+                <div aria-hidden="true" className="absolute inset-0 -z-20 bg-slate-950/62" />
+                <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(2,6,23,0.92)_0%,rgba(2,6,23,0.74)_55%,rgba(2,6,23,0.50)_100%)]" />
                 <div className="max-w-7xl mx-auto">
                     <Link href="/locations" className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-8">
                         <ArrowLeft className="w-4 h-4" /> Back to National Directory
                     </Link>
                     <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 px-4 py-1.5 rounded-full text-blue-200 text-sm font-semibold mb-6 backdrop-blur-sm">
                         <ShieldAlert className="w-4 h-4 text-blue-400" />
-                        <span>{fullStateName} Geological Authority</span>
+                        <span>{fullStateName} Foundation Repair Guide</span>
                     </div>
                     <h1 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight">
-                        {fullStateName} Service Areas{currentPage > 1 ? ` – Page ${currentPage}` : ''}
+                        Foundation Repair in {fullStateName}{currentPage > 1 ? ` - Page ${currentPage}` : ''}
                     </h1>
                     <p className="text-slate-300 text-lg md:text-xl leading-relaxed max-w-2xl">
-                        Explore foundation repair and forensic evaluation options across <strong>{count.toLocaleString()} service areas</strong> in {fullStateName}. Select a city to view its local soil profile.
+                        Find foundation repair guidance across <strong>{count.toLocaleString()} service areas</strong> in {fullStateName}. Select a city to review warning signs, local soil context, evaluation steps, and repair options.
                     </p>
                 </div>
             </header>

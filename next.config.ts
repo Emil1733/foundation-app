@@ -1,9 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  turbopack: {
-    root: 'c:/Users/tevat/nicheanalyzer/foundation-app',
-  },
+  // Keep build configuration portable. Vercel/Next resolves the project root
+  // from the deployment workspace, so a developer-machine path must not be
+  // committed here.
   async redirects() {
     return [
       {

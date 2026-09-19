@@ -1,0 +1,373 @@
+# Data Remediation
+
+## Legacy neighborhood claims
+
+Status: remediation tooling prepared, production data not modified automatically.
+
+### Background
+
+An older version of `scripts/add-city.mjs` stored neighborhood objects containing randomized foundation-risk labels and unsupported notes. It could also invent fallback neighborhood names when the geographic source returned no neighborhoods.
+
+That behavior has been removed from current ingestion. New ingestion preserves sourced neighborhood names only and does not assign neighborhood-level soil or foundation risk without matching evidence.
+
+### Why existing rows still matter
+
+Changing the ingestion script prevents future bad records, but it does not rewrite rows already stored in Supabase. Historical `target_locations.neighborhoods` values may therefore still contain `risk` or `note` fields created by the old script.
+
+### Remediation script
+
+`scripts/sanitize-neighborhoods.mjs` converts legacy neighborhood values to this shape:
+
+```json
+[
+  { "name": "Neighborhood Name" }
+]
+```
+
+It removes all other neighborhood-level fields. It does not invent replacement names.
+
+### Safety behavior
+
+The script is dry-run by default:
+
+```bash
+node scripts/sanitize-neighborhoods.mjs
+```
+
+This scans records and prints proposed changes without writing them.
+
+Production mutation requires an explicit flag:
+
+```bash
+node scripts/sanitize-neighborhoods.mjs --apply
+```
+
+Do not use `--apply` until the dry-run output has been reviewed. The script requires `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`.
+
+### Important limitation
+
+If an old fallback neighborhood name itself was fabricated, the database does not currently retain enough provenance to distinguish it reliably from a real sourced name. The sanitizer therefore removes unsupported risk/note claims but preserves names. Deleting names solely because they resemble an old fallback pattern could remove legitimate places.
+
+If stronger cleanup is required, re-query the geographic source for each location and reconcile stored names against sourced results rather than guessing from naming patterns.
+
+## Stored PI risk-label reclassification
+
+Status: completed in production on 2026-09-17 and verified after the write.
+
+A read-only audit found that historical `soil_cache.risk_level` values often did not match the centralized classifier in `lib/soilRisk.ts`. This was a label-consistency problem and remained separate from the USDA methodology migration below.
+
+The deterministic classifier is:
+
+- PI > 35: `Severe`
+- PI > 25: `High`
+- PI > 15: `Moderate`
+- PI >= 0: `Lower`
+- missing, invalid, or negative PI: `Not classified`
+
+The boundary values 15, 25, and 35 remain in the lower class because the application classifier uses strict `>` thresholds.
+
+### Reclassification tool
+
+`scripts/reclassify-soil-risk.mjs` derives only `risk_level` from the PI already stored in the same row. It does not contact USDA and does not change PI, LEP, map units, components, coordinates, or other fields.
+
+Dry run:
+
+```bash
+node scripts/reclassify-soil-risk.mjs
+```
+
+Targeted dry run:
+
+```bash
+node scripts/reclassify-soil-risk.mjs --slugs=cedar-park-tx,allen-tx,schertz-tx,boerne-tx,lewisville-tx
+```
+
+Apply is deliberately explicit:
+
+```bash
+node scripts/reclassify-soil-risk.mjs --apply
+```
+
+Apply mode updates rows by ID and also checks the previously observed `risk_level` so a concurrent change causes an abort instead of silently overwriting newer data.
+
+### Production remediation record
+
+On 2026-09-17, the pre-write audit scanned 4,143 `soil_cache` rows and identified exactly 3,912 mismatches. The proposed change set was fingerprinted before mutation so the production update would not proceed against an unexpected data set.
+
+The original database check constraint allowed only `Low`, `Moderate`, `High`, and `Severe`. That schema was older than the application classifier and initially blocked canonical `Lower` / `Not classified` values. The migration therefore proceeded in stages:
+
+1. An attempted direct tightening to canonical labels failed safely because 145 legacy `Low` rows still existed.
+2. The constraint was temporarily expanded to accept both legacy and canonical labels.
+3. The 3,912-row change-set count and fingerprint were revalidated unchanged.
+4. Exactly 3,912 `risk_level` values were updated from their existing stored PI. No PI, LEP, USDA map unit, component, coordinate, or other soil value was changed.
+5. A post-write audit found zero classifier mismatches and zero legacy `Low` rows across all 4,143 records.
+6. The database constraint was then tightened successfully to the canonical set only: `Lower`, `Moderate`, `High`, `Severe`, `Not classified`.
+7. A final post-migration audit again found 4,143 rows, zero classifier mismatches, and zero legacy `Low` values.
+
+Final production distribution at remediation time was 3,391 `Lower`, 420 `Moderate`, 126 `High`, 199 `Severe`, and 7 `Not classified`.
+
+These counts document the completed migration and are not intended as permanent invariants as new locations are ingested.
+
+## USDA soil methodology migration
+
+Status: historical PI/LEP/risk methodology migration completed in production on 2026-09-18 and independently verified.
+
+### Why migration is separate from code deployment
+
+Older cached records were produced by selecting the first USDA major-component/horizon row. Current ingestion calculates PI and LEP for the dominant major component using horizon-thickness weighting over the 0-50 cm interval.
+
+Changing ingestion fixes new/re-ingested records, but blindly rewriting historical records could alter public soil values, screening classes, and indexed page copy at scale. Historical PI/LEP data therefore stays unchanged until impact is measured.
+
+### Read-only comparison tool
+
+Use `scripts/compare-soil-methodology.mjs` to compare cached values against fresh USDA values calculated with the current methodology.
+
+The script has no update/upsert/delete calls and is intentionally read-only.
+
+Default sample:
+
+```bash
+node scripts/compare-soil-methodology.mjs
+```
+
+Limit sample size:
+
+```bash
+node scripts/compare-soil-methodology.mjs --limit=50
+```
+
+Target specific indexed/priority cities:
+
+```bash
+node scripts/compare-soil-methodology.mjs --slugs=cedar-park-tx,allen-tx,schertz-tx,boerne-tx,lewisville-tx
+```
+
+Change the PI delta considered material:
+
+```bash
+node scripts/compare-soil-methodology.mjs --threshold=2
+```
+
+The output reports old/new PI, PI delta, risk-class changes, dominant-component changes, mean absolute PI change, and maximum absolute PI change. No database writes are performed.
+
+### Migration decision gate
+
+Do not create or run a historical PI/LEP migration until the comparison output has been reviewed.
+
+At minimum, review:
+
+1. the five SEO treatment cities,
+2. a broader sample across states/regions,
+3. every risk-class change,
+4. large PI deltas,
+5. dominant-component changes,
+6. cases where USDA now returns no usable result.
+
+If changes are small and scientifically coherent, a separate migration script can be designed with dry-run, explicit apply flag, audit output, and rollback/export requirements. If changes are widespread or surprising, investigate the affected USDA rows before any database mutation.
+
+### Full read-only audit, 2026-09-18
+
+After the Supabase Data API row ceiling was raised, the full comparison was rerun with `--limit=5000`.
+
+Observed result:
+
+- locations loaded: 4,231
+- comparable USDA results: 3,982
+- material PI changes >= 1: 2,600
+- risk-class changes: 1,150
+- dominant-component-name changes: 0
+- mean absolute PI change: 4.64
+- maximum absolute PI change: 36.05
+- database writes: 0
+
+The audit establishes that historical numeric PI differences are widespread, not merely a risk-label problem. It does not authorize a production rewrite. The 249 loaded locations outside the comparable set must be classified and reviewed before migration.
+
+### Canonical-query parity
+
+Before designing a write path, the shared application query was aligned with the audited methodology: horizons must intersect 0-50 cm (`hzdept_r < 50` and `hzdepb_r > 0`), and `cokey` is used as the deterministic tie-break and component identity. Comparison and remediation tooling must use the same rules.
+
+### Phase 1: immutable review manifest
+
+`scripts/prepare-soil-remediation.mjs` is intentionally read-only and has no `--apply` mode. It explicitly paginates Supabase reads in 500-row ranges, so audit completeness does not depend on a high project-wide Data API row ceiling.
+
+It fetches fresh USDA data, records expected cached values and proposed values, quarantines fresh PI or LEP nulls as `REVIEW_NULL_ATTRIBUTE`, excludes `NO_CACHE`, `NO_USDA_RESULT`, and `ERROR` from the eligible change set, records component key/percentage/horizon count, writes a local JSON manifest, and fingerprints the exact eligible changed rows with SHA-256.
+
+Run the full preparation with:
+
+```bash
+node scripts/prepare-soil-remediation.mjs --limit=5000
+```
+
+The generated manifest is run-specific audit evidence and must not be committed.
+
+### First remediation manifest result, 2026-09-18
+
+The first full manifest run loaded 4,231 locations and produced:
+
+- `ELIGIBLE`: 3,693
+- `ERROR`: 256
+- `NO_CACHE`: 88
+- `NO_USDA_RESULT`: 151
+- `REVIEW_NULL_ATTRIBUTE`: 43
+- eligible changed rows: 2,922
+- eligible risk-class changes: 1,038
+- intermediate change-set SHA-256: `7baf675c6bfbbff75b729692dd902c0680d28c4246584b87099e6407285ed370`
+
+The status counts sum exactly to 4,231. This fingerprint is explicitly **intermediate**, not production-approved, because 256 USDA requests remained in `ERROR`. Resolving any of those errors can change the eligible set, counts, and fingerprint.
+
+### Phase 2: targeted error reconciliation
+
+`scripts/retry-soil-remediation-errors.mjs` consumes the existing local manifest and retries only rows whose status is `ERROR`. It preserves every successful/non-error row from the prior run rather than re-querying thousands of already-resolved locations.
+
+For each failed row it re-reads the current target/cache record before retrying USDA, uses five bounded attempts with a longer timeout, groups error types, replaces resolved errors with the appropriate canonical status, recalculates the eligible change set, and creates a new SHA-256 fingerprint.
+
+It remains strictly read-only with respect to Supabase and intentionally has no `--apply` mode.
+
+After this code passes the normal validation branch:
+
+```bash
+node scripts/retry-soil-remediation-errors.mjs
+```
+
+Default input is `soil-remediation-manifests/latest.json` and default output is `soil-remediation-manifests/reconciled.json`.
+
+Do not treat the reconciled fingerprint as production-approved while unexplained `ERROR` rows remain.
+
+### Reconciled remediation manifest result, 2026-09-18
+
+The targeted retry resolved every one of the 256 prior USDA errors. The reconciled manifest contains:
+
+- `ELIGIBLE`: 3,937
+- `NO_CACHE`: 88
+- `NO_USDA_RESULT`: 161
+- `REVIEW_NULL_ATTRIBUTE`: 45
+- remaining `ERROR`: 0
+- eligible changed rows: 3,121
+- eligible risk-class changes: 1,105
+- reconciled change-set SHA-256: `bb592abac611c1a1cecde949b68cf99938a4328a95d809471d7cd22546e816d1`
+
+The status counts sum exactly to 4,231. This is now the authoritative read-only reconciliation fingerprint for the current manifest run, but it still does **not** authorize production writes. The remaining migration blockers are the non-eligible populations and the need to define/export rollback data and exact optimistic-concurrency guards before any apply path exists.
+
+The 88 `NO_CACHE` rows are outside a historical cache rewrite because there is no existing soil row to update. The 161 `NO_USDA_RESULT` rows must remain unchanged unless a separate evidence-backed remediation path is designed. The 45 `REVIEW_NULL_ATTRIBUTE` rows remain quarantined because at least one fresh numeric attribute needed for the historical rewrite is absent.
+
+### Phase 3: production-state pre-flight and rollback export
+
+`scripts/verify-soil-remediation.mjs` is the next migration gate. It remains read-only and has no `--apply` mode.
+
+The verifier refuses to proceed unless the reconciled manifest recomputes to the recorded change-set fingerprint `bb592abac611c1a1cecde949b68cf99938a4328a95d809471d7cd22546e816d1`, contains zero `ERROR` rows, and contains exactly 3,121 eligible changed rows.
+
+For every proposed changed row it then re-reads the current `soil_cache` record by ID and verifies both the expected `location_id` and every manifest-tracked old value. This is the optimistic-concurrency gate: if production changed after the manifest was prepared, the row is reported as drift instead of being considered safe to mutate.
+
+A successful run exports, under the gitignored `soil-remediation-manifests/verified/` directory:
+
+- `preflight-report.json` with blocker counts and fingerprints,
+- `rollback.json` with the exact verified pre-migration values,
+- `rollback.csv` as a human-reviewable copy of the same rollback values.
+
+The rollback package covers only the exact 3,121 proposed changed rows. It is fingerprinted separately from the migration change set.
+
+Run after pulling the validated implementation branch:
+
+```bash
+node scripts/verify-soil-remediation.mjs
+```
+
+A pre-flight is successful only when all 3,121 changed rows match their expected current production state and blocker count is zero. A successful pre-flight still does not authorize a production write. The rollback files and summary must be reviewed first.
+
+### Pre-flight result, 2026-09-18
+
+The production-state pre-flight passed with all 3,121 proposed changed rows matching the manifest exactly. Duplicate soil-cache IDs: 0. Missing soil-cache rows: 0. Current-state drift rows: 0. Blockers: 0.
+
+The change-set fingerprint remained `bb592abac611c1a1cecde949b68cf99938a4328a95d809471d7cd22546e816d1`. The exported rollback package fingerprint is `c634def54fd4dbdf9786f892d8a87472215606f8f725e0138aeee70d9660ab7e`.
+
+No database writes were performed.
+
+### Phase 4: exact mutation-plan freeze
+
+`scripts/plan-soil-remediation.mjs` converts the broader audited change set into the exact intended historical methodology migration. It remains read-only and intentionally has no `--apply` mode.
+
+The historical methodology rewrite is deliberately limited to `plasticity_index`, `shrink_swell_potential`, and the deterministic `risk_level` derived from PI. Descriptive USDA fields such as map-unit name/symbol, component name, and drainage class remain audit evidence and are not rewritten merely because the fresh USDA response differs.
+
+Before producing a plan, the script verifies the reconciled change-set fingerprint, the zero-blocker pre-flight report, the rollback fingerprint, and the rollback file contents. It then re-checks current production values once more. Any drift blocks the plan.
+
+Run after this phase passes branch validation:
+
+```bash
+node scripts/plan-soil-remediation.mjs
+```
+
+The output `soil-remediation-manifests/verified/migration-plan.json` records the exact PI/LEP/risk rows, separately counts rows whose only fresh differences are descriptive fields, and creates a new SHA-256 fingerprint over the exact mutation plan. That plan fingerprint and row count must be frozen before an apply tool is designed.
+
+### Frozen mutation-plan result, 2026-09-18
+
+The exact mutation planner completed with zero current-state drift. All 3,121 broader manifest changes require at least one change among the deliberately limited migration fields `plasticity_index`, `shrink_swell_potential`, and `risk_level`. There are zero rows whose differences are descriptive USDA metadata only.
+
+The frozen migration-plan fingerprint is `d42075cc4be961cba849112dfb0e8081e7cbf64a9527ab6dec69d5bd406fa996`. It is chained to change-set fingerprint `bb592abac611c1a1cecde949b68cf99938a4328a95d809471d7cd22546e816d1` and rollback fingerprint `c634def54fd4dbdf9786f892d8a87472215606f8f725e0138aeee70d9660ab7e`.
+
+No database writes were performed. Any eventual apply path must require all three fingerprints, exactly 3,121 planned rows, a fresh zero-drift concurrency check, and post-write verification. The 88 `NO_CACHE`, 161 `NO_USDA_RESULT`, and 45 `REVIEW_NULL_ATTRIBUTE` populations remain excluded and unchanged.
+
+### Phase 5: fail-closed atomic apply package
+
+The final mutation tooling is split deliberately so local JavaScript cannot silently perform thousands of independent non-atomic updates.
+
+- `scripts/apply-soil-remediation.mjs` validates the frozen plan and rechecks all 3,121 current rows. Its default mode is dry-run. Even with `--apply`, it refuses client-side mutation and requires the admin-SQL path.
+- `scripts/generate-soil-remediation-sql.mjs` validates the frozen plan/provenance and generates a local, gitignored one-shot SQL package containing the exact 3,121-row plan.
+- The generated SQL uses one PostgreSQL `DO` statement, loads the plan into a temporary table, locks all target rows, requires exactly 3,121 exact expected-value/location matches, updates only PI/LEP/risk, and raises an exception unless exactly 3,121 rows update. Any raised exception aborts the statement rather than leaving a partial migration.
+- `scripts/verify-applied-soil-remediation.mjs` is read-only post-write verification. It requires every planned row to equal its proposed PI/LEP/risk values. Excluded IDs must be disjoint from the frozen mutation plan; excluded rows that carry a pre-write expected-value snapshot are also checked value-by-value. `NO_USDA_RESULT` rows have no expected-value snapshot in the reconciled manifest, so the verifier does not fabricate one.
+
+Before final authorization, run:
+
+```bash
+node scripts/apply-soil-remediation.mjs
+node scripts/generate-soil-remediation-sql.mjs
+```
+
+Neither command writes to Supabase. The generated SQL must not be manually edited or committed. Production execution remains a separate explicitly authorized action through the admin SQL channel, followed immediately by the read-only post-migration verifier.
+
+### Production execution and final verification, 2026-09-18
+
+Immediately before production execution, `scripts/apply-soil-remediation.mjs` rechecked all 3,121 planned rows against their frozen expected state. Exact current-state matches were 3,121 of 3,121, with plan SHA-256 `d42075cc4be961cba849112dfb0e8081e7cbf64a9527ab6dec69d5bd406fa996`. No database writes were performed by that dry run.
+
+`scripts/generate-soil-remediation-sql.mjs` then generated the guarded atomic admin SQL package for exactly 3,121 rows using the same frozen plan fingerprint. The generated SQL was executed successfully against production. Its fail-closed statement required all 3,121 target rows to match the frozen old state before mutation and required exactly 3,121 updates.
+
+The first post-write verifier run confirmed all 3,121 planned rows at their proposed values, zero rows at old values, and zero unexpected planned-row states. It incorrectly reported 161 excluded rows as changed because `NO_USDA_RESULT` manifest rows intentionally do not contain an `expected` value snapshot, while the verifier treated the missing snapshot as if it were an expected null-valued record. This was a verifier defect, not a migration discrepancy.
+
+The verifier was corrected to distinguish structural exclusion from snapshot-backed value verification. The corrected read-only verification then passed with:
+
+- planned rows at proposed values: 3,121
+- planned rows still at old values: 0
+- planned rows in unexpected state: 0
+- excluded cached rows: 206
+- excluded rows overlapping the mutation plan: 0
+- excluded rows with an expected-value snapshot: 45
+- snapshot-backed excluded rows changed: 0
+- excluded rows without a pre-write snapshot: 161
+- frozen plan SHA-256: `d42075cc4be961cba849112dfb0e8081e7cbf64a9527ab6dec69d5bd406fa996`
+
+The migration is therefore complete. No rollback was required. The 88 `NO_CACHE` locations remained outside the historical cache rewrite, the 161 `NO_USDA_RESULT` cached rows were outside the mutation plan, and the 45 `REVIEW_NULL_ATTRIBUTE` cached rows with snapshots were verified unchanged.
+
+### Historical migration gates
+
+The production migration was not permitted until:
+
+1. the manifest script passes the validation-branch build,
+2. a fresh full manifest is generated,
+3. every non-eligible status is counted and reviewed,
+4. null PI/LEP policy is explicitly approved,
+5. large PI deltas and risk-class changes are spot-checked,
+6. the manifest fingerprint is recorded,
+7. rollback/export strategy is defined,
+8. any future apply path uses optimistic concurrency against the manifest's expected old values,
+9. apply is guarded by exact count and fingerprint,
+10. post-write verification is defined before the first production write.
+
+All of these gates were satisfied for the frozen 2026-09-18 migration described above. Future bulk soil-data migrations must establish a new manifest, fingerprints, rollback package, concurrency checks, and post-write verification rather than reusing this completed plan.
+
+## Data-integrity rule
+
+Generated or stored geographic, scientific, risk, credential, engineering, contractor, or property claims must have either:
+
+1. a traceable external source, or
+2. a deterministic, documented derivation from sourced data.
+
+Randomization is permitted only for harmless presentation variation. It must never generate factual claims.

@@ -66,7 +66,7 @@ export async function submitLead(
                 symptoms: lead.symptoms,
                 notes: lead.notes,
                 status: 'new',
-                source: 'web_intake',
+                source: lead.source || 'web_intake',
                 contact_consent: true,
                 contact_consent_at: new Date().toISOString(),
                 contact_consent_version: CONTACT_CONSENT_VERSION,

@@ -84,15 +84,15 @@ export default function RootLayout({
         >
           Skip to Content
         </a>
-        <div className="bg-blue-700 text-white text-center py-1 px-4 text-[11px] font-bold sticky top-0 z-50 shadow-md h-8 flex items-center justify-center uppercase tracking-wider">
+        <div className="fixed top-0 left-0 z-[101] flex h-8 w-full items-center justify-center border-b border-slate-800 bg-slate-950 px-4 text-center text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
           <span className="hidden sm:inline">Foundation soil context: </span>
-          <Link href="/book-analysis" className="ml-1 underline decoration-blue-300 hover:text-blue-100">
+          <Link href="/book-analysis" className="ml-1 text-blue-400 transition hover:text-blue-300">
             Check Your Address &amp; Request an Evaluation
           </Link>
         </div>
         <Navbar />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(brandSchema) }} />
-        <div className="pt-24">
+        <div className="pt-[108px]">
           {children}
         </div>
         <footer className="bg-slate-900 border-t border-slate-800 text-slate-400 py-12 px-6 text-center text-sm">

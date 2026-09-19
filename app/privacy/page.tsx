@@ -34,13 +34,13 @@ export default function PrivacyPage() {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <header className="bg-slate-50 border-b border-slate-200 py-12 px-6">
+            <header className="bg-slate-950 border-b border-white/10 py-12 px-6 text-white">
                 <div className="max-w-3xl mx-auto">
                     <Link href="/" className="inline-flex items-center text-slate-500 hover:text-blue-600 mb-8 transition gap-2 text-sm font-medium">
                         <ArrowLeft className="w-4 h-4" /> Back to Registry
                     </Link>
-                    <h1 className="text-4xl font-bold text-slate-900 mb-4">Privacy & Data Governance</h1>
-                    <p className="text-slate-600">Last Updated: January 2026</p>
+                    <h1 className="text-4xl font-bold text-white mb-4">Privacy & Data Governance</h1>
+                    <p className="text-slate-600">Last Updated: September 2026</p>
                 </div>
             </header>
 
@@ -55,15 +55,15 @@ export default function PrivacyPage() {
                 </div>
 
                 <p className="text-sm text-slate-500 mb-8 leading-relaxed">
-                    This Privacy Policy describes how The Foundation Risk Registry (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) collects, uses, and shares your information. We are committed to transparency in our data practices, especially concerning the sensitive geological mapping of residential properties.
+                    This Privacy Policy describes how The Foundation Risk Registry (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) collects, uses, and shares your information. We are committed to transparency in our data practices, including property details and foundation evaluation requests.
                 </p>
 
                 <h2>1. Data Collection & Usage</h2>
-                <p>When you enter an address into the Foundation Risk Registry, we collect and process the following data points to provide your forensic report:</p>
+                <p>When you use our tools or submit a foundation evaluation request, we may collect and process the following information:</p>
                 <ul>
-                    <li><strong>Geolocation Coordinates:</strong> Used as the primary key to query the USDA Soil Data Access (SDA) system and determine the Plasticity Index (PI) of your specific plot.</li>
-                    <li><strong>Email Address:</strong> Required to deliver the generated PDF Forensic Report and providing updates on geological shifts in your monitored zone.</li>
-                    <li><strong>Device Metadata:</strong> Basic information (IP address, browser type) to prevent automated scraping of our proprietary risk models.</li>
+                    <li><strong>Property information:</strong> Street address, ZIP code, and location context used to organize the request and connect it with relevant mapped soil information.</li>
+                    <li><strong>Contact information:</strong> Name, email address, and phone number used to respond to your evaluation request and coordinate relevant follow-up.</li>
+                    <li><strong>Request information:</strong> Foundation symptoms and optional notes you submit, plus limited technical metadata such as IP address and browser information for request records, security, and abuse prevention.</li>
                 </ul>
 
                 <h2>2. USDA Data Integration</h2>
@@ -71,7 +71,7 @@ export default function PrivacyPage() {
                     The soil data displayed on this website is sourced directly from the <strong>USDA Natural Resources Conservation Service (NRCS) Web Soil Survey (SSURGO)</strong> database. This is a public federal dataset.
                 </p>
                 <p>
-                    While we strive for 100% accuracy, The Foundation Risk Registry acts as a forensic visualization interface for this public data. We do not alter the underlying geological classification of your property as defined by federal surveyors. Our value lies in the interpretation of this data against residential structural tolerances.
+                    Mapped soil information is screening context, not a parcel-level diagnosis. Conditions can vary within a mapped area and may differ from conditions at a specific structure.
                 </p>
 
                 <h2>3. Security & Third-Party Sharing</h2>
@@ -79,17 +79,17 @@ export default function PrivacyPage() {
                     <strong>Service-request sharing:</strong> When you submit a foundation evaluation request, your contact information, property location, and reported symptoms may be shared with participating local foundation evaluation or repair providers so they can respond. A participating provider should identify its business, qualifications, scope, and terms directly. We do not represent every participating provider as a licensed engineering firm.
                 </p>
                 <p>
-                    Your data is stored using industry-standard AES-256 encryption via Supabase (a secure PostgreSQL infrastructure). We maintain strict access controls to ensure that only authorized forensic leads can access specific property data.
+                    Evaluation requests are stored in our application database. We use access controls intended to limit request data to authorized operations and service workflows.
                 </p>
 
                 <h2>4. Data Retention & Your Rights</h2>
                 <p>
-                    Address queries are cached anonymously for 30 days to improve system performance. You have the right to request a full &ldquo;Right to Be Forgotten&rdquo; purge of your property history and email from our registry at any time.
+                    We retain request information as reasonably necessary to process the request, maintain operational records, address disputes, and meet applicable legal obligations. You may contact us about access, correction, or deletion requests, subject to applicable law and legitimate retention requirements.
                 </p>
 
-                <h2>Contact the Data Protection Officer</h2>
+                <h2>Privacy Contact</h2>
                 <p>
-                    For privacy inquiries or to exercise your data rights under the CCPA/GDPR (where applicable), please contact our compliance desk at <a href="mailto:privacy@foundationrisk.org">privacy@foundationrisk.org</a>.
+                    For privacy inquiries or requests concerning your information, please contact us at <a href="mailto:privacy@foundationrisk.org">privacy@foundationrisk.org</a>.
                 </p>
             </main>
         </div>

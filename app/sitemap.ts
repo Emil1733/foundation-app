@@ -1,8 +1,7 @@
 import { MetadataRoute } from 'next';
 import { supabase } from '@/lib/supabase';
-import { shouldIndexServicePage } from '@/lib/serviceIndexability';
+import { hasUsableSoilRecord, shouldIndexServicePage } from '@/lib/serviceIndexability';
 
-// TODO: Update this to your real custom domain when you buy one.
 const BASE_URL = 'https://foundationrisk.org';
 
 export const revalidate = 86400; // ISR: Cache sitemap for 24 hours to prevent Supabase query exhaustion
@@ -15,6 +14,18 @@ type SitemapLocation = {
         | Array<{ map_unit_name?: string | null }>
         | null;
 };
+
+const STATE_SLUGS = [
+    'texas', 'florida', 'georgia', 'colorado', 'tennessee', 'north-carolina',
+    'arizona', 'kansas', 'oklahoma', 'mississippi', 'louisiana', 'missouri',
+    'south-carolina', 'virginia', 'nevada', 'utah',
+];
+
+const stateUrls: MetadataRoute.Sitemap = STATE_SLUGS.map((state) => ({
+    url: `${BASE_URL}/locations/${state}`,
+    changeFrequency: 'weekly' as const,
+    priority: 0.85,
+}));
 
 const coreUrls: MetadataRoute.Sitemap = [
     {
@@ -65,7 +76,7 @@ const coreUrls: MetadataRoute.Sitemap = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    // 1. Fetch all cities using a pagination loop to bypass the Supabase 1,000 row hard limit
+    // Fetch all cities using pagination to bypass Supabase's 1,000-row response limit.
     let locations: SitemapLocation[] = [];
     let from = 0;
     const step = 1000;
@@ -82,30 +93,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             hasMore = false;
         } else {
             locations = locations.concat(data);
-            if (data.length < step) hasMore = false; // We reached the end
+            if (data.length < step) hasMore = false;
             from += step;
         }
     }
 
     // Keep important static pages discoverable even if Supabase is temporarily unavailable.
-    if (locations.length === 0) return coreUrls;
+    if (locations.length === 0) return [...coreUrls, ...stateUrls];
 
     const cityUrls = locations
-      .filter((loc) => shouldIndexServicePage(loc.slug, loc.soil_cache))
-      .map((loc) => ({
-        url: `${BASE_URL}/services/foundation-repair/${loc.slug}`,
-        lastModified: new Date(loc.created_at),
-        changeFrequency: 'weekly' as const,
-        priority: 0.9, // Direct homepage links
-      }));
+        .filter((loc) => shouldIndexServicePage(loc.slug, loc.soil_cache))
+        .map((loc) => ({
+            url: `${BASE_URL}/services/foundation-repair/${loc.slug}`,
+            lastModified: new Date(loc.created_at),
+            changeFrequency: 'weekly' as const,
+            priority: 0.9,
+        }));
 
-    // NEW: Programmatic Soil Reports (/learn/...)
-    const articleUrls = locations.map((loc) => ({
-        url: `${BASE_URL}/learn/${loc.slug}-soil-analysis`,
-        lastModified: new Date(loc.created_at),
-        changeFrequency: 'weekly' as const,
-        priority: 0.8, // Deeper educational content
-    }));
+    // Soil reports depend on actual mapped soil data. Do not advertise fallback-only
+    // reports in the sitemap while their soil record is missing or unusable.
+    const articleUrls = locations
+        .filter((loc) => hasUsableSoilRecord(loc.soil_cache))
+        .map((loc) => ({
+            url: `${BASE_URL}/learn/${loc.slug}-soil-analysis`,
+            lastModified: new Date(loc.created_at),
+            changeFrequency: 'weekly' as const,
+            priority: 0.8,
+        }));
 
-    return [...coreUrls, ...cityUrls, ...articleUrls];
+    return [...coreUrls, ...stateUrls, ...cityUrls, ...articleUrls];
 }

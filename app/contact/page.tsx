@@ -11,9 +11,9 @@ export const metadata = {
 export default function ContactPage() {
     return (
         <div className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)]">
-            <header className="bg-white border-b border-slate-200 py-16 px-6">
+            <header className="bg-slate-950 border-b border-white/10 py-16 px-6 text-white">
                 <div className="max-w-4xl mx-auto">
-                    <h1 className="text-4xl font-extrabold text-slate-900 mb-4">Foundation Risk Support</h1>
+                    <h1 className="text-4xl font-extrabold text-white mb-4">Foundation Risk Support</h1>
                     <p className="text-lg text-slate-600">
                         Ask about mapped soil data, report a correction, or request help finding the right next step for a property.
                     </p>

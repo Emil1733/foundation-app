@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import Link from 'next/link';
-import { BookOpen, MapPin, ArrowRight, FileText } from 'lucide-react';
+import { BookOpen, MapPin, ArrowRight, FileText, ShieldCheck } from 'lucide-react';
 import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import Pagination from '@/components/Pagination';
@@ -100,18 +100,23 @@ export default async function LearnPage({
 
     return (
         <div className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)]">
-            {/* HEADER */}
-            <header className="bg-white border-b border-slate-200 py-16 px-6">
-                <div className="max-w-4xl mx-auto text-center">
-                    <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
-                        <BookOpen className="w-4 h-4" /> Engineering Library
+            <header className="relative isolate overflow-hidden bg-slate-950 px-6 py-16 text-white md:py-20">
+                <div aria-hidden="true" className="absolute inset-0 -z-30 bg-cover bg-[position:center_48%]" style={{ backgroundImage: "url('/foundation-hero-generated.webp')" }} />
+                <div aria-hidden="true" className="absolute inset-0 -z-20 bg-slate-950/64" />
+                <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(2,6,23,0.92)_0%,rgba(2,6,23,0.72)_52%,rgba(2,6,23,0.48)_100%)]" />
+                <div className="max-w-5xl mx-auto text-center">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/25 bg-blue-400/10 px-4 py-1.5 text-sm font-semibold text-blue-200 mb-6">
+                        <BookOpen className="w-4 h-4" /> Foundation & Soil Resource Library
                     </div>
-                    <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">
-                        Forensic Soil Analysis & <br />Repair Protocols
+                    <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">
+                        Local Soil Context for Better Foundation Decisions
                     </h1>
-                    <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                        Don&apos;t rely on general advice. Read the specific engineering breakdown for your city&apos;s geological profile.
+                    <p className="text-lg text-slate-300 max-w-2xl mx-auto leading-8">
+                        Review mapped USDA soil context, foundation warning signs, and practical evaluation questions before choosing a repair scope.
                     </p>
+                    <Link href="/book-analysis" className="mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 px-7 font-bold text-white transition hover:bg-blue-500">
+                        <ShieldCheck className="h-5 w-5" /> Request a Foundation Evaluation
+                    </Link>
                 </div>
             </header>
 
@@ -121,7 +126,7 @@ export default async function LearnPage({
                     <section aria-labelledby="featured-risk-zones">
                         <h2 id="featured-risk-zones" className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                             <span className="w-2 h-8 bg-red-500 rounded-full" aria-hidden="true"></span>
-                            Recently Added High-Risk Soil Reports
+                            Featured Soil Reports
                         </h2>
                         <div className="grid md:grid-cols-2 gap-6 mb-16">
                             {criticalCities.map((loc) => (
@@ -134,7 +139,7 @@ export default async function LearnPage({
                             <div className="flex justify-between items-start mb-4">
                                 <div>
                                     <h3 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition">
-                                        Why Foundations Fail in {loc.city}, {loc.state}
+                                        Soil and Foundation Context in {loc.city}, {loc.state}
                                     </h3>
                                     <div className="flex items-center gap-2 mt-2 text-sm text-slate-500">
                                         <MapPin className="w-4 h-4" />
@@ -152,11 +157,11 @@ export default async function LearnPage({
                                 {(() => {
                                     const soil = Array.isArray(loc.soil_cache) ? loc.soil_cache[0] : loc.soil_cache;
                                     const pi = soil?.plasticity_index;
-                                    return `In-depth analysis of the ${pi ? `PI ${Number(pi).toFixed(1)}` : 'High'} soil active zone in ${loc.city} and why standard pressed pilings often fail here.`;
+                                    return `Review mapped ${pi ? `PI ${Number(pi).toFixed(1)}` : 'soil'} context in ${loc.city}, including moisture sensitivity and questions to consider during a property evaluation.`;
                                 })()}
                             </p>
                             <span className="text-xs font-bold text-red-600 uppercase tracking-wide flex items-center gap-1">
-                                <FileText className="w-3 h-3" /> Read Engineering Report
+                                <FileText className="w-3 h-3" /> Read Soil Report
                             </span>
                         </Link>
                             ))}
