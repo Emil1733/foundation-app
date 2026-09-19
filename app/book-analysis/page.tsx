@@ -30,7 +30,8 @@ function IntakeForm() {
         email: '',
         phone: '',
         notes: '',
-        tcpaConsent: false
+        tcpaConsent: false,
+        source: 'web_intake'
     });
 
     const steps = [
@@ -53,6 +54,7 @@ function IntakeForm() {
     useEffect(() => {
         const addressParam = searchParams.get('address');
         const symptomParam = searchParams.get('symptom');
+        const sourceParam = searchParams.get('source');
         
         if (addressParam || symptomParam) {
             setFormData(prev => ({
@@ -62,7 +64,8 @@ function IntakeForm() {
                     && ALLOWED_SYMPTOMS.includes(symptomParam as typeof ALLOWED_SYMPTOMS[number])
                     && !prev.symptoms.includes(symptomParam)
                     ? [...prev.symptoms, symptomParam]
-                    : prev.symptoms
+                    : prev.symptoms,
+                source: sourceParam === 'soil_risk_widget' ? 'soil_risk_widget' : prev.source
             }));
             
             // If they provided an address, jump them to step 2 automatically!
