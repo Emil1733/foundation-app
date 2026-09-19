@@ -85,12 +85,12 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
       <header className="relative isolate overflow-hidden bg-slate-950 text-white px-6 py-10 md:py-16 lg:py-20">
         <div
           aria-hidden="true"
-          className="absolute inset-0 -z-30 bg-cover bg-center lg:bg-[center_48%]"
+          className="absolute inset-0 -z-30 bg-cover bg-[position:62%_center] sm:bg-[position:68%_center] lg:bg-[position:center_48%]"
           style={{ backgroundImage: "url('/foundation-hero-generated.webp')" }}
         />
-        <div aria-hidden="true" className="absolute inset-0 -z-20 bg-slate-950/60" />
-        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(2,6,23,0.96)_0%,rgba(2,6,23,0.82)_38%,rgba(2,6,23,0.52)_66%,rgba(2,6,23,0.66)_100%)] lg:bg-[linear-gradient(90deg,rgba(2,6,23,0.96)_0%,rgba(2,6,23,0.82)_36%,rgba(2,6,23,0.36)_66%,rgba(2,6,23,0.58)_100%)]" />
-        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-slate-950/55 to-transparent" />
+        <div aria-hidden="true" className="absolute inset-0 -z-20 bg-slate-950/28 sm:bg-slate-950/24 lg:bg-slate-950/20" />
+        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(2,6,23,0.78)_0%,rgba(2,6,23,0.58)_46%,rgba(2,6,23,0.20)_76%,rgba(2,6,23,0.30)_100%)] lg:bg-[linear-gradient(90deg,rgba(2,6,23,0.82)_0%,rgba(2,6,23,0.62)_34%,rgba(2,6,23,0.14)_66%,rgba(2,6,23,0.24)_100%)]" />
+        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 -z-10 h-32 bg-gradient-to-t from-slate-950/32 to-transparent" />
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1.08fr_0.92fr] gap-10 lg:gap-12 items-center">
           <div>
             <nav aria-label="Breadcrumb" className="mb-6 text-sm text-slate-400"><ol className="flex flex-wrap items-center gap-2"><li><Link href="/" className="hover:text-white">Home</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li><li><Link href="/locations" className="hover:text-white">Service Areas</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li><li><Link href={stateRoute.href} className="hover:text-white">{stateRoute.name}</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li><li aria-current="page" className="text-slate-200">{city}</li></ol></nav>
