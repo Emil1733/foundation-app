@@ -8,8 +8,8 @@ export default function TrustBadges() {
                     <UserCheck className="w-6 h-6" />
                 </div>
                 <div>
-                    <p className="font-bold text-slate-900 text-sm">Property-Specific Review</p>
-                    <p className="text-xs text-slate-500">Your symptoms and address</p>
+                    <p className="font-bold text-slate-900 text-sm">Property-Specific Help</p>
+                    <p className="text-xs text-slate-500">Your home, symptoms & location</p>
                 </div>
             </div>
 
@@ -18,8 +18,8 @@ export default function TrustBadges() {
                     <ShieldCheck className="w-6 h-6" />
                 </div>
                 <div>
-                    <p className="font-bold text-slate-900 text-sm">Repair Options</p>
-                    <p className="text-xs text-slate-500">Compare the proposed scope</p>
+                    <p className="font-bold text-slate-900 text-sm">Foundation Repair Guidance</p>
+                    <p className="text-xs text-slate-500">Understand your options</p>
                 </div>
             </div>
 
@@ -28,8 +28,8 @@ export default function TrustBadges() {
                     <Scale className="w-6 h-6" />
                 </div>
                 <div>
-                    <p className="font-bold text-slate-900 text-sm">Informed Decisions</p>
-                    <p className="text-xs text-slate-500">Questions before you commit</p>
+                    <p className="font-bold text-slate-900 text-sm">Clear Next Steps</p>
+                    <p className="text-xs text-slate-500">Know what to do next</p>
                 </div>
             </div>
 
@@ -38,8 +38,8 @@ export default function TrustBadges() {
                     <Map className="w-6 h-6" />
                 </div>
                 <div>
-                    <p className="font-bold text-slate-900 text-sm">USDA Soil Context</p>
-                    <p className="text-xs text-slate-500">Public survey data explained</p>
+                    <p className="font-bold text-slate-900 text-sm">Local Soil Context</p>
+                    <p className="text-xs text-slate-500">USDA data for your area</p>
                 </div>
             </div>
         </div>
