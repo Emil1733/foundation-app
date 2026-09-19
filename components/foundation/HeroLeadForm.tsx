@@ -16,7 +16,7 @@ const concerns = [
   { value: 'pre_purchase', label: 'Buying or selling a home' },
 ];
 
-export default function HeroLeadForm({ city }: { city: string }) {
+export default function HeroLeadForm({ city, source = 'hero_form' }: { city: string; source?: 'hero_form' | 'homepage_hero' }) {
   const [form, setForm] = useState({
     name: '',
     phone: '',
@@ -54,7 +54,7 @@ export default function HeroLeadForm({ city }: { city: string }) {
       symptoms: [form.concern],
       notes: '',
       tcpaConsent: form.consent,
-      source: 'hero_form',
+      source,
     };
 
     try {
