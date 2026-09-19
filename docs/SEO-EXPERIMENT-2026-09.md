@@ -210,3 +210,11 @@ A sitewide conversion-copy pass was applied through the shared service-page temp
 The shared trust strip now emphasizes property-specific help, foundation repair guidance, clear next steps, and local USDA soil context. The symptom tool now uses homeowner-oriented language such as `What This May Mean` and a consistent `Request a Foundation Evaluation` CTA. The former `Foundation Repair Scope Planner` is presented as `What Should You Do Next?`, while its cautious decision logic remains unchanged.
 
 The global service-page hero and final CTA copy were strengthened to connect common symptoms directly to an evaluation request without claiming an online diagnosis or guaranteed repair need. Treatment-city hero copy was updated through the existing treatment registry, with treatment membership and the control cohort unchanged. No new cities were added to the commercial SEO treatment.
+
+### 2026-09-19 global brand/header redesign
+
+The global navigation was redesigned around a custom inline SVG FoundationRisk structural monogram and a restrained engineering/home-services visual system. The prior generic shield icon, pulsing status dot, `Registry 2026`, and `Live Data` treatments were removed because they made the brand read more like a software dashboard than a premium foundation service.
+
+The new brand system uses a dark architectural header, a white/blue FOUNDATIONRISK wordmark, the descriptor `Foundation Evaluation & Repair`, simpler navigation typography, and a single high-contrast evaluation CTA. The logo is implemented as vector markup in `components/BrandLogo.tsx`, so it stays sharp at desktop and mobile sizes without a raster asset dependency. The top utility bar and global content offset were adjusted to match the new 76px navigation height.
+
+This is a global presentation change only. It does not alter city treatment/control membership, service-page SEO copy, lead validation, soil data, or production database state.
