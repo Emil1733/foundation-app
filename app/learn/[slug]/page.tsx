@@ -110,19 +110,19 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
             <main>
                 <article className="max-w-3xl mx-auto py-12 px-6" itemScope itemType="https://schema.org/Article">
-                    <header className="mb-10">
-                        <nav aria-label="Breadcrumb" className="mb-6 text-sm text-slate-500">
+                    <header className="mb-10 overflow-hidden rounded-3xl bg-slate-950 p-6 text-white shadow-xl sm:p-8">
+                        <nav aria-label="Breadcrumb" className="mb-6 text-sm text-slate-400">
                             <ol className="flex flex-wrap items-center gap-2">
-                                <li><Link href="/" className="hover:text-blue-700">Home</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li>
+                                <li><Link href="/" className="hover:text-white">Home</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li>
                                 <li><Link href="/locations" className="hover:text-blue-700">Service Areas</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li>
                                 <li><Link href={stateRoute.href} className="hover:text-blue-700">{stateRoute.name}</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li>
                                 <li><Link href={`/services/foundation-repair/${citySlug}`} className="hover:text-blue-700">{cityData.city}</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li>
-                                <li aria-current="page" className="text-slate-700">Soil report</li>
+                                <li aria-current="page" className="text-slate-200">Soil report</li>
                             </ol>
                         </nav>
-                        <div className="inline-flex bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-6">Local Soil Report</div>
-                        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">{cityData.city} Soil and Foundation Risk: <span className="text-blue-700">{mapUnitName}</span></h1>
-                        <div className="text-sm text-slate-600 border-l-4 border-blue-200 pl-4">Primary data: USDA/NRCS SSURGO. Mapped context only, not a property diagnosis.</div>
+                        <div className="inline-flex border border-blue-400/20 bg-blue-400/10 text-blue-200 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-6">Local Soil Report</div>
+                        <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight">{cityData.city} Soil and Foundation Risk: <span className="text-blue-300">{mapUnitName}</span></h1>
+                        <div className="text-sm text-slate-300 border-l-4 border-blue-400 pl-4">Primary data: USDA/NRCS SSURGO. Mapped context only, not a property diagnosis.</div>
                     </header>
 
                     <aside className="mb-10 rounded-2xl border border-blue-100 bg-blue-50/60 p-6 text-sm leading-6 text-slate-700">
