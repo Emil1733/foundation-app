@@ -14,6 +14,7 @@ import FoundationDiagram from "@/components/FoundationDiagram";
 import SoilActionPlan from "@/components/SoilActionPlan";
 import CrackAnalyzer from "@/components/CrackAnalyzer";
 import CostEstimator from "@/components/CostEstimator";
+import SoilRiskWidget from "@/components/SoilRiskWidget";
 import { getNearbyLocations } from "@/lib/nearbyLocations";
 import { STATE_FOUNDATION_GUIDES } from "@/lib/stateFoundationGuides";
 import { hasUsableSoilRecord, shouldIndexServicePage } from "@/lib/serviceIndexability";
@@ -111,6 +112,12 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           soilReportAvailable={soilReportAvailable}
           intro={getDynamicIntro(city, soilReportAvailable ? soil.map_unit_name : "local soil", hasPi ? riskClass : "unclassified")}
         />
+
+        <section className="my-10 overflow-hidden rounded-3xl bg-slate-950 p-4 sm:p-6 md:my-14">
+          <div className="mx-auto max-w-xl">
+            <SoilRiskWidget />
+          </div>
+        </section>
 
         <FoundationDiagram />
         <SoilActionPlan city={city} soil={soil || null} riskLevel={riskClass} />
