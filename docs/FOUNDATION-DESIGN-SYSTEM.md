@@ -454,3 +454,17 @@ The primary supporting page families now follow the premium foundation-service s
 - `/learn/[slug]` keeps its server-rendered soil evidence and SEO structure but presents the report in the darker premium editorial system.
 - `/book-analysis` retains the existing validated multi-step intake and consent behavior while visually aligning the page with the cinematic foundation-service brand.
 - SEO pagination, canonicals, structured data, internal links, and lead submission mechanics were intentionally preserved.
+
+
+### 2026-09-19 - legacy page audit and cleanup
+
+The remaining public legacy routes were audited for brand consistency and unsupported authority, diagnostic, testimonial, and repair-outcome claims.
+
+- `/quiz` and `FoundationQuiz` are now a warning-sign screening tool. The old forensic diagnosis, calculated failure likelihood, active-failure, detected seasonal movement, and stable-condition claims were removed.
+- `/reviews` no longer publishes the unverified Project Alpha/Bravo/Charlie homeowner case studies, five-star presentation, claimed engineering fixes, or claimed measured outcomes. The route is retained as a useful guide for comparing foundation repair proposals so existing links do not break.
+- `/safety/visual-guide` now frames images as documentation examples, not a method for distinguishing harmless settlement from active structural failure.
+- `/about` and `/contact` received brand-surface consistency updates. The former contributor route already permanently redirects to `/about`.
+- Privacy, Terms, and Disclaimer retain their substantive disclosure content with lighter visual alignment. Terms language was updated to reflect both informational screening and evaluation-request functionality. Markdown-style USDA emphasis in the disclaimer was corrected.
+- `/widget` remains noindex, now links to the production FoundationRisk.org domain and uses non-authoritative mapped-soil wording.
+
+Rule: interactive screening can organize homeowner observations, but it must not diagnose structural failure, claim detected movement, or imply an engineering conclusion from questionnaire answers or mapped soil data.
