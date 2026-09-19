@@ -310,3 +310,10 @@ The shared `components/CrackAnalyzer.tsx` presentation was redesigned as the nex
 The interaction now uses a light architectural selection panel paired with a dark interpretation panel, matching the premium visual rhythm established by the cinematic hero and Soil Intelligence component. Symptom choices remain observable homeowner signs, not diagnoses. Selecting a sign reveals cautious interpretation, mapped-soil context, and the existing evaluation path. The address field and symptom parameter remain real form controls submitted to `/book-analysis`.
 
 No treatment-city membership, SEO metadata, city-specific styling, soil classification logic, or production data was changed in this batch.
+
+
+### 2026-09-19 - foundation evidence sequence redesign
+
+The shared `components/FoundationDiagram.tsx` was redesigned as a reusable evidence-to-repair sequence rather than a row of three generic dark cards. The component now combines a dark architectural explanation panel with a light three-stage decision sequence: measure movement, identify contributors, and compare repair scopes.
+
+The presentation reinforces the commercial message that repair selection should follow property evidence while preserving the existing limitation that mapped soil data cannot prescribe a repair type or depth. All explanatory copy remains real HTML. No city-specific design logic, treatment membership, SEO metadata, production data, or repair recommendations were added.
