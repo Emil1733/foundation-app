@@ -71,8 +71,8 @@ Cinematic hero
 
 ## Current hero implementation
 
-The current shared city hero is still implemented directly in:
-`app/services/foundation-repair/[city]/page.tsx`
+The shared city hero is implemented in:
+`components/foundation/FoundationHero.tsx`
 
 It uses:
 - local decorative asset `/foundation-hero-generated.webp`
@@ -82,10 +82,7 @@ It uses:
 - real H1, paragraph, breadcrumb, links, and CTA
 - no UI or text baked into the image
 
-The intended future extraction is:
-`components/foundation/FoundationHero.tsx`
-
-Once extracted, the city page should pass location and SEO-treatment data into that component rather than owning hero CSS itself.
+The city route now passes location and SEO-treatment-derived strings into the hero rather than owning the hero presentation CSS. Treatment membership and copy selection remain outside the component, preserving experiment isolation.
 
 ## Target component structure
 
@@ -340,3 +337,12 @@ The treatment-only repair-options block was extracted from the city template int
 The former generic dark CTA block was replaced by `EvaluationCTA`, a reusable dark conversion break that reconnects the lower page to the premium hero language. It uses a single evaluation action plus concise trust points and does not claim a diagnosis, free service, engineering relationship, or guaranteed repair outcome.
 
 The shared city template now orchestrates both components instead of owning their presentation markup. No treatment membership, SEO metadata, production data, or city-specific styling was changed.
+
+
+### 2026-09-19 - cinematic hero extraction
+
+The approved cinematic service hero was extracted into `components/foundation/FoundationHero.tsx`. The component now owns the hero image layers, responsive mobile/desktop background positioning, breadcrumb presentation, headline/description presentation, evaluation CTA, credibility labels, and the existing live `SoilRiskWidget` placement.
+
+The shared city route remains responsible for selecting treatment versus control copy. It passes the resolved eyebrow, H1 lead, description, CTA label, state route, and location values into the component. This keeps SEO experiment membership and content logic outside the visual component while eliminating the large hero presentation block from the route.
+
+The extraction intentionally preserves the approved `/foundation-hero-generated.webp` asset path and the mobile framing/overlay values that were visually approved. No treatment membership, metadata, production data, soil logic, or conversion destination was changed.
