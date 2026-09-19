@@ -70,7 +70,7 @@ export default function TermsPage() {
 
                 <h2>4. Intellectual Property</h2>
                 <p>
-                    The visualization tools, PDF report layouts, and forensic analysis algorithms are the property of The Foundation Risk Registry. Soil data remains within the public domain as per USDA guidelines.
+                    The site design, original written content, and application features are owned by or licensed to The Foundation Risk Registry, except for third-party and public-domain materials. USDA soil data remains subject to its applicable public-data terms.
                 </p>
 
                 <h2>5. Limitation of Liability</h2>
