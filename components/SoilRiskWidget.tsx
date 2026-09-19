@@ -1,266 +1,170 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, AlertTriangle, CheckCircle, MapPin } from 'lucide-react';
-import clsx from 'clsx';
+import { ArrowRight, CheckCircle2, Download, LoaderCircle, MapPin, Search } from 'lucide-react';
+import { classifySoilPlasticityIndex } from '@/lib/soilRisk';
 
 type RiskData = {
-    map_unit_name: string;
-    shrink_swell: number;
-    plasticity_index: number;
-    drainage_class?: string;
+  map_unit_name: string;
+  shrink_swell: number;
+  plasticity_index: number;
+  drainage_class?: string;
 };
 
 export default function SoilRiskWidget() {
-    const [address, setAddress] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [data, setData] = useState<RiskData | null>(null);
+  const [address, setAddress] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<RiskData | null>(null);
+  const [generating, setGenerating] = useState(false);
 
-    const [showModal, setShowModal] = useState(false);
-    const [email, setEmail] = useState('');
-    const [generating, setGenerating] = useState(false);
+  const checkRisk = async () => {
+    if (!address.trim()) return;
+    setLoading(true);
+    setError(null);
+    setData(null);
 
-    const checkRisk = async () => {
-        if (!address) return;
-        setLoading(true);
-        setError(null);
-        setData(null);
-        setShowModal(false);
+    try {
+      const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`);
+      const geoData = await geoRes.json();
+      if (!geoData?.length) throw new Error('We could not find that address. Try including the city and state.');
 
-        try {
-            // 1. Geocode
-            const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`);
-            const geoData = await geoRes.json();
+      const { lat, lon } = geoData[0];
+      const soilRes = await fetch('/api/soil', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lat, lon }),
+      });
+      if (!soilRes.ok) {
+        const errJson = await soilRes.json();
+        throw new Error(errJson.error || 'Unable to retrieve mapped soil data.');
+      }
+      setData(await soilRes.json());
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Unable to retrieve mapped soil data.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            if (!geoData || geoData.length === 0) {
-                throw new Error('Address not found');
-            }
+  const downloadSummary = async () => {
+    if (!data) return;
+    setGenerating(true);
+    try {
+      const { jsPDF } = await import('jspdf');
+      const doc = new jsPDF();
+      const risk = classifySoilPlasticityIndex(data.plasticity_index);
 
-            const { lat, lon } = geoData[0];
+      doc.setFillColor(15, 23, 42);
+      doc.rect(0, 0, 210, 40, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(22);
+      doc.text('Foundation Risk Registry', 105, 15, { align: 'center' });
+      doc.setFontSize(12);
+      doc.text('Mapped Soil Context Summary', 105, 25, { align: 'center' });
 
-            // 2. Fetch Soil Data
-            const soilRes = await fetch('/api/soil', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ lat, lon })
-            });
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(14);
+      doc.text(`Property: ${address}`, 20, 60);
+      doc.setFillColor(245, 247, 250);
+      doc.rect(20, 70, 170, 62, 'F');
+      doc.setFontSize(11);
+      doc.text('MAPPED SOIL SCREENING CLASS', 30, 88);
+      doc.setFontSize(25);
+      doc.text(risk.toUpperCase(), 30, 103);
+      doc.setFontSize(11);
+      doc.text(`Soil unit: ${data.map_unit_name}`, 30, 116);
+      doc.text(`Plasticity Index: ${Number(data.plasticity_index).toFixed(1)}`, 30, 125);
+      doc.text(`Shrink-Swell: ${Number(data.shrink_swell).toFixed(1)}%`, 105, 125);
 
-            if (!soilRes.ok) {
-                const errJson = await soilRes.json();
-                throw new Error(errJson.error || 'Failed to fetch soil data');
-            }
+      doc.setFontSize(10);
+      doc.setTextColor(90, 90, 90);
+      doc.text('Mapped soil values are screening context, not a property diagnosis.', 20, 148);
+      doc.text('Use property measurements and an on-site evaluation before selecting repairs.', 20, 154);
+      doc.setFontSize(8);
+      doc.text('Generated from mapped public soil data.', 105, 280, { align: 'center' });
+      doc.text(`Date: ${new Date().toLocaleDateString()}`, 105, 285, { align: 'center' });
+      doc.save('FoundationRisk_Mapped_Soil_Summary.pdf');
+    } finally {
+      setGenerating(false);
+    }
+  };
 
-            const soilData = await soilRes.json();
-            setData(soilData);
+  const evaluationHref = `/book-analysis?address=${encodeURIComponent(address)}&source=soil_risk_widget`;
 
-        } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : 'Unable to retrieve soil data');
-        } finally {
-            setLoading(false);
-        }
-    };
+  return (
+    <section className="w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-950/90 text-white shadow-2xl">
+      <div className="p-5 sm:p-6">
+        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-blue-300">Property Soil Check</p>
+        <h2 className="mt-2 text-xl font-bold tracking-tight sm:text-2xl">Check Your Foundation Risk</h2>
+        <p className="mt-2 text-sm leading-6 text-slate-300">Enter the property address to see mapped soil context, then use it to ask better questions about foundation movement and repair options.</p>
 
-    const getRiskLevel = (pi: number) => {
-        if (pi > 35) return { label: 'SEVERE', color: 'bg-red-600', text: 'text-red-700' };
-        if (pi > 25) return { label: 'HIGH', color: 'bg-orange-500', text: 'text-orange-600' };
-        if (pi > 15) return { label: 'MODERATE', color: 'bg-yellow-500', text: 'text-yellow-600' };
-        return { label: 'LOW', color: 'bg-green-500', text: 'text-green-600' };
-    };
-
-    const handleDownload = async () => {
-        if (!email.includes('@')) {
-            alert('Please enter a valid email to receive the report.');
-            return;
-        }
-
-        setGenerating(true);
-
-        // Dynamic import to avoid SSR issues
-        const { jsPDF } = await import('jspdf');
-        const doc = new jsPDF();
-
-        // BRANDING
-        doc.setFillColor(15, 23, 42); // slate-900
-        doc.rect(0, 0, 210, 40, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(22);
-        doc.text("Foundation Risk Registry", 105, 15, { align: 'center' });
-        doc.setFontSize(12);
-        doc.text("Mapped Soil and Foundation Risk Summary", 105, 25, { align: 'center' });
-
-        // ADDRESS
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(14);
-        doc.text(`Property: ${address}`, 20, 60);
-
-        if (data) {
-            const risk = getRiskLevel(data.plasticity_index);
-
-            // SCORECARD
-            doc.setFillColor(240, 240, 240);
-            doc.rect(20, 70, 170, 60, 'F');
-
-            doc.setFontSize(16);
-            doc.text("SOIL RISK CLASSIFICATION:", 30, 90);
-
-            doc.setFontSize(30);
-            doc.setTextColor(risk.label === 'SEVERE' ? 220 : 0, 0, 0);
-            doc.text(risk.label, 150, 95, { align: 'center' });
-
-            doc.setFontSize(12);
-            doc.setTextColor(0, 0, 0);
-            doc.text(`Soil Unit: ${data.map_unit_name}`, 30, 110);
-            doc.text(`Plasticity Index: ${data.plasticity_index.toFixed(1)}`, 30, 120);
-            doc.text(`Shrink-Swell Potential: ${data.shrink_swell.toFixed(1)}%`, 100, 120);
-
-            // WARNING
-            doc.setFontSize(10);
-            doc.setTextColor(100, 100, 100);
-            doc.text("NOTE: Mapped soil values are screening context, not a property diagnosis.", 20, 145);
-            doc.text("Use property measurements and an on-site evaluation before selecting repairs.", 20, 150);
-        }
-
-        // FOOTER
-        doc.setFontSize(8);
-        doc.text("Generated by The Foundation Risk Registry from mapped public soil data.", 105, 280, { align: 'center' });
-        doc.text(`Date: ${new Date().toLocaleDateString()}`, 105, 285, { align: 'center' });
-
-        doc.save("Forensic_Foundation_Report.pdf");
-
-        setGenerating(false);
-        setShowModal(false);
-        alert(`Report queued. A copy has been sent to ${email}.`);
-    };
-
-    return (
-        <div className="max-w-md w-full bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
-            <div className="bg-slate-900 p-6 text-white pb-8">
-                <h2 className="text-xl font-bold mb-2">Check Your Foundation Risk</h2>
-                <p className="text-slate-400 text-sm">
-                    See the mapped soil context for your address before comparing foundation repair options.
-                </p>
+        <div className="mt-5">
+          <label htmlFor="property-address" className="mb-2 block text-xs font-bold text-slate-300">Property address</label>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <div className="relative min-w-0 flex-1">
+              <MapPin className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" aria-hidden="true" />
+              <input
+                id="property-address"
+                type="text"
+                autoComplete="street-address"
+                placeholder="123 Main St, Cedar Park, TX"
+                className="min-h-12 w-full rounded-xl border border-white/15 bg-white/[0.07] py-3 pl-10 pr-4 text-sm text-white outline-none placeholder:text-slate-500 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && checkRisk()}
+              />
             </div>
-
-            <div className="p-6 -mt-6 bg-white rounded-t-xl">
-                <div className="flex gap-2 mb-4">
-                    <div className="relative flex-1">
-                        <label htmlFor="property-address" className="sr-only">Property Address</label>
-                        <MapPin className="absolute left-3 top-3 text-slate-400 w-5 h-5" aria-hidden="true" />
-                        <input
-                            id="property-address"
-                            type="text"
-                            autoComplete="street-address"
-                            placeholder="Enter your address..."
-                            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 placeholder:text-slate-400"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && checkRisk()}
-                        />
-                    </div>
-                    <button
-                        onClick={checkRisk}
-                        disabled={loading}
-                        aria-label={loading ? 'Scanning for soil risk' : 'Search address'}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition disabled:opacity-50 flex items-center gap-2"
-                    >
-                        {loading ? 'Scanning...' : <Search className="w-5 h-5" aria-hidden="true" />}
-                    </button>
-                </div>
-
-                {error && (
-                    <div className="p-3 bg-red-50 text-red-700 rounded-lg text-sm flex items-center gap-2" role="alert">
-                        <AlertTriangle className="w-4 h-4" aria-hidden="true" /> {error}
-                    </div>
-                )}
-
-                {data && !showModal && (
-                    <div className="animate-in fade-in slide-in-from-bottom duration-500">
-                        {(() => {
-                            const risk = getRiskLevel(Number(data.plasticity_index));
-                            return (
-                                <div>
-                                    <div className="flex items-center justify-between mb-4">
-                                        <h4 className="text-slate-500 font-medium text-sm">Soil Classification</h4>
-                                        <span className={clsx("px-3 py-1 rounded-full text-xs font-bold text-white", risk.color)}>
-                                            {risk.label} RISK
-                                        </span>
-                                    </div>
-
-                                    <div className="mb-4">
-                                        <h3 className="text-lg font-bold text-slate-900 mb-1">{data.map_unit_name}</h3>
-                                        <p className="text-sm text-slate-700">
-                                            Drainage: {data.drainage_class || 'Unknown'}
-                                        </p>
-                                    </div>
-
-                                    <div className="grid grid-cols-2 gap-3 mb-4">
-                                        <div className="bg-slate-50 p-3 rounded-lg">
-                                            <span className="text-xs text-slate-500 uppercase font-bold block mb-1">Plasticity Index</span>
-                                            <span className={clsx("text-xl font-mono font-bold", risk.text)}>
-                                                {Number(data.plasticity_index).toFixed(1)}
-                                            </span>
-                                        </div>
-                                        <div className="bg-slate-50 p-3 rounded-lg">
-                                            <span className="text-xs text-slate-500 uppercase font-bold block mb-1">Shrink-Swell</span>
-                                            <span className="text-xl font-mono font-bold text-slate-800">
-                                                {Number(data.shrink_swell).toFixed(1)}%
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <button
-                                        onClick={() => setShowModal(true)}
-                                        className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition"
-                                    >
-                                        <span role="img" aria-label="document">📄</span> Download Mapped Soil Risk Summary
-                                    </button>
-
-                                    <div className="text-xs text-slate-500 border-t pt-3 mt-4 flex items-center gap-1">
-                                        <CheckCircle className="w-3 h-3 text-green-600" aria-hidden="true" />
-                                        Data sourced from USDA Soil Survey (SSURGO)
-                                    </div>
-                                </div>
-                            );
-                        })()}
-                    </div>
-                )}
-
-                {/* LEAD CAPTURE MODAL */}
-                {showModal && (
-                    <div className="animate-in zoom-in duration-300 bg-slate-50 p-6 rounded-xl border border-blue-200" role="dialog" aria-labelledby="modal-title">
-                        <h3 id="modal-title" className="font-bold text-slate-900 mb-2">Final Step: Where should we send the PDF?</h3>
-                        <p className="text-xs text-slate-600 mb-4">
-                            Your Forensic Analysis contains critical engineering data for {address}.
-                        </p>
-                        <div className="mb-3">
-                            <label htmlFor="report-email" className="sr-only">Email Address</label>
-                            <input
-                                id="report-email"
-                                type="email"
-                                autoComplete="email"
-                                placeholder="engineer@example.com"
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-900"
-                                value={email}
-                                onChange={e => setEmail(e.target.value)}
-                            />
-                        </div>
-                        <button
-                            onClick={handleDownload}
-                            disabled={generating}
-                            className="w-full bg-blue-600 hover:bg-blue-500 text-white py-2 rounded-lg font-bold transition disabled:opacity-50"
-                        >
-                            {generating ? 'Generating PDF...' : '🔒 Unlock Report Now'}
-                        </button>
-                        <button
-                            onClick={() => setShowModal(false)}
-                            className="w-full mt-2 text-slate-500 text-xs hover:text-slate-700 transition"
-                        >
-                            Cancel
-                        </button>
-                    </div>
-                )}
-            </div>
+            <button onClick={checkRisk} disabled={loading || !address.trim()} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 text-sm font-bold transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50">
+              {loading ? <><LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" /> Checking</> : <><Search className="h-4 w-4" aria-hidden="true" /> Check soil</>}
+            </button>
+          </div>
+          <p className="mt-2 text-[11px] leading-5 text-slate-500">Mapped soil screening only. This does not diagnose the foundation.</p>
         </div>
-    );
+
+        {error && <div className="mt-4 rounded-xl border border-red-400/20 bg-red-400/10 p-3 text-sm text-red-100" role="alert">{error}</div>}
+
+        {data && (() => {
+          const risk = classifySoilPlasticityIndex(data.plasticity_index);
+          return (
+            <div className="mt-5 border-t border-white/10 pt-5">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Mapped screening class</p>
+                  <p className="mt-1 text-2xl font-bold">{risk}</p>
+                </div>
+                <span className="rounded-full border border-blue-400/20 bg-blue-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-blue-200">USDA / NRCS context</span>
+              </div>
+
+              <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+                <p className="text-sm font-bold text-white">{data.map_unit_name}</p>
+                <p className="mt-1 text-xs text-slate-400">Drainage: {data.drainage_class || 'Not reported'}</p>
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  <div><p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Plasticity Index</p><p className="mt-1 font-mono text-xl font-bold">{Number(data.plasticity_index).toFixed(1)}</p></div>
+                  <div><p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Shrink-Swell</p><p className="mt-1 font-mono text-xl font-bold">{Number(data.shrink_swell).toFixed(1)}%</p></div>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-2xl border border-blue-400/20 bg-blue-400/[0.08] p-4">
+                <div className="flex gap-3">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-blue-300" aria-hidden="true" />
+                  <div>
+                    <p className="text-sm font-bold">Make this useful for your property</p>
+                    <p className="mt-1 text-xs leading-5 text-slate-300">Mapped soil tells you about the area beneath the address. A property evaluation can compare that context with cracks, drainage, floor changes, and other signs at the home.</p>
+                  </div>
+                </div>
+                <a href={evaluationHref} className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-sm font-bold transition hover:bg-blue-500">
+                  Request a Foundation Evaluation <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </a>
+              </div>
+
+              <button onClick={downloadSummary} disabled={generating} className="mt-3 inline-flex w-full items-center justify-center gap-2 py-2 text-xs font-semibold text-slate-400 transition hover:text-white disabled:opacity-50">
+                <Download className="h-4 w-4" aria-hidden="true" /> {generating ? 'Preparing summary...' : 'Download mapped soil summary'}
+              </button>
+            </div>
+          );
+        })()}
+      </div>
+    </section>
+  );
 }
