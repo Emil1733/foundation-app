@@ -194,3 +194,11 @@ The evaluation funnel was reviewed against the actual server-side submission beh
 The privacy policy was reconciled with the current lead workflow. Outdated claims about generated PDF forensic reports, geological-shift updates, proprietary forensic models, guaranteed AES-256 storage language, a fixed 30-day anonymous address cache, and a dedicated Data Protection Officer were removed. The policy now describes the information the form actually collects: property details, contact details, symptoms/notes, and limited request metadata. Provider sharing remains disclosed.
 
 The Terms intellectual-property section was also corrected so it no longer claims ownership of unspecified `forensic analysis algorithms` or PDF report layouts. These changes improve trust and disclosure consistency without weakening the foundation-repair lead-generation path.
+
+### 2026-09-19 final branch audit cleanup
+
+The full implementation branch was compared against `master` and the highest-risk runtime areas were re-reviewed: city rendering, soil reports, sitemap/indexability, USDA/API handling, treatment isolation, nearby links, and the evaluation funnel. A source-level escaped newline was found immediately before the shared cost planner in the city template and was replaced with a real newline. This had not prevented the previous validated build but was cleaned up to keep the source unambiguous.
+
+The dynamic city intro fallback was also corrected so missing PI data no longer has any path to the phrase `A unclassified map classification`. Missing classification now receives explicit no-PI wording. Repository searches found no remaining occurrences of the previously removed `forensic`, `Geological Authority`, `permanent structural stabilization`, `100% accuracy`, `AES-256`, `Data Protection Officer`, simulated diagnostic, or `Get Report` language.
+
+PR #1 was updated to reflect the implementation that is actually present rather than the obsolete initial checklist. The PR remains draft and no merge to `master` was performed.
