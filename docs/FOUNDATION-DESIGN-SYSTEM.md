@@ -317,3 +317,12 @@ No treatment-city membership, SEO metadata, city-specific styling, soil classifi
 The shared `components/FoundationDiagram.tsx` was redesigned as a reusable evidence-to-repair sequence rather than a row of three generic dark cards. The component now combines a dark architectural explanation panel with a light three-stage decision sequence: measure movement, identify contributors, and compare repair scopes.
 
 The presentation reinforces the commercial message that repair selection should follow property evidence while preserving the existing limitation that mapped soil data cannot prescribe a repair type or depth. All explanatory copy remains real HTML. No city-specific design logic, treatment membership, SEO metadata, production data, or repair recommendations were added.
+
+
+### 2026-09-19 - foundation planning tool redesign
+
+The shared `components/CostEstimator.tsx` was redesigned as a premium foundation planning and scope-decision interface. The component intentionally does not present a fabricated dollar estimate because the existing inputs do not support property-specific pricing. Instead, homeowners select the closest observable symptom pattern and receive a clear statement of what still needs to be checked and the appropriate next-step category.
+
+The visual treatment now uses the same architectural light/dark rhythm as the Foundation Signs experience, with restrained blue as the shared action color. The city and mapped PI remain data inputs, the address and selected symptom continue through the existing `/book-analysis` form path, and all explanatory content remains real HTML.
+
+No city-specific styling, treatment membership, pricing claims, SEO metadata, soil classification logic, or production data was changed.
