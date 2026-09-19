@@ -406,3 +406,12 @@ The hero `SoilRiskWidget` was redesigned as a useful free soil-context tool and 
 - The PDF filename and copy no longer use unsupported `Forensic` or `critical engineering data` language.
 
 Monitoring query after deployment: compare lead rows where `source = 'soil_risk_widget'` against `source = 'web_intake'`. This measures completed leads, not merely soil checks or CTA clicks. Event-level funnel analytics would require a separate analytics implementation.
+
+
+### 2026-09-19 - soil-widget geocoding reliability fix
+
+The property soil widget no longer calls the public Nominatim geocoder directly from the browser. Direct browser requests can fail as a generic `Failed to fetch` because the external service controls browser-origin/CORS behavior.
+
+A same-origin server route now handles geocoding at `app/api/geocode/route.ts`. The client posts the address to FoundationRisk, the server performs the external lookup with an identifying User-Agent, restricts results to the US, validates the returned coordinates, and returns only the coordinates/display name needed by the widget. The existing `/api/soil` route remains responsible for USDA soil lookup.
+
+This also gives the UI useful HTTP errors instead of an opaque browser network failure.
