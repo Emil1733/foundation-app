@@ -1,10 +1,11 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronRight, Info, MapPin, ShieldCheck } from "lucide-react";
+import { ChevronRight, MapPin, ShieldCheck } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import SoilRiskWidget from "@/components/SoilRiskWidget";
 import TrustBadges from "@/components/TrustBadges";
+import SoilIntelligence from "@/components/foundation/SoilIntelligence";
 import FoundationDiagram from "@/components/FoundationDiagram";
 import SoilActionPlan from "@/components/SoilActionPlan";
 import CrackAnalyzer from "@/components/CrackAnalyzer";
@@ -109,14 +110,15 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
         <TrustBadges />
         {treatment && <section className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 mb-12"><h2 className="text-2xl font-bold text-slate-900 mb-3">Choosing Foundation Repair in {city}</h2><p className="text-slate-600 leading-relaxed">{treatment.localFocus(city)}</p><div className="mt-5 flex flex-wrap gap-3 text-sm"><a href="#repair-options" className="font-semibold text-blue-700 hover:underline">Compare repair options</a><span className="text-slate-300">•</span><a href="#foundation-cost" className="font-semibold text-blue-700 hover:underline">Understand cost factors</a><span className="text-slate-300">•</span><Link href="/book-analysis" className="font-semibold text-blue-700 hover:underline">Request an evaluation</Link></div></section>}
         <CrackAnalyzer city={city} pi={soil?.plasticity_index} />
-        <section className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 mb-12">
-          <div className="flex items-start gap-4 mb-6"><div className="bg-blue-50 p-3 rounded-lg text-blue-600"><Info className="w-6 h-6" /></div><div><h2 className="text-2xl font-bold text-slate-900">Mapped Soil and Foundation Context for {city}</h2><p className="text-slate-500 text-sm">{hasDisplayableZip(location.zip_code) ? `USDA/NRCS soil screening record for ZIP ${location.zip_code}` : "USDA/NRCS mapped soil screening context for this location"}</p></div></div>
-          <div className="prose prose-slate max-w-none text-slate-600">
-            <p>{getDynamicIntro(city, soilReportAvailable ? soil.map_unit_name : "local soil", hasPi ? riskClass : "unclassified")}</p>
-            {soil && <div className="my-8 grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose"><div className="bg-slate-50 p-4 rounded-xl border border-slate-100"><span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Plasticity Index (PI)</span><div className="flex items-end gap-2 mt-1"><span className="text-3xl font-mono font-bold text-slate-900">{piDisplay}</span>{hasPi && <span className="rounded bg-blue-100 px-2 py-0.5 text-sm font-bold text-blue-800">{riskClass}</span>}</div><p className="text-xs text-slate-500 mt-2">{hasPi ? "Mapped screening value, not a measurement from the property." : "No reportable mapped PI is available for this record."}</p></div><div className="bg-slate-50 p-4 rounded-xl border border-slate-100"><span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Shrink-Swell</span><div className="mt-1 text-3xl font-mono font-bold text-slate-900">{soil.shrink_swell_potential === null || soil.shrink_swell_potential === undefined ? "Not reported" : `${Number(soil.shrink_swell_potential).toFixed(1)}%`}</div><p className="text-xs text-slate-500 mt-2">Mapped linear-extensibility context, site conditions can vary.</p></div></div>}
-            {soilReportAvailable && <Link href={`/learn/${slug}-soil-analysis`} className="not-prose mt-8 flex items-center justify-between p-4 bg-slate-50 border border-blue-100 rounded-xl hover:bg-blue-50 transition"><span><strong className="block text-slate-900">View {city} Soil Risk Report</strong><span className="text-sm text-slate-500">Review the mapped soil record and interpretation.</span></span><ChevronRight className="w-5 h-5 text-blue-600" /></Link>}
-          </div>
-        </section>
+        <SoilIntelligence
+          city={city}
+          slug={slug}
+          zipCode={location.zip_code}
+          soil={soil || null}
+          riskClass={riskClass}
+          soilReportAvailable={soilReportAvailable}
+          intro={getDynamicIntro(city, soilReportAvailable ? soil.map_unit_name : "local soil", hasPi ? riskClass : "unclassified")}
+        />
 
         <FoundationDiagram />
         <SoilActionPlan city={city} soil={soil || null} riskLevel={riskClass} />
