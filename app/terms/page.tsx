@@ -34,12 +34,12 @@ export default function TermsPage() {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <header className="bg-slate-50 border-b border-slate-200 py-12 px-6">
+            <header className="bg-slate-950 border-b border-white/10 py-12 px-6 text-white">
                 <div className="max-w-3xl mx-auto">
                     <Link href="/" className="inline-flex items-center text-slate-500 hover:text-blue-600 mb-8 transition gap-2 text-sm font-medium">
                         <ArrowLeft className="w-4 h-4" /> Back to Registry
                     </Link>
-                    <h1 className="text-4xl font-bold text-slate-900 mb-4">Terms of Service</h1>
+                    <h1 className="text-4xl font-bold text-white mb-4">Terms of Service</h1>
                     <p className="text-slate-600">Effective Date: February 2026</p>
                 </div>
             </header>
@@ -49,13 +49,13 @@ export default function TermsPage() {
                     <Scale className="w-6 h-6 text-blue-600 shrink-0" />
                     <div>
                         <h3 className="font-bold text-slate-900 mb-1">Agreement to Terms</h3>
-                        <p className="text-sm text-slate-700">By accessing the Foundation Risk Registry, you agree to these legal terms regarding data usage, accuracy, and engineering liability.</p>
+                        <p className="text-sm text-slate-700">By accessing the Foundation Risk Registry, you agree to these legal terms regarding data usage, accuracy, service requests, and professional-service limitations.</p>
                     </div>
                 </div>
 
                 <h2>1. Service Description</h2>
                 <p>
-                    The Foundation Risk Registry (&ldquo;the Service&rdquo;) provides visualization of geological and soil data sourced from the USDA Natural Resources Conservation Service (NRCS) Web Soil Survey (SSURGO). The Service is intended for informational and preliminary assessment purposes only.
+                    The Foundation Risk Registry (&ldquo;the Service&rdquo;) provides visualization of geological and soil data sourced from the USDA Natural Resources Conservation Service (NRCS) Web Soil Survey (SSURGO). The Service is intended for informational and informational and screening purposes, alongside the evaluation-request features described on this site.
                 </p>
 
                 <h2>2. No Engineering Advice</h2>
