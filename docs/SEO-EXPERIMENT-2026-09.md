@@ -218,3 +218,12 @@ The global navigation was redesigned around a custom inline SVG FoundationRisk s
 The new brand system uses a dark architectural header, a white/blue FOUNDATIONRISK wordmark, the descriptor `Foundation Evaluation & Repair`, simpler navigation typography, and a single high-contrast evaluation CTA. The logo is implemented as vector markup in `components/BrandLogo.tsx`, so it stays sharp at desktop and mobile sizes without a raster asset dependency. The top utility bar and global content offset were adjusted to match the new 76px navigation height.
 
 This is a global presentation change only. It does not alter city treatment/control membership, service-page SEO copy, lead validation, soil data, or production database state.
+
+
+### 2026-09-19 cinematic service hero background
+
+The shared foundation-repair city template now supports a generated cinematic house-at-dusk hero asset at `/foundation-hero-generated.webp`. The image is treated strictly as a decorative background. All headings, location copy, CTA text, links, and the live soil widget remain real HTML/UI above the image.
+
+Layered navy overlays protect contrast across desktop and mobile, including a stronger left-side gradient behind the primary copy and a bottom fade into the page. The live soil widget receives a restrained translucent frame so it remains visually separated from the photograph without being replaced by image content.
+
+The image is intentionally referenced as a local first-party asset rather than a third-party stock-image URL. Until that binary asset is present in `public/foundation-hero-generated.webp`, the existing slate background remains the visual fallback.
