@@ -27,7 +27,7 @@ export default function FoundationHero({
     <header className="relative isolate overflow-hidden bg-slate-950 px-6 py-10 text-white md:py-16 lg:py-20">
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-30 bg-cover bg-[position:62%_center] sm:bg-[position:68%_center] lg:bg-[position:center_48%]"
+        className="absolute inset-0 -z-30 bg-cover bg-[position:62%_center] sm:bg-[position:68%_center] lg:bg-[position:center_48%] motion-reduce:transform-none"
         style={{ backgroundImage: "url('/foundation-hero-generated.webp')" }}
       />
       <div aria-hidden="true" className="absolute inset-0 -z-20 bg-slate-950/28 sm:bg-slate-950/24 lg:bg-slate-950/20" />
@@ -59,7 +59,7 @@ export default function FoundationHero({
           </h1>
           <p className="mb-6 max-w-xl text-lg leading-relaxed text-slate-300">{description}</p>
 
-          <Link href="/book-analysis" className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-8 py-4 font-bold text-white transition hover:bg-blue-500 hover:shadow-lg">
+          <Link href="/book-analysis" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 px-8 py-4 font-bold text-white transition hover:bg-blue-500 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950">
             <ShieldCheck className="h-5 w-5" aria-hidden="true" />
             {ctaLabel}
           </Link>
