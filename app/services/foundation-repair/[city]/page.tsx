@@ -1,11 +1,11 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronRight, MapPin, ShieldCheck } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import SoilRiskWidget from "@/components/SoilRiskWidget";
 import TrustBadges from "@/components/TrustBadges";
 import SoilIntelligence from "@/components/foundation/SoilIntelligence";
+import FoundationHero from "@/components/foundation/FoundationHero";
 import RepairOptions from "@/components/foundation/RepairOptions";
 import EvaluationCTA from "@/components/foundation/EvaluationCTA";
 import FoundationDiagram from "@/components/FoundationDiagram";
@@ -85,28 +85,16 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
   return (
     <div className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <header className="relative isolate overflow-hidden bg-slate-950 text-white px-6 py-10 md:py-16 lg:py-20">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 -z-30 bg-cover bg-[position:62%_center] sm:bg-[position:68%_center] lg:bg-[position:center_48%]"
-          style={{ backgroundImage: "url('/foundation-hero-generated.webp')" }}
-        />
-        <div aria-hidden="true" className="absolute inset-0 -z-20 bg-slate-950/28 sm:bg-slate-950/24 lg:bg-slate-950/20" />
-        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(2,6,23,0.78)_0%,rgba(2,6,23,0.58)_46%,rgba(2,6,23,0.20)_76%,rgba(2,6,23,0.30)_100%)] lg:bg-[linear-gradient(90deg,rgba(2,6,23,0.82)_0%,rgba(2,6,23,0.62)_34%,rgba(2,6,23,0.14)_66%,rgba(2,6,23,0.24)_100%)]" />
-        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 -z-10 h-32 bg-gradient-to-t from-slate-950/32 to-transparent" />
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1.08fr_0.92fr] gap-10 lg:gap-12 items-center">
-          <div>
-            <nav aria-label="Breadcrumb" className="mb-6 text-sm text-slate-400"><ol className="flex flex-wrap items-center gap-2"><li><Link href="/" className="hover:text-white">Home</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li><li><Link href="/locations" className="hover:text-white">Service Areas</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li><li><Link href={stateRoute.href} className="hover:text-white">{stateRoute.name}</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li><li aria-current="page" className="text-slate-200">{city}</li></ol></nav>
-            <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 px-4 py-1.5 rounded-full text-blue-200 text-sm font-semibold mb-8"><ShieldCheck className="w-4 h-4 text-blue-400" /><span>{treatment ? treatment.eyebrow(city, state) : `Local Soil Context for ${city}, ${state}`}</span></div>
-            <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">{treatment ? treatment.h1Lead : "Foundation Repair Evaluation & Options"}{" "}<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">in {city}, {state}</span></h1>
-            <p className="text-slate-300 text-lg mb-6 leading-relaxed max-w-xl">{treatment ? treatment.hero(city, state) : <>Seeing cracks, uneven floors, sticking doors, or other signs of foundation movement? Request an evaluation to understand the problem and what repair options may make sense for your home.</>}</p>
-            <Link href="/book-analysis" className="inline-flex bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold items-center justify-center gap-2 transition hover:shadow-lg"><ShieldCheck className="w-5 h-5" /> {treatment?.cta || "Request a Foundation Evaluation"}</Link>
-            <p className="mt-3 text-sm text-slate-400">Get help understanding the next step before committing to a repair.</p>
-            <div className="mt-6 pt-6 border-t border-slate-700/50 flex flex-wrap gap-6 text-[11px] font-bold uppercase tracking-widest text-slate-400"><span>USDA Soil Context</span><span>Property-Specific Review</span><span>Compare Repair Options</span></div>
-          </div>
-          <div className="relative rounded-3xl border border-white/15 bg-slate-950/55 p-2 shadow-[0_28px_80px_rgba(2,6,23,0.45)] backdrop-blur-md"><SoilRiskWidget /></div>
-        </div>
-      </header>
+      <FoundationHero
+        city={city}
+        state={state}
+        stateHref={stateRoute.href}
+        stateName={stateRoute.name}
+        eyebrow={treatment ? treatment.eyebrow(city, state) : `Local Soil Context for ${city}, ${state}`}
+        h1Lead={treatment ? treatment.h1Lead : "Foundation Repair Evaluation & Options"}
+        description={treatment ? treatment.hero(city, state) : `Seeing cracks, uneven floors, sticking doors, or other signs of foundation movement? Request an evaluation to understand the problem and what repair options may make sense for your home.`}
+        ctaLabel={treatment?.cta || "Request a Foundation Evaluation"}
+      />
 
       <main id="main-content" className="max-w-4xl mx-auto py-16 px-6">
         <TrustBadges />
