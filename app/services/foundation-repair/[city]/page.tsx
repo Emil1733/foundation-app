@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { MapPin } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import TrustBadges from "@/components/TrustBadges";
 import SoilIntelligence from "@/components/foundation/SoilIntelligence";
@@ -9,6 +8,8 @@ import FoundationHero from "@/components/foundation/FoundationHero";
 import RepairOptions from "@/components/foundation/RepairOptions";
 import EvaluationCTA from "@/components/foundation/EvaluationCTA";
 import RegionalFoundationGuide from "@/components/foundation/RegionalFoundationGuide";
+import FoundationFAQ from "@/components/foundation/FoundationFAQ";
+import NearbyFoundationLocations from "@/components/foundation/NearbyFoundationLocations";
 import FoundationDiagram from "@/components/FoundationDiagram";
 import SoilActionPlan from "@/components/SoilActionPlan";
 import CrackAnalyzer from "@/components/CrackAnalyzer";
@@ -119,9 +120,9 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
 
         <EvaluationCTA city={city} />
 
-        <section className="mb-12"><h2 className="text-3xl font-bold text-slate-900 mb-6">Foundation Repair Questions in {city}</h2><div className="space-y-4">{faqs.map((faq) => <details key={faq.q} className="bg-white border border-slate-200 rounded-xl p-5 group"><summary className="font-bold text-slate-900 cursor-pointer">{faq.q}</summary><p className="mt-3 text-slate-600 leading-relaxed">{faq.a}</p></details>)}</div></section>
+        <FoundationFAQ city={city} faqs={faqs} />
 
-        {neighbors.length > 0 && <section className="border-t border-slate-200 pt-10"><h2 className="text-xl font-bold text-slate-900 mb-5 flex items-center gap-2"><MapPin className="w-5 h-5 text-blue-600" /> Foundation Repair Near {city}</h2><div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">{neighbors.map((n) => <Link key={n.id} href={`/services/foundation-repair/${n.slug}`} className="bg-white border border-slate-200 rounded-lg px-4 py-3 hover:border-blue-300 hover:text-blue-700 transition"><span className="font-semibold">{n.city}, {n.state}</span><span className="block text-xs text-slate-400 mt-1">{n.distanceMiles.toFixed(0)} miles away</span></Link>)}</div></section>}
+        <NearbyFoundationLocations city={city} neighbors={neighbors} />
       </main>
     </div>
   );
