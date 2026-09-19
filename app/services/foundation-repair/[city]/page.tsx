@@ -6,6 +6,8 @@ import { supabase } from "@/lib/supabase";
 import SoilRiskWidget from "@/components/SoilRiskWidget";
 import TrustBadges from "@/components/TrustBadges";
 import SoilIntelligence from "@/components/foundation/SoilIntelligence";
+import RepairOptions from "@/components/foundation/RepairOptions";
+import EvaluationCTA from "@/components/foundation/EvaluationCTA";
 import FoundationDiagram from "@/components/FoundationDiagram";
 import SoilActionPlan from "@/components/SoilActionPlan";
 import CrackAnalyzer from "@/components/CrackAnalyzer";
@@ -123,10 +125,10 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
         <FoundationDiagram />
         <SoilActionPlan city={city} soil={soil || null} riskLevel={riskClass} />
         {stateGuide && <section className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 mb-12"><h2 className="text-2xl font-bold text-slate-900 mb-4">Regional Foundation Guidance for {city}</h2><div className="space-y-4 text-slate-600 leading-relaxed">{stateGuide.overview.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div><h3 className="text-lg font-bold text-slate-900 mt-6 mb-3">What to watch for</h3><ul className="list-disc pl-5 space-y-2 text-slate-600">{stateGuide.watchFor.map((item) => <li key={item}>{item}</li>)}</ul><h3 className="text-lg font-bold text-slate-900 mt-6 mb-3">Evaluation approach</h3><p className="text-slate-600 leading-relaxed">{stateGuide.evaluation}</p><p className="text-sm text-slate-500 mt-4">Regional guidance is context only. Repair decisions should be tied to evidence from the property.</p></section>}
-        {treatment && <section id="repair-options" className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 mb-12 scroll-mt-24"><h2 className="text-2xl font-bold text-slate-900 mb-4">Foundation Repair Options in {city}</h2><p className="text-slate-600 leading-relaxed mb-5">Common proposals may involve localized supports or piers, slab or footing stabilization, drainage corrections, plumbing repairs, or monitoring when structural work is not yet supported by the evidence. The appropriate option depends on the movement mechanism, affected area, access, foundation type, and measurements at the property.</p><p className="text-slate-600 leading-relaxed">When comparing contractors, ask for the measured elevations or other evidence behind the scope, which areas are included, what is excluded, how drainage or plumbing concerns are handled, and what the warranty actually covers.</p></section>}
+        {treatment && <RepairOptions city={city} />}
         <div id="foundation-cost" className="scroll-mt-24"><CostEstimator city={city} pi={soil?.plasticity_index} /></div>
 
-        <section className="bg-slate-900 text-white rounded-2xl p-8 md:p-10 mb-12"><h2 className="text-3xl font-bold mb-4">Does your {city} home need foundation repair?</h2><p className="text-slate-300 mb-6 max-w-2xl">Cracks, uneven floors, sticking doors, and other changes can have several causes. Request a foundation evaluation to understand what may be happening and what your next step should be.</p><Link href="/book-analysis" className="inline-flex bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-xl font-bold items-center gap-2"><ShieldCheck className="w-5 h-5" /> Request a Foundation Evaluation</Link></section>
+        <EvaluationCTA city={city} />
 
         <section className="mb-12"><h2 className="text-3xl font-bold text-slate-900 mb-6">Foundation Repair Questions in {city}</h2><div className="space-y-4">{faqs.map((faq) => <details key={faq.q} className="bg-white border border-slate-200 rounded-xl p-5 group"><summary className="font-bold text-slate-900 cursor-pointer">{faq.q}</summary><p className="mt-3 text-slate-600 leading-relaxed">{faq.a}</p></details>)}</div></section>
 
