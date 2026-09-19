@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import TrustBadges from "@/components/TrustBadges";
@@ -10,6 +9,7 @@ import EvaluationCTA from "@/components/foundation/EvaluationCTA";
 import RegionalFoundationGuide from "@/components/foundation/RegionalFoundationGuide";
 import FoundationFAQ from "@/components/foundation/FoundationFAQ";
 import NearbyFoundationLocations from "@/components/foundation/NearbyFoundationLocations";
+import CommercialLocalFocus from "@/components/foundation/CommercialLocalFocus";
 import FoundationDiagram from "@/components/FoundationDiagram";
 import SoilActionPlan from "@/components/SoilActionPlan";
 import CrackAnalyzer from "@/components/CrackAnalyzer";
@@ -98,9 +98,9 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
         ctaLabel={treatment?.cta || "Request a Foundation Evaluation"}
       />
 
-      <main id="main-content" className="max-w-4xl mx-auto py-16 px-6">
+      <main id="main-content" className="mx-auto max-w-5xl px-5 py-12 sm:px-6 md:py-16">
         <TrustBadges />
-        {treatment && <section className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 mb-12"><h2 className="text-2xl font-bold text-slate-900 mb-3">Choosing Foundation Repair in {city}</h2><p className="text-slate-600 leading-relaxed">{treatment.localFocus(city)}</p><div className="mt-5 flex flex-wrap gap-3 text-sm"><a href="#repair-options" className="font-semibold text-blue-700 hover:underline">Compare repair options</a><span className="text-slate-300">•</span><a href="#foundation-cost" className="font-semibold text-blue-700 hover:underline">Understand cost factors</a><span className="text-slate-300">•</span><Link href="/book-analysis" className="font-semibold text-blue-700 hover:underline">Request an evaluation</Link></div></section>}
+        {treatment && <CommercialLocalFocus city={city} copy={treatment.localFocus(city)} />}
         <CrackAnalyzer city={city} pi={soil?.plasticity_index} />
         <SoilIntelligence
           city={city}
