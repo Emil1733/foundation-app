@@ -391,3 +391,18 @@ Audit conclusions:
 
 Performance note:
 - The cinematic background remains a CSS background because it is decorative and the approved composition depends on cover positioning. Its WebP should remain compressed and locally hosted. Do not add JavaScript or a duplicate image element solely for decoration without a measured LCP reason.
+
+
+### 2026-09-19 - hero soil-check lead funnel
+
+The hero `SoilRiskWidget` was redesigned as a useful free soil-context tool and a measurable lead-funnel entry point.
+
+- Address lookup still returns mapped soil unit, drainage context, Plasticity Index, shrink-swell value, and the shared PI screening classification.
+- Screening labels now use `classifySoilPlasticityIndex` from `lib/soilRisk.ts`, eliminating duplicate classification logic.
+- The result explains what mapped soil can and cannot establish, then offers a property-specific foundation evaluation as the logical next step.
+- The evaluation link carries the checked address into `/book-analysis` and tags the funnel with `source=soil_risk_widget`.
+- `/book-analysis` preserves that allow-listed source through validated submission, and the existing `leads.source` field stores `soil_risk_widget` instead of `web_intake`. This enables lead counts and conversion comparisons by funnel source without a production schema migration.
+- The former email-gated PDF modal was removed. It claimed a report was emailed even though the implementation only generated a local PDF. The mapped soil summary is now an honest direct download, while contact capture happens through the existing consented evaluation form.
+- The PDF filename and copy no longer use unsupported `Forensic` or `critical engineering data` language.
+
+Monitoring query after deployment: compare lead rows where `source = 'soil_risk_widget'` against `source = 'web_intake'`. This measures completed leads, not merely soil checks or CTA clicks. Event-level funnel analytics would require a separate analytics implementation.
