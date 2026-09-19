@@ -53,7 +53,7 @@ export default function FoundationHero({
             <span>{eyebrow}</span>
           </div>
 
-          <h1 className="mb-6 text-4xl font-extrabold leading-tight md:text-6xl">
+          <h1 className="mb-6 text-3xl font-extrabold leading-[1.08] sm:text-4xl md:text-5xl lg:text-[3.35rem]">
             {h1Lead}{" "}
             <span className="bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent">in {city}, {state}</span>
           </h1>
