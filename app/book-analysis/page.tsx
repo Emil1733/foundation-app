@@ -143,7 +143,7 @@ function IntakeForm() {
                         The registry team or a participating local service provider will review the request and follow up using the contact information you provided. The provider should explain their qualifications and scope before any service begins.
                     </p>
                     <Link href="/" className="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-slate-800 transition">
-                        Return to Registry
+                        Return Home
                     </Link>
                 </main>
              </div>
@@ -166,13 +166,13 @@ function IntakeForm() {
                 <div className="mb-8 text-center">
                     <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-sm font-bold mb-6">
                         <CheckCircle className="w-4 h-4" />
-                        Preliminary Assessment
+                        Foundation Evaluation Request
                     </div>
                     <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-4 leading-tight">
                         Request a Foundation Evaluation
                     </h1>
                     <p className="text-slate-600 text-lg max-w-lg mx-auto">
-                        Share your symptoms and property details so the soil context can be reviewed and the appropriate local next step can be identified.
+                        Tell us what you are seeing at the property so your request can be reviewed and the right foundation evaluation or repair next step can be identified.
                         <span className="block mt-2 font-bold text-slate-800">No obligation to purchase a repair.</span>
                     </p>
                 </div>
@@ -250,7 +250,7 @@ function IntakeForm() {
                                 <MapPin className="w-5 h-5 text-blue-500" />
                                 Property Location
                             </h2>
-                            <p className="text-sm text-slate-500">We use this to pull the USDA Soil Map Unit for your specific lot.</p>
+                            <p className="text-sm text-slate-500">We use the property location to organize your request and review relevant mapped soil context for the area.</p>
 
                             <div className="space-y-4">
                                 <div>
@@ -313,7 +313,7 @@ function IntakeForm() {
                         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                              <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
                                 <User className="w-5 h-5 text-green-500" />
-                                Evaluation Follow-Up
+                                Your Contact Details
                             </h2>
                             <p className="text-sm text-slate-500">Where can a foundation professional follow up about your property concerns and evaluation options?</p>
 
