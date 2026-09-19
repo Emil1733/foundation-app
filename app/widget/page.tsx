@@ -15,7 +15,7 @@ export default function WidgetPage() {
                 {/* WIDGET HEADER */}
                 <div className="bg-slate-900 p-3 text-center">
                     <h3 className="text-white text-sm font-bold flex items-center justify-center gap-2">
-                        <ShieldCheck className="w-4 h-4 text-blue-400" /> Official Soil Risk Check
+                        <ShieldCheck className="w-4 h-4 text-blue-400" /> Mapped Soil Risk Check
                     </h3>
                 </div>
 
@@ -28,11 +28,11 @@ export default function WidgetPage() {
                 {/* SEO BACKLINK (The "Bait") */}
                 <div className="bg-slate-50 p-2 text-center border-t border-slate-200">
                     <Link
-                        href="https://foundation-app-self.vercel.app"
+                        href="https://foundationrisk.org"
                         target="_blank"
                         className="text-[10px] text-slate-500 hover:text-blue-600 font-medium flex items-center justify-center gap-1"
                     >
-                        Powered by Foundation Risk Registry &trade;
+                        Powered by FoundationRisk.org
                     </Link>
                 </div>
             </div>
