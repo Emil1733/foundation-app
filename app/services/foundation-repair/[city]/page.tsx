@@ -8,6 +8,7 @@ import SoilIntelligence from "@/components/foundation/SoilIntelligence";
 import FoundationHero from "@/components/foundation/FoundationHero";
 import RepairOptions from "@/components/foundation/RepairOptions";
 import EvaluationCTA from "@/components/foundation/EvaluationCTA";
+import RegionalFoundationGuide from "@/components/foundation/RegionalFoundationGuide";
 import FoundationDiagram from "@/components/FoundationDiagram";
 import SoilActionPlan from "@/components/SoilActionPlan";
 import CrackAnalyzer from "@/components/CrackAnalyzer";
@@ -112,7 +113,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
 
         <FoundationDiagram />
         <SoilActionPlan city={city} soil={soil || null} riskLevel={riskClass} />
-        {stateGuide && <section className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 mb-12"><h2 className="text-2xl font-bold text-slate-900 mb-4">Regional Foundation Guidance for {city}</h2><div className="space-y-4 text-slate-600 leading-relaxed">{stateGuide.overview.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div><h3 className="text-lg font-bold text-slate-900 mt-6 mb-3">What to watch for</h3><ul className="list-disc pl-5 space-y-2 text-slate-600">{stateGuide.watchFor.map((item) => <li key={item}>{item}</li>)}</ul><h3 className="text-lg font-bold text-slate-900 mt-6 mb-3">Evaluation approach</h3><p className="text-slate-600 leading-relaxed">{stateGuide.evaluation}</p><p className="text-sm text-slate-500 mt-4">Regional guidance is context only. Repair decisions should be tied to evidence from the property.</p></section>}
+        {stateGuide && <RegionalFoundationGuide city={city} guide={stateGuide} />}
         {treatment && <RepairOptions city={city} />}
         <div id="foundation-cost" className="scroll-mt-24"><CostEstimator city={city} pi={soil?.plasticity_index} /></div>
 
