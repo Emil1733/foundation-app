@@ -428,3 +428,17 @@ The service-page hero now prioritizes direct conversion instead of requiring a s
 - No database schema change is required because attribution continues to use the existing `leads.source` field.
 
 Design rule: service hero = direct lead capture; soil checker = supporting utility/evidence.
+
+
+### 2026-09-19 - homepage conversion redesign
+
+The homepage now uses the same premium cinematic foundation-service language as the city pages.
+
+- The old white soil-tool-first hero was replaced with the shared cinematic house background, foundation-focused commercial copy, trust points, and the reusable direct lead form.
+- Homepage form submissions use `leads.source = 'homepage_hero'`, distinct from city-page `hero_form` leads.
+- `HeroLeadForm` now accepts an allow-listed source prop so the same validated form can be reused without duplicating lead handling.
+- The soil checker remains on the homepage but has been moved below the initial trust section into a dedicated dark utility section. It supports engagement and credibility rather than blocking direct lead capture.
+- Existing educational content and internal city links remain in place to preserve homepage SEO and crawl value.
+- No database schema change is required.
+
+Homepage rule: direct evaluation request first, supporting soil utility second, educational and local SEO content after.
