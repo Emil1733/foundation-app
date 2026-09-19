@@ -326,3 +326,17 @@ The shared `components/CostEstimator.tsx` was redesigned as a premium foundation
 The visual treatment now uses the same architectural light/dark rhythm as the Foundation Signs experience, with restrained blue as the shared action color. The city and mapped PI remain data inputs, the address and selected symptom continue through the existing `/book-analysis` form path, and all explanatory content remains real HTML.
 
 No city-specific styling, treatment membership, pricing claims, SEO metadata, soil classification logic, or production data was changed.
+
+
+### 2026-09-19 - repair options and conversion-break batch
+
+Two additional reusable components now live in the dedicated foundation namespace:
+
+- `components/foundation/RepairOptions.tsx`
+- `components/foundation/EvaluationCTA.tsx`
+
+The treatment-only repair-options block was extracted from the city template into `RepairOptions`. It presents support/piers, drainage correction, plumbing/leak work, and monitoring as distinct proposal categories while repeatedly tying selection to property evidence. The treatment guard remains in the shared city route, so this extraction does not expose the treatment-only section to control cities.
+
+The former generic dark CTA block was replaced by `EvaluationCTA`, a reusable dark conversion break that reconnects the lower page to the premium hero language. It uses a single evaluation action plus concise trust points and does not claim a diagnosis, free service, engineering relationship, or guaranteed repair outcome.
+
+The shared city template now orchestrates both components instead of owning their presentation markup. No treatment membership, SEO metadata, production data, or city-specific styling was changed.
