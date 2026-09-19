@@ -68,13 +68,13 @@ export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number 
       {/* Header */}
       <div className="bg-slate-950 px-6 py-5 border-b border-slate-800 flex items-center gap-3">
         <Activity className="text-blue-500 w-6 h-6" />
-        <h2 className="text-xl font-extrabold text-white tracking-wide uppercase">Foundation Symptom Guide</h2>
+        <h2 className="text-xl font-extrabold text-white tracking-wide uppercase">What Could These Foundation Signs Mean?</h2>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2">
         {/* Left: Inputs */}
         <div className="p-6 md:p-8 bg-slate-900">
-          <p className="text-slate-400 font-bold mb-6 uppercase tracking-widest text-xs">Step 1: Select Observable Symptom</p>
+          <p className="text-slate-400 font-bold mb-6 uppercase tracking-widest text-xs">Select what you are seeing</p>
           <div className="flex flex-col gap-3">
             {issues.map((issue) => {
               const Icon = issue.icon;
@@ -104,12 +104,12 @@ export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number 
 
         {/* Right: Output Screen */}
         <div className="p-6 md:p-8 bg-slate-950 border-t lg:border-t-0 lg:border-l border-slate-800 relative">
-          <p className="text-slate-500 font-bold mb-6 uppercase tracking-widest text-xs">Symptom Context</p>
+          <p className="text-slate-500 font-bold mb-6 uppercase tracking-widest text-xs">What This May Mean</p>
 
           {!selectedIssue && !showResult && (
             <div className="h-full min-h-[350px] flex flex-col items-center justify-center text-slate-600 space-y-4">
               <Search className="w-16 h-16 opacity-20" />
-              <p className="text-center px-4 font-medium text-lg">Waiting for symptom input... <br/><span className="text-sm font-normal text-slate-500">Select a symptom to review what it can mean and what to document next.</span></p>
+              <p className="text-center px-4 font-medium text-lg">Select a foundation sign... <br/><span className="text-sm font-normal text-slate-500">See what it may mean and whether an evaluation makes sense.</span></p>
             </div>
           )}
 
@@ -120,7 +120,7 @@ export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number 
                   {activeIssue.risk}
                 </div>
                 
-                <h3 className="text-2xl font-extrabold text-white mb-3">Symptom Context</h3>
+                <h3 className="text-2xl font-extrabold text-white mb-3">What This May Mean</h3>
                 <p className="text-slate-300 leading-relaxed mb-6 text-lg">{activeIssue.desc}</p>
                 
                 <div className="bg-slate-900 rounded-xl p-5 border border-slate-800 mb-6 relative overflow-hidden">
@@ -137,7 +137,7 @@ export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number 
               </div>
 
               <div className="mt-8 pt-6 border-t border-slate-800 mb-2">
-                <p className="text-slate-400 font-bold mb-3 text-xs uppercase tracking-widest">Request a Property Review</p>
+                <p className="text-slate-400 font-bold mb-3 text-xs uppercase tracking-widest">Get Help With Your Foundation</p>
                 <form action="/book-analysis" className="flex flex-col sm:flex-row gap-3">
                   <input type="hidden" name="symptom" value={activeIssue.id} />
                   <input
@@ -149,7 +149,7 @@ export default function CrackAnalyzer({ city, pi }: { city: string; pi?: number 
                       required
                   />
                   <button type="submit" className={`w-full sm:w-auto text-white font-extrabold px-6 py-4 rounded-xl transition hover:scale-105 bg-gradient-to-r ${activeIssue.color} shadow-lg`}>
-                      Continue to Evaluation
+                      Request a Foundation Evaluation
                   </button>
                 </form>
               </div>
