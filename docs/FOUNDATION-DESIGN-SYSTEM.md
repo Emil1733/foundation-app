@@ -346,3 +346,14 @@ The approved cinematic service hero was extracted into `components/foundation/Fo
 The shared city route remains responsible for selecting treatment versus control copy. It passes the resolved eyebrow, H1 lead, description, CTA label, state route, and location values into the component. This keeps SEO experiment membership and content logic outside the visual component while eliminating the large hero presentation block from the route.
 
 The extraction intentionally preserves the approved `/foundation-hero-generated.webp` asset path and the mobile framing/overlay values that were visually approved. No treatment membership, metadata, production data, soil logic, or conversion destination was changed.
+
+
+### 2026-09-19 - regional guidance and soil action-plan batch
+
+The remaining mid-page context blocks were brought into the reusable design system.
+
+- `components/foundation/RegionalFoundationGuide.tsx` now owns presentation for the structured state guidance from `lib/stateFoundationGuides.ts`. The city route passes the city and existing state guide into the component. Overview paragraphs, watch-for items, evaluation guidance, and the property-evidence limitation remain crawlable HTML.
+- `components/SoilActionPlan.tsx` was visually redesigned without changing its input contract. It now uses a dark mapped-signal panel paired with a light practical next-step sequence for documenting symptoms, checking water conditions, and asking for evidence behind a proposed scope.
+- The shared city route no longer contains the large inline regional-guidance markup.
+
+No state-guide facts were rewritten in this batch. No city-specific styling, treatment membership, SEO metadata, production data, soil classification thresholds, or conversion destinations were changed.
