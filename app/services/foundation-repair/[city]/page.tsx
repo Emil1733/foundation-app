@@ -82,9 +82,16 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
   return (
     <div className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <header className="bg-slate-900 text-white py-8 md:py-12 px-6 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-800 to-slate-950 -z-10" />
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      <header className="relative isolate overflow-hidden bg-slate-950 text-white px-6 py-10 md:py-16 lg:py-20">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-30 bg-cover bg-center lg:bg-[center_48%]"
+          style={{ backgroundImage: "url('/foundation-hero-generated.webp')" }}
+        />
+        <div aria-hidden="true" className="absolute inset-0 -z-20 bg-slate-950/60" />
+        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(2,6,23,0.96)_0%,rgba(2,6,23,0.82)_38%,rgba(2,6,23,0.52)_66%,rgba(2,6,23,0.66)_100%)] lg:bg-[linear-gradient(90deg,rgba(2,6,23,0.96)_0%,rgba(2,6,23,0.82)_36%,rgba(2,6,23,0.36)_66%,rgba(2,6,23,0.58)_100%)]" />
+        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-slate-950/55 to-transparent" />
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1.08fr_0.92fr] gap-10 lg:gap-12 items-center">
           <div>
             <nav aria-label="Breadcrumb" className="mb-6 text-sm text-slate-400"><ol className="flex flex-wrap items-center gap-2"><li><Link href="/" className="hover:text-white">Home</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li><li><Link href="/locations" className="hover:text-white">Service Areas</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li><li><Link href={stateRoute.href} className="hover:text-white">{stateRoute.name}</Link></li><li><ChevronRight className="h-3.5 w-3.5" /></li><li aria-current="page" className="text-slate-200">{city}</li></ol></nav>
             <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 px-4 py-1.5 rounded-full text-blue-200 text-sm font-semibold mb-8"><ShieldCheck className="w-4 h-4 text-blue-400" /><span>{treatment ? treatment.eyebrow(city, state) : `Local Soil Context for ${city}, ${state}`}</span></div>
@@ -94,7 +101,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             <p className="mt-3 text-sm text-slate-400">Get help understanding the next step before committing to a repair.</p>
             <div className="mt-6 pt-6 border-t border-slate-700/50 flex flex-wrap gap-6 text-[11px] font-bold uppercase tracking-widest text-slate-400"><span>USDA Soil Context</span><span>Property-Specific Review</span><span>Compare Repair Options</span></div>
           </div>
-          <div className="relative"><SoilRiskWidget /></div>
+          <div className="relative rounded-3xl border border-white/15 bg-slate-950/55 p-2 shadow-[0_28px_80px_rgba(2,6,23,0.45)] backdrop-blur-md"><SoilRiskWidget /></div>
         </div>
       </header>
 
