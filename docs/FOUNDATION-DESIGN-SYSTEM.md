@@ -301,3 +301,12 @@ The first design-system implementation batch is now present on `seo-build-valida
 - The existing `SoilRiskWidget` in the hero is a separate address-search interaction and was intentionally not folded into `SoilIntelligence` in this batch.
 
 This batch establishes the intended pattern: extract shared presentation while preserving existing data sources, SEO semantics, treatment isolation, and business logic. Continue future migrations in small validated batches rather than rewriting the whole page at once.
+
+
+### 2026-09-19 - foundation signs interaction redesign
+
+The shared `components/CrackAnalyzer.tsx` presentation was redesigned as the next design-system batch. It remains one reusable component for all city service pages and still receives only `city` and mapped PI context from the shared template.
+
+The interaction now uses a light architectural selection panel paired with a dark interpretation panel, matching the premium visual rhythm established by the cinematic hero and Soil Intelligence component. Symptom choices remain observable homeowner signs, not diagnoses. Selecting a sign reveals cautious interpretation, mapped-soil context, and the existing evaluation path. The address field and symptom parameter remain real form controls submitted to `/book-analysis`.
+
+No treatment-city membership, SEO metadata, city-specific styling, soil classification logic, or production data was changed in this batch.
