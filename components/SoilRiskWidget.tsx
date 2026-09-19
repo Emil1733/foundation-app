@@ -25,11 +25,15 @@ export default function SoilRiskWidget() {
     setData(null);
 
     try {
-      const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`);
+      const geoRes = await fetch('/api/geocode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ address }),
+      });
       const geoData = await geoRes.json();
-      if (!geoData?.length) throw new Error('We could not find that address. Try including the city and state.');
+      if (!geoRes.ok) throw new Error(geoData.error || 'Unable to look up that address.');
 
-      const { lat, lon } = geoData[0];
+      const { lat, lon } = geoData;
       const soilRes = await fetch('/api/soil', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
