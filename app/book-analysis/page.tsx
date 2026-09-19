@@ -98,7 +98,7 @@ function IntakeForm() {
         setFormError('');
     };
 
-    const updateField = <Field extends keyof LeadSubmissionInput>(
+    const updateField = <Field extends LeadField>(
         field: Field,
         value: LeadSubmissionInput[Field],
     ) => {
