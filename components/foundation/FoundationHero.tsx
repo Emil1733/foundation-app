@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ChevronRight, ShieldCheck } from "lucide-react";
-import SoilRiskWidget from "@/components/SoilRiskWidget";
+import HeroLeadForm from "@/components/foundation/HeroLeadForm";
 
 type FoundationHeroProps = {
   city: string;
@@ -72,8 +72,8 @@ export default function FoundationHero({
           </div>
         </div>
 
-        <div className="relative rounded-3xl border border-white/15 bg-slate-950/55 p-2 shadow-[0_28px_80px_rgba(2,6,23,0.45)] backdrop-blur-md">
-          <SoilRiskWidget />
+        <div className="relative">
+          <HeroLeadForm city={city} />
         </div>
       </div>
     </header>
