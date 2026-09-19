@@ -202,3 +202,11 @@ The full implementation branch was compared against `master` and the highest-ris
 The dynamic city intro fallback was also corrected so missing PI data no longer has any path to the phrase `A unclassified map classification`. Missing classification now receives explicit no-PI wording. Repository searches found no remaining occurrences of the previously removed `forensic`, `Geological Authority`, `permanent structural stabilization`, `100% accuracy`, `AES-256`, `Data Protection Officer`, simulated diagnostic, or `Get Report` language.
 
 PR #1 was updated to reflect the implementation that is actually present rather than the obsolete initial checklist. The PR remains draft and no merge to `master` was performed.
+
+### 2026-09-19 sitewide service-page conversion pass
+
+A sitewide conversion-copy pass was applied through the shared service-page template and shared components rather than editing city pages individually. The goal is to preserve the scalable programmatic architecture while making the homeowner path clearer: identify a foundation concern, understand what it may mean, and request an evaluation.
+
+The shared trust strip now emphasizes property-specific help, foundation repair guidance, clear next steps, and local USDA soil context. The symptom tool now uses homeowner-oriented language such as `What This May Mean` and a consistent `Request a Foundation Evaluation` CTA. The former `Foundation Repair Scope Planner` is presented as `What Should You Do Next?`, while its cautious decision logic remains unchanged.
+
+The global service-page hero and final CTA copy were strengthened to connect common symptoms directly to an evaluation request without claiming an online diagnosis or guaranteed repair need. Treatment-city hero copy was updated through the existing treatment registry, with treatment membership and the control cohort unchanged. No new cities were added to the commercial SEO treatment.
