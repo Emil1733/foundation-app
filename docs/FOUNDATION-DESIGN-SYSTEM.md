@@ -442,3 +442,15 @@ The homepage now uses the same premium cinematic foundation-service language as 
 - No database schema change is required.
 
 Homepage rule: direct evaluation request first, supporting soil utility second, educational and local SEO content after.
+
+
+### 2026-09-19 - locations, resource library, and evaluation intake alignment
+
+The primary supporting page families now follow the premium foundation-service system.
+
+- `/locations` uses the cinematic brand surface and clearer state-selection hierarchy while retaining crawlable state links.
+- `/locations/[state]` uses the premium hero treatment and a more commercial `Foundation Repair in [State]` H1 while preserving pagination, city links, and state guidance.
+- `/learn` was repositioned from unsupported `Engineering Library / Forensic Soil Analysis / Repair Protocols` language to a foundation and soil resource library. Featured cards no longer claim why foundations fail or why a specific piling system fails from mapped soil data.
+- `/learn/[slug]` keeps its server-rendered soil evidence and SEO structure but presents the report in the darker premium editorial system.
+- `/book-analysis` retains the existing validated multi-step intake and consent behavior while visually aligning the page with the cinematic foundation-service brand.
+- SEO pagination, canonicals, structured data, internal links, and lead submission mechanics were intentionally preserved.
