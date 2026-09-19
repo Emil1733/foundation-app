@@ -57,9 +57,11 @@ export default async function LocationsMap() {
         <div className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)]">
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
             
-            <header className="bg-slate-900 text-white py-16 px-6 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-800 to-slate-950 -z-10" />
-                <div className="max-w-7xl mx-auto text-center">
+            <header className="relative isolate overflow-hidden bg-slate-950 px-6 py-16 text-white md:py-20">
+                <div aria-hidden="true" className="absolute inset-0 -z-30 bg-cover bg-[position:center_48%]" style={{ backgroundImage: "url('/foundation-hero-generated.webp')" }} />
+                <div aria-hidden="true" className="absolute inset-0 -z-20 bg-slate-950/60" />
+                <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(2,6,23,0.88)_0%,rgba(2,6,23,0.70)_50%,rgba(2,6,23,0.48)_100%)]" />
+                <div className="max-w-6xl mx-auto text-center">
                     <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 px-4 py-1.5 rounded-full text-blue-200 text-sm font-semibold mb-6 backdrop-blur-sm">
                         <ShieldAlert className="w-4 h-4 text-blue-400" />
                         <span>Foundation Repair Help Near You</span>
@@ -71,7 +73,12 @@ export default async function LocationsMap() {
                 </div>
             </header>
 
-            <main className="max-w-5xl mx-auto py-16 px-4 sm:px-6">
+            <main className="max-w-6xl mx-auto py-16 px-4 sm:px-6">
+                <div className="mb-10 max-w-2xl">
+                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-700">Choose your area</p>
+                    <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">Find local foundation repair guidance</h2>
+                    <p className="mt-3 text-slate-600">Select a state, then choose your city to review warning signs, local soil context, repair considerations, and evaluation options.</p>
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {sortedStates.map(state => {
                         const cities = clusters[state];
