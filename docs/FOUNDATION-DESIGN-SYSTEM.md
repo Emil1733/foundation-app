@@ -285,3 +285,19 @@ The core rule is:
 **One visual system + reusable components + structured local data + server-rendered SEO content.**
 
 Do not solve a local city-page problem with one-off markup if the same need can be represented by a reusable component, content helper, or documented variant.
+
+
+## Implementation log
+
+### 2026-09-19 - first reusable component batch
+
+The first design-system implementation batch is now present on `seo-build-validation`.
+
+- `components/TrustBadges.tsx` remains the compatibility entry point used by existing pages, but its presentation has been redesigned as the approved premium credibility/specification strip rather than four generic circular-icon cards.
+- `components/foundation/SoilIntelligence.tsx` is the first new component in the dedicated foundation component namespace.
+- The shared city service template now delegates its mapped-soil presentation to `SoilIntelligence` instead of owning that large presentation block inline.
+- Soil values, city, slug, ZIP, screening class, report availability, and locally generated intro copy are passed into the component as data. No city-specific styling was introduced.
+- The soil panel keeps the mapped-data limitation visible and keeps the detailed soil-report link as real HTML.
+- The existing `SoilRiskWidget` in the hero is a separate address-search interaction and was intentionally not folded into `SoilIntelligence` in this batch.
+
+This batch establishes the intended pattern: extract shared presentation while preserving existing data sources, SEO semantics, treatment isolation, and business logic. Continue future migrations in small validated batches rather than rewriting the whole page at once.
