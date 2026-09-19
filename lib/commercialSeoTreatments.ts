@@ -41,7 +41,7 @@ function createTreatment(localFocus: (city: string) => string): CommercialSeoTre
     eyebrow: (city, state) => `Foundation Repair in ${city}, ${state}`,
     h1Lead: "Foundation Repair",
     hero: (city) =>
-      `Seeing cracks, sticking doors, uneven floors, or other signs of movement in ${city}? Compare warning signs, local soil context, evaluation steps, and repair options before choosing a contractor or repair scope.`,
+      `Seeing cracks, uneven floors, sticking doors, or other signs of foundation movement in ${city}? Request an evaluation to understand what may be causing the problem and what repair options may make sense for your home.`,
     cta: "Request a Foundation Evaluation",
     localFocus,
   };
