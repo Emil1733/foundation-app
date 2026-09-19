@@ -1,4 +1,6 @@
 import SoilRiskWidget from "@/components/SoilRiskWidget";
+import HeroLeadForm from "@/components/foundation/HeroLeadForm";
+import { CheckCircle2, ShieldCheck } from "lucide-react";
 import Link from 'next/link';
 import { MapPin, ArrowRight } from 'lucide-react';
 import PartnerLogos from "@/components/PartnerLogos";
@@ -27,23 +29,48 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)] flex flex-col items-center">
-        <section className="w-full flex flex-col items-center justify-center pb-8 px-6 bg-white border-b border-slate-100">
-          <div className="max-w-4xl w-full text-center space-y-6 mb-12">
-            <div className="inline-block bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
-              🇺🇸 Serving Texas, Oklahoma & Missouri
-            </div>
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 leading-tight">
-              Foundation <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Problems?</span> <br />
-              Start With the Evidence.
-            </h1>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              Cracks, uneven floors, sticking doors, or signs of movement? Understand what may be happening, review foundation repair options, and
-              <strong> Request a property-specific evaluation</strong> before choosing a repair plan.
-            </p>
-          </div>
+        <section className="relative isolate w-full overflow-hidden bg-slate-950 px-6 py-12 text-white md:py-16 lg:py-20">
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 -z-30 bg-cover bg-[position:64%_center] lg:bg-[position:center_48%]"
+            style={{ backgroundImage: "url('/foundation-hero-generated.webp')" }}
+          />
+          <div aria-hidden="true" className="absolute inset-0 -z-20 bg-slate-950/28" />
+          <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(2,6,23,0.88)_0%,rgba(2,6,23,0.70)_38%,rgba(2,6,23,0.22)_70%,rgba(2,6,23,0.34)_100%)]" />
 
-          <div className="w-full flex justify-center relative z-10">
-            <SoilRiskWidget />
+          <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:gap-12">
+            <div>
+              <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-blue-400/25 bg-blue-400/10 px-4 py-1.5 text-sm font-semibold text-blue-200">
+                <ShieldCheck className="h-4 w-4 text-blue-300" aria-hidden="true" />
+                Foundation Evaluation & Repair Guidance
+              </div>
+
+              <h1 className="max-w-2xl text-4xl font-extrabold leading-[1.06] tracking-tight sm:text-5xl lg:text-[3.7rem]">
+                Foundation problems? <span className="bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent">Get clarity before choosing a repair.</span>
+              </h1>
+              <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
+                Cracks, uneven floors, sticking doors, or other signs of movement? Request a property-specific foundation evaluation and understand the next step before committing to a repair.
+              </p>
+
+              <div className="mt-7 grid max-w-xl gap-3 sm:grid-cols-3">
+                {[
+                  'Property-specific review',
+                  'Foundation-focused help',
+                  'Compare repair options',
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-2 text-sm font-semibold text-slate-200">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-blue-300" aria-hidden="true" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <p className="mt-7 max-w-xl border-t border-white/10 pt-5 text-xs leading-5 text-slate-400">
+                Mapped soil data can add useful context, but repair decisions should be based on evidence from the property itself.
+              </p>
+            </div>
+
+            <HeroLeadForm city="your area" source="homepage_hero" />
           </div>
         </section>
 
@@ -62,6 +89,22 @@ export default async function Home() {
                 <p className="text-slate-500 leading-relaxed">{item.desc}</p>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className="w-full bg-slate-950 px-6 py-16 text-white">
+          <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[0.78fr_1.22fr]">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-300">Free Property Tool</p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight">Check Your Foundation Risk</h2>
+              <p className="mt-4 max-w-md text-sm leading-6 text-slate-300">
+                Look up mapped USDA soil context for a property address. Use the result as one piece of evidence when evaluating foundation symptoms and repair recommendations.
+              </p>
+              <p className="mt-4 text-xs leading-5 text-slate-500">Mapped soil screening is not a diagnosis of the foundation.</p>
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-2 shadow-2xl">
+              <SoilRiskWidget />
+            </div>
           </div>
         </section>
 
