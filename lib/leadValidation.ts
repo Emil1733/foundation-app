@@ -27,6 +27,7 @@ export type LeadSubmissionInput = {
   symptoms: string[];
   notes: string;
   tcpaConsent: boolean;
+  source?: "web_intake" | "soil_risk_widget";
 };
 
 export type NormalizedLeadSubmission = Omit<LeadSubmissionInput, "tcpaConsent"> & {
@@ -132,6 +133,7 @@ export function validateLeadSubmission(input: unknown): LeadValidationResult {
       symptoms,
       notes,
       tcpaConsent: true,
+      source: source.source === "soil_risk_widget" ? "soil_risk_widget" : "web_intake",
     },
   };
 }
