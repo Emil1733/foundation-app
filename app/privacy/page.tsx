@@ -34,12 +34,12 @@ export default function PrivacyPage() {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <header className="bg-slate-50 border-b border-slate-200 py-12 px-6">
+            <header className="bg-slate-950 border-b border-white/10 py-12 px-6 text-white">
                 <div className="max-w-3xl mx-auto">
                     <Link href="/" className="inline-flex items-center text-slate-500 hover:text-blue-600 mb-8 transition gap-2 text-sm font-medium">
                         <ArrowLeft className="w-4 h-4" /> Back to Registry
                     </Link>
-                    <h1 className="text-4xl font-bold text-slate-900 mb-4">Privacy & Data Governance</h1>
+                    <h1 className="text-4xl font-bold text-white mb-4">Privacy & Data Governance</h1>
                     <p className="text-slate-600">Last Updated: September 2026</p>
                 </div>
             </header>
