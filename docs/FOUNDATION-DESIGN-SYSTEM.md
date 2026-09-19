@@ -368,3 +368,26 @@ The lower service-page content is now part of the reusable foundation component 
 - The city route no longer owns FAQ accordion styling or nearby-location card styling.
 
 This batch does not change FAQ generation, neighbor selection, distances, service URLs, schema, treatment membership, metadata, production data, or indexability logic.
+
+
+### 2026-09-19 - full service-page composition audit
+
+A page-level audit was performed after the reusable component redesigns.
+
+Changes made:
+- The shared content column was widened from `max-w-4xl` to `max-w-5xl` so split-layout tools have adequate desktop breathing room while retaining responsive side padding.
+- Mobile page padding and vertical entry spacing were tightened to reduce the feeling of stacked oversized cards on small screens.
+- The remaining inline treatment-only local-focus block was extracted into `components/foundation/CommercialLocalFocus.tsx`. Treatment membership remains in the route, preserving the experiment boundary.
+- The local-focus shortcuts remain normal anchor/link navigation to repair options, planning factors, and the evaluation path.
+- The hero CTA received an explicit keyboard focus treatment and minimum target height.
+- Existing native FAQ disclosure controls, semantic headings, breadcrumb navigation, crawlable nearby-city links, and server-rendered content were preserved.
+- No additional client component was introduced during the audit. Interactive client JavaScript remains concentrated in the existing Foundation Signs and Foundation Planning tools (plus the pre-existing soil search widget).
+
+Audit conclusions:
+- Dark surfaces are now reserved for deliberate emphasis: the cinematic hero, evidence/soil-signal panels inside mixed sections, interactive interpretation panels, and the lower conversion break. The page does not need additional full-width dark sections.
+- Component order is coherent for the intended journey: commercial context -> observable signs -> mapped evidence -> evaluation logic -> regional/local context -> repair comparison -> planning -> conversion -> FAQ -> nearby internal links.
+- FAQ and nearby locations should remain low-interaction server components.
+- Avoid further visual redesign until real mobile/desktop QA or performance data identifies a concrete issue.
+
+Performance note:
+- The cinematic background remains a CSS background because it is decorative and the approved composition depends on cover positioning. Its WebP should remain compressed and locally hosted. Do not add JavaScript or a duplicate image element solely for decoration without a measured LCP reason.
