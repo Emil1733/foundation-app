@@ -415,3 +415,16 @@ The property soil widget no longer calls the public Nominatim geocoder directly 
 A same-origin server route now handles geocoding at `app/api/geocode/route.ts`. The client posts the address to FoundationRisk, the server performs the external lookup with an identifying User-Agent, restricts results to the US, validates the returned coordinates, and returns only the coordinates/display name needed by the widget. The existing `/api/soil` route remains responsible for USDA soil lookup.
 
 This also gives the UI useful HTTP errors instead of an opaque browser network failure.
+
+
+### 2026-09-19 - direct hero lead form
+
+The service-page hero now prioritizes direct conversion instead of requiring a soil lookup before contact capture.
+
+- `HeroLeadForm` is the right-side hero surface and submits through the existing validated `submitLead` server action.
+- The form collects name, phone, email, property address, ZIP code, one primary foundation concern, and the existing contact-consent checkbox.
+- Successful hero submissions are stored with `leads.source = 'hero_form'`, allowing direct comparison with `web_intake` and `soil_risk_widget`.
+- The soil checker remains available lower on the service page as an engagement and credibility tool. It is no longer the primary hero conversion path.
+- No database schema change is required because attribution continues to use the existing `leads.source` field.
+
+Design rule: service hero = direct lead capture; soil checker = supporting utility/evidence.
