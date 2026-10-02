@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function BrandLogo({ compact = false }: { compact?: boolean }) {
   return (
-    <Link href="/" aria-label="FoundationRisk home" className="group inline-flex items-center gap-3.5 shrink-0">
+    <Link href="/" className="group inline-flex items-center gap-3.5 shrink-0">
       <svg
         viewBox="0 0 64 64"
         aria-hidden="true"

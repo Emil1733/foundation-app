@@ -5,7 +5,7 @@ export const metadata = {
     title: "Data Disclaimer | Foundation Risk Registry",
     description: "Understand the limits of mapped USDA soil data, foundation-risk screening, evaluation requests, and information supplied by participating service providers.",
     alternates: { canonical: "https://foundationrisk.org/disclaimer" },
-    openGraph: { url: "https://foundationrisk.org/disclaimer" },
+    openGraph: { url: "https://foundationrisk.org/disclaimer", images: ["/logo.png"] },
 };
 
 export default function DisclaimerPage() {
@@ -49,7 +49,7 @@ export default function DisclaimerPage() {
                     <div className="bg-amber-50 border border-amber-100 p-6 rounded-xl not-prose mb-10 flex items-start gap-4">
                         <AlertTriangle className="w-6 h-6 text-amber-600 shrink-0" />
                         <div>
-                            <h3 className="font-bold text-slate-900 mb-1">Informational Purpose Only</h3>
+                            <h2 className="font-bold text-slate-900 mb-1">Informational Purpose Only</h2>
                             <p className="text-sm text-slate-700">Data provided by this registry is for visualization and research. It is not an engineering certification.</p>
                         </div>
                     </div>

@@ -8,12 +8,13 @@ import { supabase } from '@/lib/supabase';
 
 export const metadata = {
   title: "Foundation Repair Help & Evaluation | Foundation Risk Registry",
-  description: "Concerned about cracks, uneven floors, or foundation movement? Review local soil context, understand repair options, and request a property-specific foundation evaluation.",
+  description: "Concerned about cracks, uneven floors, or foundation movement? Review local soil context, compare repair options, and request a property evaluation.",
   alternates: {
     canonical: 'https://foundationrisk.org',
   },
   openGraph: {
     url: 'https://foundationrisk.org',
+    images: ['/logo.png'],
   },
 };
 

@@ -184,3 +184,13 @@ Still to verify/follow up:
 A generated fact must have a traceable source or deterministic documented derivation. Randomization may be used for harmless presentation variation, but never for geographic, scientific, risk, credential, contractor, engineering, or property claims.
 
 Build rule: a committed change is not a verified change. Shared types must be inspected and the production build must pass before risky implementation work is promoted.
+
+## 2026-10-02 supporting technical cleanup
+
+A fresh 300-page live SquirrelScan audit was run after the sitemap and cross-state title deployments. The audit confirmed perfect scores for Core SEO, crawlability, structured data, images, site integrity, mobile, local SEO, and several other fundamentals, while identifying a small set of reproducible supporting defects.
+
+This cleanup adds a server-visible `main` landmark and H1 to the `/book-analysis` Suspense fallback, aligns the hydrated intake landmarks with the global skip link, removes the logo's conflicting `aria-label`, completes Open Graph image metadata on static pages, corrects the privacy and terms heading hierarchy, shortens the homepage description to 148 characters, and adds mobile enter-key hints to the shared lead forms.
+
+The focused regression crawl also identified and resolved one remaining disclaimer heading skip. Soil reports now link directly to the official USDA/NRCS Soil Survey source, and the unsupported schema-only publication timestamp was removed rather than exposing a database-ingestion date as an editorial publication date.
+
+Broader CSP hardening, bot verification, cache policy, and template performance remain separate workstreams because they require deployment configuration, key management, or architecture decisions beyond a low-risk markup correction.

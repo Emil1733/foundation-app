@@ -5,7 +5,7 @@ export const metadata = {
     title: "Terms of Service | Foundation Risk Registry",
     description: "Read the terms governing Foundation Risk Registry soil reports, evaluation requests, data limitations, acceptable use, and professional-service disclosures.",
     alternates: { canonical: "https://foundationrisk.org/terms" },
-    openGraph: { url: "https://foundationrisk.org/terms" },
+    openGraph: { url: "https://foundationrisk.org/terms", images: ["/logo.png"] },
 };
 
 export default function TermsPage() {
@@ -48,7 +48,7 @@ export default function TermsPage() {
                 <div className="bg-blue-50 border border-blue-100 p-6 rounded-xl not-prose mb-10 flex items-start gap-4">
                     <Scale className="w-6 h-6 text-blue-600 shrink-0" />
                     <div>
-                        <h3 className="font-bold text-slate-900 mb-1">Agreement to Terms</h3>
+                        <h2 className="font-bold text-slate-900 mb-1">Agreement to Terms</h2>
                         <p className="text-sm text-slate-700">By accessing the Foundation Risk Registry, you agree to these legal terms regarding data usage, accuracy, service requests, and professional-service limitations.</p>
                     </div>
                 </div>

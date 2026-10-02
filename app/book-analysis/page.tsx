@@ -135,7 +135,7 @@ function IntakeForm() {
     if (isSuccess) {
         return (
              <div className="min-h-screen bg-slate-50 font-[family-name:var(--font-geist-sans)] flex items-center justify-center p-6">
-                <main className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-green-200 p-8 text-center animate-in zoom-in duration-300">
+                <main id="main-content" className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-green-200 p-8 text-center animate-in zoom-in duration-300">
                     <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
                         <CheckCircle className="w-10 h-10 text-green-600" />
                     </div>
@@ -165,7 +165,7 @@ function IntakeForm() {
                     </Link>
                 </header>
 
-            <main className="max-w-2xl mx-auto py-12 px-6">
+            <main id="main-content" className="max-w-2xl mx-auto py-12 px-6">
                 <div className="mb-8 text-center text-white">
                     <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-sm font-bold mb-6">
                         <CheckCircle className="w-4 h-4" />
@@ -265,6 +265,7 @@ function IntakeForm() {
                                             type="text" 
                                             required
                                             autoComplete="street-address"
+                                            enterKeyHint="next"
                                             maxLength={200}
                                             aria-invalid={Boolean(fieldErrors.address)}
                                             aria-describedby={fieldErrors.address ? 'lead-address-error' : undefined}
@@ -284,6 +285,7 @@ function IntakeForm() {
                                         required
                                         inputMode="numeric"
                                         autoComplete="postal-code"
+                                        enterKeyHint="next"
                                         maxLength={10}
                                         pattern="[0-9]{5}(-[0-9]{4})?"
                                         aria-invalid={Boolean(fieldErrors.zip)}
@@ -328,6 +330,7 @@ function IntakeForm() {
                                         type="text" 
                                         required
                                         autoComplete="name"
+                                        enterKeyHint="next"
                                         maxLength={100}
                                         aria-invalid={Boolean(fieldErrors.name)}
                                         aria-describedby={fieldErrors.name ? 'lead-name-error' : undefined}
@@ -345,6 +348,7 @@ function IntakeForm() {
                                         type="email" 
                                         required
                                         autoComplete="email"
+                                        enterKeyHint="next"
                                         maxLength={254}
                                         aria-invalid={Boolean(fieldErrors.email)}
                                         aria-describedby={fieldErrors.email ? 'lead-email-error' : undefined}
@@ -365,6 +369,7 @@ function IntakeForm() {
                                             required
                                             inputMode="tel"
                                             autoComplete="tel"
+                                            enterKeyHint="done"
                                             maxLength={30}
                                             aria-invalid={Boolean(fieldErrors.phone)}
                                             aria-describedby={fieldErrors.phone ? 'lead-phone-error' : 'lead-phone-help'}
@@ -425,7 +430,17 @@ function IntakeForm() {
 
 export default function BookAnalysisPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-50"><div className="animate-pulse flex flex-col items-center"><Search className="w-12 h-12 text-blue-500 mb-4" /><p className="text-slate-500 font-bold tracking-widest uppercase">Loading Evaluation Form...</p></div></div>}>
+        <Suspense fallback={
+            <div className="min-h-screen bg-slate-950 font-[family-name:var(--font-geist-sans)]">
+                <main id="main-content" className="mx-auto flex min-h-[70vh] max-w-2xl flex-col items-center justify-center px-6 py-16 text-center text-white">
+                    <Search className="mb-5 h-12 w-12 animate-pulse text-blue-400" aria-hidden="true" />
+                    <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-blue-300">Foundation Evaluation Request</p>
+                    <h1 className="text-3xl font-extrabold leading-tight md:text-5xl">Request a Foundation Evaluation</h1>
+                    <p className="mt-4 max-w-lg text-base leading-7 text-slate-300">Tell us what you are seeing at the property so your request can be reviewed and the appropriate evaluation or repair next step can be identified.</p>
+                    <p className="mt-5 text-sm font-semibold text-white">Loading the secure evaluation form...</p>
+                </main>
+            </div>
+        }>
             <IntakeForm />
         </Suspense>
     );

@@ -5,7 +5,7 @@ export const metadata = {
     title: "Privacy Policy & Data Usage | Foundation Risk Registry",
     description: "Learn how the Foundation Risk Registry collects, uses, protects, retains, and shares address, contact, and foundation evaluation request information.",
     alternates: { canonical: "https://foundationrisk.org/privacy" },
-    openGraph: { url: "https://foundationrisk.org/privacy" },
+    openGraph: { url: "https://foundationrisk.org/privacy", images: ["/logo.png"] },
 };
 
 export default function PrivacyPage() {
@@ -49,7 +49,7 @@ export default function PrivacyPage() {
                 <div className="bg-blue-50 border border-blue-100 p-6 rounded-xl not-prose mb-10 flex items-start gap-4">
                     <ShieldCheck className="w-6 h-6 text-blue-600 shrink-0" />
                     <div>
-                        <h3 className="font-bold text-slate-900 mb-1">Our Core Promise</h3>
+                        <h2 className="font-bold text-slate-900 mb-1">Our Core Promise</h2>
                         <p className="text-sm text-slate-700">We do not sell your address to unrelated bulk-marketing lists. When you request an evaluation, we use your details to provide soil context and may share the request with participating local foundation evaluation or repair providers.</p>
                     </div>
                 </div>

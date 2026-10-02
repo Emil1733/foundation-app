@@ -5,7 +5,7 @@ export const metadata = {
     title: "Contact the Registry | Foundation Risk Support",
     description: "Contact the Foundation Risk Registry for soil-data corrections, report questions, support, or help requesting a property-specific foundation evaluation.",
     alternates: { canonical: "https://foundationrisk.org/contact" },
-    openGraph: { url: "https://foundationrisk.org/contact" },
+    openGraph: { url: "https://foundationrisk.org/contact", images: ["/logo.png"] },
 };
 
 export default function ContactPage() {

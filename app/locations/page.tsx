@@ -14,6 +14,7 @@ export const metadata = {
     },
     openGraph: {
         url: 'https://foundationrisk.org/locations',
+        images: ['/logo.png'],
     },
 };
 

@@ -69,7 +69,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     const publishedAt = soil.created_at || cityData.created_at;
     const publishedDate = new Date(publishedAt);
     const hasValidPublishedDate = !Number.isNaN(publishedDate.getTime());
-
+    const publishedLabel = hasValidPublishedDate
+        ? new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeZone: 'UTC' }).format(publishedDate)
+        : null;
     const riskContext = !hasPi
         ? 'A plasticity value was not available for this record, so no PI-based interpretation should be inferred.'
         : riskClass === 'Severe' || riskClass === 'High'
@@ -128,7 +130,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
                     <aside className="mb-10 rounded-2xl border border-blue-100 bg-blue-50/60 p-6 text-sm leading-6 text-slate-700">
                         <h2 className="text-base font-bold text-slate-900">How this report was prepared</h2>
-                        <p className="mt-2">Foundation Risk Registry translates mapped USDA/NRCS soil data into plain-language foundation context. The figures describe a mapped soil unit around {cityData.city}; they do not confirm the soil directly beneath an individual home or diagnose structural movement.</p>
+                        <p className="mt-2">Foundation Risk Registry translates mapped <a href="https://websoilsurvey.nrcs.usda.gov/app/" rel="noopener noreferrer" className="font-semibold text-blue-800 underline decoration-blue-300 underline-offset-2 hover:text-blue-950">USDA/NRCS Web Soil Survey data</a> into plain-language foundation context. The figures describe a mapped soil unit around {cityData.city}; they do not confirm the soil directly beneath an individual home or diagnose structural movement.</p>
+                        {hasValidPublishedDate && publishedLabel && (
+                            <p className="mt-3 text-xs text-slate-500">Registry report published <time dateTime={publishedDate.toISOString()}>{publishedLabel}</time>.</p>
+                        )}
                     </aside>
 
                     <div className={`mb-12 rounded-2xl border p-6 ${treatment ? "border-blue-200 bg-blue-50" : "border-emerald-200 bg-emerald-50"}`}>

@@ -97,23 +97,23 @@ export default function HeroLeadForm({ city, source = 'hero_form' }: { city: str
       <div className="grid gap-3 sm:grid-cols-2">
         <div>
           <label htmlFor="hero-name" className="mb-1 block text-xs font-semibold text-slate-700">Name</label>
-          <input id="hero-name" required autoComplete="name" maxLength={100} className={inputClass} placeholder="Your name" value={form.name} onChange={(e) => update('name', e.target.value)} />
+          <input id="hero-name" required autoComplete="name" enterKeyHint="next" maxLength={100} className={inputClass} placeholder="Your name" value={form.name} onChange={(e) => update('name', e.target.value)} />
         </div>
         <div>
           <label htmlFor="hero-phone" className="mb-1 block text-xs font-semibold text-slate-700">Phone</label>
-          <input id="hero-phone" required type="tel" inputMode="tel" autoComplete="tel" maxLength={30} className={inputClass} placeholder="(555) 555-5555" value={form.phone} onChange={(e) => update('phone', e.target.value)} />
+          <input id="hero-phone" required type="tel" inputMode="tel" autoComplete="tel" enterKeyHint="next" maxLength={30} className={inputClass} placeholder="(555) 555-5555" value={form.phone} onChange={(e) => update('phone', e.target.value)} />
         </div>
         <div className="sm:col-span-2">
           <label htmlFor="hero-email" className="mb-1 block text-xs font-semibold text-slate-700">Email</label>
-          <input id="hero-email" required type="email" autoComplete="email" maxLength={254} className={inputClass} placeholder="you@example.com" value={form.email} onChange={(e) => update('email', e.target.value)} />
+          <input id="hero-email" required type="email" autoComplete="email" enterKeyHint="next" maxLength={254} className={inputClass} placeholder="you@example.com" value={form.email} onChange={(e) => update('email', e.target.value)} />
         </div>
         <div className="sm:col-span-2">
           <label htmlFor="hero-address" className="mb-1 block text-xs font-semibold text-slate-700">Property address</label>
-          <input id="hero-address" required autoComplete="street-address" maxLength={200} className={inputClass} placeholder={`Property address in ${city}`} value={form.address} onChange={(e) => update('address', e.target.value)} />
+          <input id="hero-address" required autoComplete="street-address" enterKeyHint="next" maxLength={200} className={inputClass} placeholder={`Property address in ${city}`} value={form.address} onChange={(e) => update('address', e.target.value)} />
         </div>
         <div>
           <label htmlFor="hero-zip" className="mb-1 block text-xs font-semibold text-slate-700">ZIP code</label>
-          <input id="hero-zip" required inputMode="numeric" autoComplete="postal-code" maxLength={10} className={inputClass} placeholder="ZIP code" value={form.zip} onChange={(e) => update('zip', e.target.value)} />
+          <input id="hero-zip" required inputMode="numeric" autoComplete="postal-code" enterKeyHint="next" maxLength={10} className={inputClass} placeholder="ZIP code" value={form.zip} onChange={(e) => update('zip', e.target.value)} />
         </div>
         <div>
           <label htmlFor="hero-concern" className="mb-1 block text-xs font-semibold text-slate-700">Main concern</label>

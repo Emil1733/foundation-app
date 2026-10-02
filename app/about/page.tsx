@@ -5,7 +5,7 @@ export const metadata = {
     title: "About the Foundation Risk Registry | Better Repair Decisions",
     description: "Learn how the Foundation Risk Registry explains public soil data and helps homeowners prepare for foundation evaluations and repair decisions.",
     alternates: { canonical: "https://foundationrisk.org/about" },
-    openGraph: { url: "https://foundationrisk.org/about" },
+    openGraph: { url: "https://foundationrisk.org/about", images: ["/logo.png"] },
 };
 
 export default function AboutPage() {
