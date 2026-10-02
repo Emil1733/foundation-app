@@ -10,6 +10,7 @@ import RegionalFoundationGuide from "@/components/foundation/RegionalFoundationG
 import FoundationFAQ from "@/components/foundation/FoundationFAQ";
 import NearbyFoundationLocations from "@/components/foundation/NearbyFoundationLocations";
 import CommercialLocalFocus from "@/components/foundation/CommercialLocalFocus";
+import CityFoundationProfile from "@/components/foundation/CityFoundationProfile";
 import FoundationDiagram from "@/components/FoundationDiagram";
 import SoilActionPlan from "@/components/SoilActionPlan";
 import CrackAnalyzer from "@/components/CrackAnalyzer";
@@ -20,7 +21,7 @@ import { STATE_FOUNDATION_GUIDES } from "@/lib/stateFoundationGuides";
 import { hasUsableSoilRecord, shouldIndexServicePage } from "@/lib/serviceIndexability";
 import { getTexasFoundationGuide } from "@/lib/texasFoundationGuides";
 import { getStateRoute } from "@/lib/stateRoutes";
-import { classifySoilPlasticityIndex, hasDisplayableZip } from "@/lib/soilRisk";
+import { classifySoilPlasticityIndex } from "@/lib/soilRisk";
 import { getCommercialSeoTreatment } from "@/lib/commercialSeoTreatments";
 
 export const revalidate = 604800;
@@ -44,7 +45,7 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
   const indexable = shouldIndexServicePage(slug, location.soil_cache);
   const treatment = getCommercialSeoTreatment(slug);
   const title = treatment ? treatment.title(location.city, location.state) : `${location.city} Foundation Repair | Soil Risk & Evaluation`;
-  const description = treatment ? `Foundation repair in ${location.city}, ${location.state}. Review warning signs, mapped soil context, evaluation steps, costs, and repair options before choosing a scope.` : `Foundation repair in ${location.city}, ${location.state}: review mapped soil context, warning signs, and evaluation options before choosing a repair plan.`;
+  const description = treatment ? treatment.description(location.city, location.state) : `Foundation repair in ${location.city}, ${location.state}: review mapped soil context, warning signs, and evaluation options before choosing a repair plan.`;
   return {
     title, description,
     alternates: { canonical: `https://foundationrisk.org/services/foundation-repair/${slug}` },
@@ -69,6 +70,9 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
   const piNumber = soil?.plasticity_index === null || soil?.plasticity_index === undefined || soil?.plasticity_index === "" ? null : Number(soil.plasticity_index);
   const hasPi = piNumber !== null && Number.isFinite(piNumber) && piNumber >= 0;
   const piDisplay = hasPi ? piNumber.toFixed(1) : "Not reported";
+  const cityProfile = treatment?.profile && soil?.map_unit_symbol === treatment.profile.mapUnitSymbol
+    ? treatment.profile
+    : null;
 
   const faqs = [
     { q: `How much does foundation repair cost in ${city}?`, a: `Foundation repair cost in ${city} depends on the cause, affected area, access, repair design, and number and type of supports. Compare written scopes based on property measurements rather than choosing a system from mapped soil data alone.` },
@@ -121,6 +125,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
 
         <FoundationDiagram />
         <SoilActionPlan city={city} soil={soil || null} riskLevel={riskClass} />
+        {cityProfile && <CityFoundationProfile profile={cityProfile} />}
         {stateGuide && <RegionalFoundationGuide city={city} guide={stateGuide} />}
         {treatment && <RepairOptions city={city} />}
         <div id="foundation-cost" className="scroll-mt-24"><CostEstimator city={city} pi={soil?.plasticity_index} /></div>

@@ -227,3 +227,9 @@ The shared foundation-repair city template now supports a generated cinematic ho
 Layered navy overlays protect contrast across desktop and mobile, including a stronger left-side gradient behind the primary copy and a bottom fade into the page. The live soil widget receives a restrained translucent frame so it remains visually separated from the photograph without being replaced by image content.
 
 The image is intentionally referenced as a local first-party asset rather than a third-party stock-image URL. Until that binary asset is present in `public/foundation-hero-generated.webp`, the existing slate background remains the visual fallback.
+
+### 2026-10-02 selective city differentiation
+
+The five existing treatment pages now include an individually written property-context section based on each page's stored USDA/NRCS map unit. Cedar Park, Allen, Schertz, Boerne, and Lewisville receive distinct explanations and evaluation priorities tied to their recorded soil name, slope range, drainage context, and Plasticity Index. The section renders only when the current map-unit symbol still matches the reviewed record, preventing stale editorial copy from appearing after a data change.
+
+Treatment metadata descriptions were also differentiated to reflect the same city-level evidence. Titles, H1s, CTAs, treatment membership, homepage links, and the control cohort remain unchanged. No content was generated for the remaining city inventory, and Frisco, Richardson, Pflugerville, Carrollton, and Denton remain untouched controls.
