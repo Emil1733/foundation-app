@@ -19,7 +19,7 @@ Cedar Park is the primary experiment because its commercial service URL and core
 
 Before change, commercial URLs were filtered through `shouldIndexServicePage()` but soil-report URLs were generated for every target location.
 
-Implemented: `app/sitemap.ts` now requires a usable soil record before a soil-report URL is included in the sitemap.
+Implemented: `app/sitemaps/[name]/route.ts` now requires a usable soil record before a soil-report URL is included in the soil-report child sitemap.
 
 ## Finding 2 - City ingestion contained fabricated neighborhood risk labels
 
@@ -194,3 +194,52 @@ This cleanup adds a server-visible `main` landmark and H1 to the `/book-analysis
 The focused regression crawl also identified and resolved one remaining disclaimer heading skip. Soil reports now link directly to the official USDA/NRCS Soil Survey source, and the unsupported schema-only publication timestamp was removed rather than exposing a database-ingestion date as an editorial publication date.
 
 Broader CSP hardening, bot verification, cache policy, and template performance remain separate workstreams because they require deployment configuration, key management, or architecture decisions beyond a low-risk markup correction.
+
+## 2026-10-02 TTFB, caching, and machine-readable response repair
+
+A controlled live timing investigation separated crawler warm-up cost from persistent server rendering. The homepage, commercial city pages, soil reports, booking page, and national locations directory were already served as Vercel cache hits after first generation. Warm responses from the test location were generally about 0.23-0.40 seconds. First requests for uncommon city/report URLs were roughly 0.75-1.07 seconds while ISR populated an edge cache.
+
+The reproducible cache defect affected `/learn` and `/locations/[state]`. Both routes declared revalidation periods but read server `searchParams` for `?page=N` pagination. In Next.js 16 that request data forced dynamic rendering, producing `private, no-store`, `Age: 0`, and repeated Vercel cache misses.
+
+Implemented locally:
+
+- path pagination at `/learn/page/[page]` and `/locations/[state]/page/[page]`;
+- permanent one-hop redirects from legacy `?page=N` URLs;
+- page-one normalization to the base directory URL;
+- path-based canonicals and internal pagination links;
+- not-found behavior for invalid and out-of-range page numbers;
+- React request memoization for Supabase records shared by page metadata and body rendering.
+
+Production-build output now classifies the base directories as static and the parameterized directory routes as SSG. Local production responses advertise a one-hour shared cache for the education directory and a one-week shared cache for state directories.
+
+The same regression review found that JSON/Markdown content negotiation on individual city URLs returned 404. The proxy calculated a slug but added it to an outgoing response header, while the rewritten route interpreted its internal `/api/agent/soil-data` path as the slug `soil-data`. Soil-report suffixes also needed normalization.
+
+Implemented locally:
+
+- pass the slug through the internal rewrite URL;
+- remove only the terminal `-soil-analysis` suffix before lookup;
+- validate slug shape and length;
+- negotiate only exact individual service/report URLs, excluding directories and malformed nested paths;
+- use the anonymous Supabase client for public location reads;
+- reserve the service-role client for recognized-agent analytics writes;
+- schedule analytics through Next.js `after()` and ignore unrecognized clients;
+- mark JSON/Markdown responses `private, no-store` with `Vary: Accept`.
+
+Verification completed locally:
+
+- ESLint, TypeScript, and the full Next.js production build pass;
+- service JSON, soil-report JSON, and soil-report Markdown return 200 with the expected Cedar Park record;
+- normal HTML retains ISR cache headers;
+- directory URLs remain HTML when sent a JSON Accept header;
+- invalid city and missing-slug failures return structured 404 and 400 responses;
+- legacy pagination redirects, canonicals, page-one normalization, and out-of-range 404 behavior pass.
+
+Deployment status: these changes are locally verified but not live until committed, pushed to the production branch, deployed successfully, and rechecked against live Vercel headers.
+
+### 2026-10-02 city metadata and second-wave review
+
+A full 4,231-record metadata simulation found zero exact duplicate service titles, descriptions, or H1s. Titles are 38-55 characters and descriptions are 126-153 characters. The deeper weakness is structural rather than mechanical: 4,226 pages use the same standard H1 and description pattern with only the city and state changed.
+
+Finalized September 1-30 GSC page data was therefore reviewed at query level before selecting any additional cities. Seven pages with genuine foundation-repair or foundation-inspection demand and usable stored soil records were added as a separately labeled second wave: Katy, Cypress, Cleburne, Sugar Land, Mesquite, Fort Gaines, and Ellaville. Each received individually written metadata and local property context tied to its recorded USDA/NRCS map unit. The original treatment cohort and the five controls remain unchanged.
+
+Pages were not selected from impressions alone. Fort Worth was excluded because its soil record is missing, and Greeley was excluded because its visible demand centered on engineered foundation plans, which the site does not claim to provide. Full cohort baselines and exclusions are recorded in `docs/SEO-EXPERIMENT-2026-09.md`.

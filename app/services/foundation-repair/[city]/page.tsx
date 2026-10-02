@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import TrustBadges from "@/components/TrustBadges";
@@ -28,6 +29,16 @@ import { buildServicePageTitle } from "@/lib/locationSeo";
 export const revalidate = 604800;
 export async function generateStaticParams() { return []; }
 
+const getCityLocation = cache(async (slug: string) => {
+  const { data, error } = await supabase
+    .from("target_locations")
+    .select(`id, city, state, zip_code, latitude, longitude, soil_cache (*)`)
+    .eq("slug", slug)
+    .single();
+
+  return { data, error };
+});
+
 const getDynamicIntro = (city: string, soilName: string, risk: string) => {
   const hooks = [
     `${city} homes can respond differently to drought, heavy rain, drainage, vegetation, plumbing leaks, and previous site work. The mapped ${soilName} record helps frame the right questions before a repair is chosen.`,
@@ -41,7 +52,7 @@ const getDynamicIntro = (city: string, soilName: string, risk: string) => {
 
 export async function generateMetadata({ params }: { params: Promise<{ city: string }> }): Promise<Metadata> {
   const { city: slug } = await params;
-  const { data: location } = await supabase.from("target_locations").select(`city, state, soil_cache (risk_level, map_unit_name)`).eq("slug", slug).single();
+  const { data: location } = await getCityLocation(slug);
   if (!location) return { title: "Foundation Distress Identification Services" };
   const indexable = shouldIndexServicePage(slug, location.soil_cache);
   const treatment = getCommercialSeoTreatment(slug);
@@ -57,7 +68,7 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
 
 export default async function CityPage({ params }: { params: Promise<{ city: string }> }) {
   const { city: slug } = await params;
-  const { data: location, error } = await supabase.from("target_locations").select(`id, city, state, zip_code, latitude, longitude, soil_cache (*)`).eq("slug", slug).single();
+  const { data: location, error } = await getCityLocation(slug);
   if (error || !location) return notFound();
 
   const { city, state, soil_cache: rawSoil } = location;

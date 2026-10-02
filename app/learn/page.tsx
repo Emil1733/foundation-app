@@ -2,9 +2,9 @@ import { createClient } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { BookOpen, MapPin, ArrowRight, FileText, ShieldCheck } from 'lucide-react';
 import type { Metadata } from 'next';
-import { notFound, permanentRedirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Pagination from '@/components/Pagination';
-import { paginatedUrl, parsePageNumber, type PageSearchParams } from '@/lib/pagination';
+import { paginatedUrl } from '@/lib/pagination';
 
 export const revalidate = 3600;
 
@@ -14,12 +14,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 const PAGE_SIZE = 48;
 
-export async function generateMetadata({
-    searchParams,
-}: {
-    searchParams: PageSearchParams;
-}): Promise<Metadata> {
-    const page = parsePageNumber((await searchParams).page) || 1;
+export async function buildLearnMetadata(page: number): Promise<Metadata> {
     const title = page === 1
         ? 'Foundation Repair Education Hub | Soil & Structural Analysis'
         : `Foundation Repair Education Hub – Page ${page}`;
@@ -41,16 +36,16 @@ export async function generateMetadata({
     };
 }
 
-export default async function LearnPage({
-    searchParams,
-}: {
-    searchParams: PageSearchParams;
-}) {
-    const query = await searchParams;
-    if (query.page === '1') permanentRedirect('/learn');
+export async function generateMetadata(): Promise<Metadata> {
+    return buildLearnMetadata(1);
+}
 
-    const currentPage = parsePageNumber(query.page);
-    if (!currentPage) notFound();
+export default async function LearnPage() {
+    return renderLearnPage(1);
+}
+
+export async function renderLearnPage(currentPage: number) {
+    if (!Number.isSafeInteger(currentPage) || currentPage < 1) notFound();
 
     const rangeStart = (currentPage - 1) * PAGE_SIZE;
     const rangeEnd = rangeStart + PAGE_SIZE - 1;

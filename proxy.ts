@@ -1,35 +1,57 @@
-import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
+
+const VALID_PAGE = /^[1-9]\d*$/;
 
 export function proxy(request: NextRequest) {
-    const { pathname } = request.nextUrl;
+  const { pathname } = request.nextUrl;
+  const page = request.nextUrl.searchParams.get('page');
+  const isLegacyDirectoryUrl =
+    pathname === '/learn' || /^\/locations\/[^/]+$/.test(pathname);
 
-    // Apply content negotiation to both service and learn pages.
-    if (pathname.startsWith('/services/foundation-repair/') || pathname.startsWith('/learn/')) {
-        const slug = pathname.split('/').pop();
-        const acceptHeader = request.headers.get('accept') || '';
+  if (page && isLegacyDirectoryUrl) {
+    const destination = request.nextUrl.clone();
+    destination.searchParams.delete('page');
 
-        // Return structured data when a client explicitly requests JSON or Markdown.
-        if (acceptHeader.includes('application/json') || acceptHeader.includes('text/markdown')) {
-            const agentUrl = new URL('/api/agent/soil-data', request.url);
-            const response = NextResponse.rewrite(agentUrl);
+    if (!VALID_PAGE.test(page) || !Number.isSafeInteger(Number(page))) {
+      destination.pathname = `${pathname}/page/__invalid__`;
+      return NextResponse.rewrite(destination);
+    }
 
-            response.headers.set('Vary', 'Accept');
-            response.headers.set('x-agent-slug', slug || '');
-            return response;
-        }
+    destination.pathname = page === '1'
+      ? pathname
+      : `${pathname}/page/${page}`;
 
-        const response = NextResponse.next();
-        response.headers.set('Vary', 'Accept');
-        return response;
+    return NextResponse.redirect(destination, 308);
+  }
+
+  const isContentPage =
+    /^\/services\/foundation-repair\/[^/]+$/.test(pathname) ||
+    (/^\/learn\/[^/]+$/.test(pathname) && !pathname.startsWith('/learn/page/'));
+
+  if (isContentPage) {
+    const slug = pathname.split('/').pop();
+    const acceptHeader = request.headers.get('accept') || '';
+
+    if (acceptHeader.includes('application/json') || acceptHeader.includes('text/markdown')) {
+      const agentUrl = new URL('/api/agent/soil-data', request.url);
+      agentUrl.searchParams.set('slug', slug || '');
+      return NextResponse.rewrite(agentUrl);
     }
 
     return NextResponse.next();
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-    matcher: [
-        '/services/foundation-repair/:path*',
-        '/learn/:path*'
-    ],
+  matcher: [
+    '/services/foundation-repair/:path*',
+    '/learn/:path*',
+    {
+      source: '/locations/:state',
+      has: [{ type: 'query', key: 'page' }],
+    },
+  ],
 };

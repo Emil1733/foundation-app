@@ -239,3 +239,28 @@ Treatment metadata descriptions were also differentiated to reflect the same cit
 A full inventory check found 365 city names shared by more than one state, covering 823 location records. Standard service-page titles now use `[City], [State] Foundation Repair | Evaluation`, and soil-report titles use `[City], [State] Foundation Soil Risk Guide`. This removes same-city title collisions while keeping the location and primary search intent near the beginning of each title.
 
 The five commercial treatment titles already contained city and state, so their title pattern remains unchanged. Canonicals, URLs, H1s, descriptions, treatment membership, and page content are unaffected by this title-only correction.
+
+### 2026-10-02 GSC-selected second wave
+
+A separate seven-city cohort was selected from finalized September 1-30 GSC data after a query-level review. The original five treatments and all five directional controls remain unchanged. The second wave is labeled explicitly in `lib/commercialSeoTreatments.ts` so later analysis can separate it from the September 17 cohort.
+
+| City | September impressions | Average position | Query evidence |
+| --- | ---: | ---: | --- |
+| Katy, TX | 323 | 17.23 | Multiple direct `foundation repair katy` variants and cracked-foundation intent |
+| Cypress, TX | 231 | 12.82 | Multiple direct `foundation repair cypress` variants |
+| Cleburne, TX | 177 | 11.15 | Concentrated `foundation inspection cleburne` demand |
+| Sugar Land, TX | 153 | 17.27 | Multiple direct `foundation repair sugar land` variants |
+| Mesquite, TX | 27 query-visible impressions | 10.59 | Concentrated `mesquite foundation inspection` demand |
+| Fort Gaines, GA | 42 page impressions | 5.05 | Direct `foundation repair in fort gaines, ga` demand |
+| Ellaville, GA | 41 | 5.05 | Direct `foundation repair in ellaville, ga` demand |
+
+Each page has a usable stored soil record. Its description and property-context section were written individually from the recorded map-unit name, slope range, drainage class, and Plasticity Index. Map-unit-symbol guards prevent that editorial copy from rendering if the underlying record changes.
+
+The following high-impression pages were deliberately excluded:
+
+- Fort Worth has no usable soil record and remains indexable only through its documented GSC exception.
+- Greeley impressions were dominated by engineered-plan intent that the site does not provide.
+- Austin and other lower-position pages were not added merely because they had impressions; the first second-wave batch stays small enough to review manually.
+- Frisco, Richardson, Pflugerville, Carrollton, and Denton remain untouched controls.
+
+The second wave receives the same truthful commercial treatment structure as the initial cohort: a natural `Foundation Repair in [City], [State]` H1, concise commercial title, page-specific meta description, symptom-led hero, evaluation CTA, repair-options section, and a manually reviewed local evidence section. It does not add contractor, engineering, free-inspection, diagnosis, or guaranteed-outcome claims.

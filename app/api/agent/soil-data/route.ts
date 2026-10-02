@@ -1,21 +1,39 @@
-import { NextResponse } from 'next/server';
+import { after, type NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!; // Use Service Role Key to bypass RLS for logging
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+const publicSupabase = createClient(supabaseUrl, supabaseAnonKey);
+const analyticsSupabase = createClient(supabaseUrl, supabaseServiceKey);
 
-export async function GET(request: Request) {
-    // Because this is a rewritten request, request.url is the original URL (e.g. /services/foundation-repair/dallas-tx)
-    const urlObj = new URL(request.url);
-    const slug = urlObj.pathname.split('/').pop();
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const RESPONSE_HEADERS = {
+    'Cache-Control': 'private, no-store',
+    'Vary': 'Accept',
+};
 
-    if (!slug) {
-        return NextResponse.json({ error: "Missing slug" }, { status: 400 });
+const identifyBot = (userAgent: string) => {
+    const value = userAgent.toLowerCase();
+    if (value.includes('gptbot') || value.includes('chatgpt-user') || value.includes('oai-searchbot')) return 'OpenAI';
+    if (value.includes('googlebot') || value.includes('google-extended') || value.includes('gemini')) return 'Google';
+    if (value.includes('claudebot') || value.includes('claude-searchbot') || value.includes('claude-user')) return 'Anthropic';
+    if (value.includes('perplexitybot') || value.includes('perplexity-user')) return 'Perplexity';
+    return null;
+};
+
+export async function GET(request: NextRequest) {
+    const requestedSlug = request.nextUrl.searchParams.get('slug') || '';
+    const slug = requestedSlug.replace(/-soil-analysis$/, '');
+
+    if (slug.length > 100 || !SLUG_PATTERN.test(slug)) {
+        return NextResponse.json(
+            { error: 'A valid city slug is required.' },
+            { status: 400, headers: RESPONSE_HEADERS },
+        );
     }
 
-    // 1. Fetch the location and soil data from Supabase
-    const { data: location } = await supabase
+    const { data: location, error } = await publicSupabase
         .from('target_locations')
         .select(`
             city, state, zip_code, latitude, longitude,
@@ -24,8 +42,12 @@ export async function GET(request: Request) {
         .eq('slug', slug)
         .single();
 
-    if (!location) {
-        return NextResponse.json({ error: "Location not found" }, { status: 404 });
+    if (error || !location) {
+        const status = error?.code === 'PGRST116' ? 404 : 503;
+        return NextResponse.json(
+            { error: status === 404 ? 'Location not found.' : 'Soil data is temporarily unavailable.' },
+            { status, headers: RESPONSE_HEADERS },
+        );
     }
 
     const rawSoil = location.soil_cache;
@@ -35,7 +57,6 @@ export async function GET(request: Request) {
         risk_level: "Not classified",
     };
 
-    // 2. Determine if the Agent wants JSON or Markdown
     const acceptHeader = request.headers.get('accept') || '';
     
     // 3. Construct the "Kitchen Ticket" Markdown Payload
@@ -54,31 +75,32 @@ Mapped soil data provides regional screening context. It does not diagnose a pro
 **Payload Schema:** {"name": "string", "phone": "string", "city": "${location.city}", "soil_symptoms": "string"}
     `.trim();
 
-    // --- THE ANALYTICS TRAP ---
-    // Log exactly which AI bot is consuming our data
     const userAgent = request.headers.get('user-agent') || 'Unknown';
-    let botIdentity = 'Unknown_Bot';
-    if (userAgent.toLowerCase().includes('chatgpt') || userAgent.toLowerCase().includes('oai-searchbot')) botIdentity = 'ChatGPT';
-    else if (userAgent.toLowerCase().includes('google') || userAgent.toLowerCase().includes('gemini')) botIdentity = 'Google_Gemini';
-    else if (userAgent.toLowerCase().includes('claude')) botIdentity = 'Anthropic_Claude';
-    else if (userAgent.toLowerCase().includes('node-fetch')) botIdentity = 'Local_Simulation';
+    const botIdentity = identifyBot(userAgent);
 
-    // Fire-and-forget log to Supabase (don't await it so we don't slow down the AI response)
-    supabase.from('ai_agent_analytics').insert([{
-        bot_name: botIdentity,
-        city_crawled: location.city,
-        state_crawled: location.state,
-        payload_type: acceptHeader.includes('text/markdown') ? 'Markdown' : 'JSON'
-    }]).then(({ error }) => {
-        if (error) console.error("Analytics Trap Error:", error.message);
-    });
+    if (botIdentity) {
+        after(async () => {
+            const { error: analyticsError } = await analyticsSupabase
+                .from('ai_agent_analytics')
+                .insert([{
+                    bot_name: botIdentity,
+                    city_crawled: location.city,
+                    state_crawled: location.state,
+                    payload_type: acceptHeader.includes('text/markdown') ? 'Markdown' : 'JSON',
+                }]);
+
+            if (analyticsError) {
+                console.error('Agent analytics insert failed:', analyticsError.message);
+            }
+        });
+    }
 
     // 4. Return the Payload based on what the agent asked for
     if (acceptHeader.includes('text/markdown')) {
         return new NextResponse(markdownPayload, {
             headers: {
+                ...RESPONSE_HEADERS,
                 'Content-Type': 'text/markdown',
-                'Vary': 'Accept'
             }
         });
     }
@@ -93,6 +115,6 @@ Mapped soil data provides regional screening context. It does not diagnose a pro
         interpretation: "Mapped soil data is regional screening context, not a property diagnosis or repair recommendation.",
         agent_booking_endpoint: "https://foundationrisk.org/api/agent/book"
     }, {
-        headers: { 'Vary': 'Accept' }
+        headers: RESPONSE_HEADERS,
     });
 }

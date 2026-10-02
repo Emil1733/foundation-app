@@ -1,6 +1,6 @@
 # FoundationRisk Project Map
 
-Last reviewed: 2026-09-17
+Last reviewed: 2026-10-02
 
 ## Purpose
 
@@ -51,7 +51,7 @@ A soil report without a usable map-unit record should not be promoted as if it c
 
 `lib/serviceIndexability.ts` controls commercial-page indexability and preserves a documented GSC-protected exception set while missing soil records are repaired.
 
-`app/sitemap.ts` applies commercial indexability rules and separately requires usable soil data before including soil-report URLs.
+`app/sitemap.xml/route.ts` publishes the sitemap index. `app/sitemaps/[name]/route.ts` publishes the core, service, and soil-report child sitemaps. Commercial URLs use `shouldIndexServicePage()`, and soil-report URLs require usable soil data.
 
 ### Soil screening semantics
 
@@ -72,16 +72,51 @@ These are registry screening labels, not property-specific structural diagnoses.
 
 Commercial pages link to nearby commercial pages. Soil reports link prominently to the matching commercial guide. The intended funnel is documented in `docs/SEO-EXPERIMENT-2026-09.md`.
 
+### Directory pagination and caching
+
+Directory pagination uses path-based URLs so Next.js can cache the rendered HTML:
+
+- `/learn` and `/learn/page/[page]`
+- `/locations/[state]` and `/locations/[state]/page/[page]`
+
+Legacy `?page=N` requests are normalized in `proxy.ts` with permanent redirects. Page 1 always canonicalizes to the base directory URL. Invalid and out-of-range pages return not found.
+
+Current revalidation periods:
+
+- education directory: one hour
+- state directories: one week
+- individual soil reports: one day
+- individual commercial city pages: one week
+
+Do not reintroduce server-side `searchParams` pagination on these directories. It opts the route into request-time rendering and bypasses the intended shared HTML cache.
+
+City and soil-report data loaders use React request memoization where metadata and page rendering need the same Supabase record. This removes duplicate work within one render without caching leads or user-specific data.
+
+### Machine-readable city representations
+
+`proxy.ts` negotiates JSON or Markdown only for exact individual commercial and soil-report URLs. It rewrites those requests internally to `app/api/agent/soil-data/route.ts` with a validated city slug. Directory URLs are explicitly excluded.
+
+Normal HTML remains ISR-cached. JSON and Markdown responses are `private, no-store` so an alternate representation cannot contaminate the HTML cache. Public location data is read with the anonymous Supabase client. The service-role client is used only for server-side analytics inserts and must never enter a browser bundle.
+
 ## Active SEO experiment
 
 Primary readout: Cedar Park, TX.
 
-Treatment cohort:
+Initial treatment cohort:
 - Cedar Park
-- Allen 75002
+- Allen
 - Schertz
 - Boerne
 - Lewisville
+
+GSC-selected second wave added 2026-10-02:
+- Katy
+- Cypress
+- Cleburne
+- Sugar Land
+- Mesquite
+- Fort Gaines
+- Ellaville
 
 Directional controls:
 - Frisco
@@ -90,7 +125,7 @@ Directional controls:
 - Carrollton
 - Denton
 
-Do not expand the treatment list without reviewing fresh GSC data and updating the experiment document.
+Do not expand either treatment wave without reviewing fresh GSC data and updating the experiment document. Preserve the five directional controls until the initial experiment has a clean readout.
 
 ## Data integrity rules
 
@@ -125,6 +160,7 @@ The admin endpoint must fail closed if `ADMIN_SECRET` is absent. The CLI no long
 - Historical database rows may contain neighborhood metadata created by the old randomized/fallback logic. Audit before using those fields publicly.
 - Build/type/lint verification still needs to be recorded before the implementation PR is merged.
 - Post-deployment GSC measurement is required before expanding the commercial treatment cohort.
+- The 2026-10-02 pagination/cache and content-negotiation changes are locally verified but not deployed until their commit reaches the production branch and live headers are rechecked.
 
 ## Working method
 

@@ -9,7 +9,7 @@ type PaginationProps = {
 };
 
 const pageHref = (basePath: string, page: number) =>
-  page === 1 ? basePath : `${basePath}?page=${page}`;
+  page === 1 ? basePath : `${basePath}/page/${page}`;
 
 const visiblePages = (currentPage: number, totalPages: number) => {
   const pages = new Set([1, totalPages]);

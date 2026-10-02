@@ -34,7 +34,7 @@ export default function DirectoryPageIndex({
             const page = index + 1;
             const first = index * pageSize + 1;
             const last = Math.min(page * pageSize, totalItems);
-            const href = page === 1 ? basePath : `${basePath}?page=${page}`;
+            const href = page === 1 ? basePath : `${basePath}/page/${page}`;
 
             return (
               <li key={page}>

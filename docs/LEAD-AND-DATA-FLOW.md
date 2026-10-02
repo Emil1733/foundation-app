@@ -1,6 +1,6 @@
 # FoundationRisk Lead and Data Flow
 
-Last reviewed: 2026-09-17
+Last reviewed: 2026-10-02
 
 This document maps how public traffic becomes data, how soil data is retrieved, and where the application currently stores leads. Keep it updated when forms, APIs, tables, consent behavior, or external data sources change.
 
@@ -75,6 +75,27 @@ Rate limiting currently checks the database for the same phone number during the
 
 Important audit concern: this endpoint does not currently share the human lead validation and consent model. Before treating AI-agent leads as equivalent to normal contact-consented leads, review the consent requirements and expected agent contract. Do not silently merge these tables/flows without resolving that distinction.
 
+### Machine-readable soil context
+
+Human-readable commercial and soil-report URLs also support explicit content negotiation:
+
+- `Accept: application/json`
+- `Accept: text/markdown`
+
+`proxy.ts` applies this only to exact individual content URLs. It extracts the final path segment, then internally rewrites the request to `app/api/agent/soil-data/route.ts` with the slug as a query parameter. Soil-report slugs have the terminal `-soil-analysis` suffix removed before lookup.
+
+The handler validates the slug, reads `target_locations` and associated `soil_cache` data with the anonymous Supabase client, and returns mapped screening context. It does not diagnose a property or prescribe a repair.
+
+Representation safety boundaries:
+
+- normal HTML continues through the page route and retains ISR caching;
+- JSON and Markdown responses use `Cache-Control: private, no-store` and `Vary: Accept`;
+- directory pages such as `/learn/page/2` are never treated as city records;
+- malformed slugs return 400, unknown cities return 404, and unexpected data-provider failures return 503;
+- the service-role key is not used for the public read.
+
+Recognized OpenAI, Google, Anthropic, and Perplexity crawler user agents may be recorded in `ai_agent_analytics`. Unknown clients are not logged to that table. Logging is scheduled with Next.js `after()` so it can finish after the response without delaying the data response. The service-role client is restricted to this server-side analytics write.
+
 ## 3. Soil lookup API
 
 Route: `app/api/soil/route.ts`
@@ -120,11 +141,11 @@ Supporting derived data:
 
 ## 5. Sitemap flow
 
-`app/sitemap.ts` paginates through `target_locations` in batches of 1,000.
+`lib/sitemapData.ts` paginates through `target_locations` in batches for the sitemap route handlers.
 
 Commercial URLs are filtered with `shouldIndexServicePage()`.
 
-At the time of this audit, soil-report URLs are added for every returned target location, regardless of whether a usable soil record exists. This is an audit item. Before changing it, compare actual indexed/reporting behavior and determine whether missing-soil reports render useful content or zero/default values.
+`app/sitemap.xml/route.ts` publishes the sitemap index. `app/sitemaps/[name]/route.ts` generates the core, service, and soil-report child sitemaps. Soil-report URLs require a usable soil record; commercial URLs use the shared service-page indexability rules.
 
 ## 6. Current tables observed from application code
 
@@ -134,6 +155,7 @@ The audit has directly observed references to:
 - `location_neighbors`
 - `leads`
 - `ai_agent_leads`
+- `ai_agent_analytics`
 
 This is not yet a complete Supabase schema. Do not assume undocumented columns, constraints, RLS policies, indexes, triggers, or other tables from this list alone.
 

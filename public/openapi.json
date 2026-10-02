@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Foundation Risk Registry Agent API",
-    "description": "API for autonomous AI agents to check local geological soil risks and book forensic foundation repair consultations.",
-    "version": "1.0.0"
+    "description": "Read mapped soil screening context and submit authorized foundation-evaluation follow-up requests.",
+    "version": "1.1.0"
   },
   "servers": [
     {
@@ -13,22 +13,24 @@
   "paths": {
     "/api/agent/soil-data": {
       "get": {
-        "summary": "Retrieve geological soil data for a specific city.",
+        "summary": "Retrieve mapped soil screening context for a city.",
         "operationId": "getSoilData",
         "parameters": [
           {
             "name": "slug",
             "in": "query",
-            "description": "The URL slug of the city (e.g., dallas-tx).",
+            "description": "A city slug such as cedar-park-tx. A terminal -soil-analysis suffix is accepted and normalized.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+              "maxLength": 114
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful retrieval of soil data and diagnostic.",
+            "description": "Mapped regional soil context. This is not a property diagnosis.",
             "content": {
               "application/json": {
                 "schema": {
@@ -39,20 +41,27 @@
                     "soil_type": { "type": "string" },
                     "plasticity_index": { "type": "number" },
                     "risk_level": { "type": "string" },
-                    "diagnostic": { "type": "string" },
-                    "agent_booking_endpoint": { "type": "string" }
+                    "interpretation": { "type": "string" },
+                    "agent_booking_endpoint": { "type": "string", "format": "uri" }
                   }
                 }
+              },
+              "text/markdown": {
+                "schema": { "type": "string" }
               }
             }
-          }
+          },
+          "400": { "description": "Missing or invalid slug." },
+          "404": { "description": "Location not found." },
+          "503": { "description": "Soil data temporarily unavailable." }
         }
       }
     },
     "/api/agent/book": {
       "post": {
-        "summary": "Submit a request for foundation evaluation follow-up with the homeowner's consent.",
+        "summary": "Submit an authorized foundation-evaluation follow-up request.",
         "operationId": "bookConsultation",
+        "description": "Submit homeowner data only with the homeowner's express authorization. The third request for the same phone number within one hour is rejected.",
         "requestBody": {
           "required": true,
           "content": {
@@ -98,7 +107,10 @@
                 }
               }
             }
-          }
+          },
+          "400": { "description": "Missing fields or invalid JSON." },
+          "429": { "description": "Duplicate request limit reached." },
+          "500": { "description": "Storage failure." }
         }
       }
     }

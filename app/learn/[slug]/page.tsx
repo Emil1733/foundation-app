@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { cache } from 'react';
 import Link from 'next/link';
 import { Activity, ShieldCheck, ChevronRight } from 'lucide-react';
 import { notFound } from 'next/navigation';
@@ -12,7 +13,7 @@ import { buildSoilReportTitle } from "@/lib/locationSeo";
 export const revalidate = 86400;
 export async function generateStaticParams() { return []; }
 
-async function getCityData(slugParam: string) {
+const getCityData = cache(async (slugParam: string) => {
     if (!slugParam) return null;
     const citySlug = slugParam.replace('-soil-analysis', '');
     const { data: location, error: locError } = await supabase
@@ -29,7 +30,7 @@ async function getCityData(slugParam: string) {
         .maybeSingle();
     if (soilError) console.error(`Error fetching soil for ${citySlug}:`, soilError);
     return { ...location, soil_cache: soil };
-}
+});
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;

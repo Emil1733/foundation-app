@@ -2,10 +2,10 @@ import { createClient } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { MapPin, ShieldAlert, ChevronRight, ArrowLeft } from 'lucide-react';
 import type { Metadata } from 'next';
-import { notFound, permanentRedirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Pagination from '@/components/Pagination';
 import DirectoryPageIndex from '@/components/DirectoryPageIndex';
-import { paginatedUrl, parsePageNumber, type PageSearchParams } from '@/lib/pagination';
+import { paginatedUrl } from '@/lib/pagination';
 import { STATE_FOUNDATION_GUIDES } from '@/lib/stateFoundationGuides';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -13,6 +13,7 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export const revalidate = 604800; // ISR: Cache for 1 week to protect Vercel compute and Supabase DB
+export async function generateStaticParams() { return []; }
 
 const PAGE_SIZE = 36;
 
@@ -30,19 +31,11 @@ const INVERSE_STATE_NAMES: Record<string, string> = {
     "SC": "South Carolina", "VA": "Virginia", "NV": "Nevada", "UT": "Utah"
 };
 
-export async function generateMetadata({
-    params,
-    searchParams,
-}: {
-    params: Promise<{ state: string }>;
-    searchParams: PageSearchParams;
-}): Promise<Metadata> {
-    const { state } = await params;
+export async function buildStateHubMetadata(state: string, page: number): Promise<Metadata> {
     const stateAbbr = STATE_NAMES[state.toLowerCase()];
     if (!stateAbbr) return { title: "Not Found" };
 
     const fullStateName = INVERSE_STATE_NAMES[stateAbbr];
-    const page = parsePageNumber((await searchParams).page) || 1;
     const baseUrl = `https://foundationrisk.org/locations/${state.toLowerCase()}`;
     const url = paginatedUrl(baseUrl, page);
     const title = page === 1
@@ -65,26 +58,25 @@ export async function generateMetadata({
     };
 }
 
-export default async function StateHubPage({
-    params,
-    searchParams,
-}: {
-    params: Promise<{ state: string }>;
-    searchParams: PageSearchParams;
-}) {
+export async function generateMetadata({ params }: { params: Promise<{ state: string }> }): Promise<Metadata> {
     const { state } = await params;
+    return buildStateHubMetadata(state, 1);
+}
+
+export default async function StateHubPage({ params }: { params: Promise<{ state: string }> }) {
+    const { state } = await params;
+    return renderStateHubPage(state, 1);
+}
+
+export async function renderStateHubPage(state: string, currentPage: number) {
     const stateAbbr = STATE_NAMES[state.toLowerCase()];
 
     if (!stateAbbr) return notFound();
+    if (!Number.isSafeInteger(currentPage) || currentPage < 1) return notFound();
 
     const fullStateName = INVERSE_STATE_NAMES[stateAbbr];
     const foundationGuide = STATE_FOUNDATION_GUIDES[stateAbbr];
-    const query = await searchParams;
     const basePath = `/locations/${state.toLowerCase()}`;
-    if (query.page === '1') permanentRedirect(basePath);
-
-    const currentPage = parsePageNumber(query.page);
-    if (!currentPage) notFound();
 
     const rangeStart = (currentPage - 1) * PAGE_SIZE;
     const rangeEnd = rangeStart + PAGE_SIZE - 1;
