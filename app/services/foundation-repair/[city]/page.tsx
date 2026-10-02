@@ -23,6 +23,7 @@ import { getTexasFoundationGuide } from "@/lib/texasFoundationGuides";
 import { getStateRoute } from "@/lib/stateRoutes";
 import { classifySoilPlasticityIndex } from "@/lib/soilRisk";
 import { getCommercialSeoTreatment } from "@/lib/commercialSeoTreatments";
+import { buildServicePageTitle } from "@/lib/locationSeo";
 
 export const revalidate = 604800;
 export async function generateStaticParams() { return []; }
@@ -44,7 +45,7 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
   if (!location) return { title: "Foundation Distress Identification Services" };
   const indexable = shouldIndexServicePage(slug, location.soil_cache);
   const treatment = getCommercialSeoTreatment(slug);
-  const title = treatment ? treatment.title(location.city, location.state) : `${location.city} Foundation Repair | Soil Risk & Evaluation`;
+  const title = treatment ? treatment.title(location.city, location.state) : buildServicePageTitle(location.city, location.state);
   const description = treatment ? treatment.description(location.city, location.state) : `Foundation repair in ${location.city}, ${location.state}: review mapped soil context, warning signs, and evaluation options before choosing a repair plan.`;
   return {
     title, description,

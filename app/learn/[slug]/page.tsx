@@ -1,12 +1,13 @@
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
-import { Activity, Info, ShieldCheck, ChevronRight } from 'lucide-react';
+import { Activity, ShieldCheck, ChevronRight } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import AddressAutocomplete from "@/components/AddressAutocomplete";
 import { getStateRoute } from "@/lib/stateRoutes";
 import { classifySoilPlasticityIndex } from "@/lib/soilRisk";
 import { getCommercialSeoTreatment } from "@/lib/commercialSeoTreatments";
 import { hasUsableSoilRecord } from "@/lib/serviceIndexability";
+import { buildSoilReportTitle } from "@/lib/locationSeo";
 
 export const revalidate = 86400;
 export async function generateStaticParams() { return []; }
@@ -34,7 +35,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const { slug } = await params;
     const cityData = await getCityData(slug);
     if (!cityData) return { title: 'Not Found' };
-    const title = `${cityData.city} Foundation Soil Risk: Settlement Guide`;
+    const title = buildSoilReportTitle(cityData.city, cityData.state);
     const description = `Check foundation soil risk in ${cityData.city}, ${cityData.state}. Review mapped ground conditions, warning signs, and sensible next steps before choosing a repair plan.`;
     return {
         title,

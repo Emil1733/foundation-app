@@ -233,3 +233,9 @@ The image is intentionally referenced as a local first-party asset rather than a
 The five existing treatment pages now include an individually written property-context section based on each page's stored USDA/NRCS map unit. Cedar Park, Allen, Schertz, Boerne, and Lewisville receive distinct explanations and evaluation priorities tied to their recorded soil name, slope range, drainage context, and Plasticity Index. The section renders only when the current map-unit symbol still matches the reviewed record, preventing stale editorial copy from appearing after a data change.
 
 Treatment metadata descriptions were also differentiated to reflect the same city-level evidence. Titles, H1s, CTAs, treatment membership, homepage links, and the control cohort remain unchanged. No content was generated for the remaining city inventory, and Frisco, Richardson, Pflugerville, Carrollton, and Denton remain untouched controls.
+
+### 2026-10-02 cross-state title disambiguation
+
+A full inventory check found 365 city names shared by more than one state, covering 823 location records. Standard service-page titles now use `[City], [State] Foundation Repair | Evaluation`, and soil-report titles use `[City], [State] Foundation Soil Risk Guide`. This removes same-city title collisions while keeping the location and primary search intent near the beginning of each title.
+
+The five commercial treatment titles already contained city and state, so their title pattern remains unchanged. Canonicals, URLs, H1s, descriptions, treatment membership, and page content are unaffected by this title-only correction.
