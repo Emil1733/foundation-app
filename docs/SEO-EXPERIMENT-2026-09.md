@@ -1,5 +1,9 @@
 # Commercial SEO Experiment - September 2026
 
+## 2026-10-15 shared form clarification
+
+A short request-expectations section was added beside the city hero form across all commercial city pages, including treatments and controls. It explains possible professional follow-up and questions to ask before scheduling, without promising response times, a free evaluation, or an appointment. Titles, H1s, meta descriptions, treatment membership, and consent text remain unchanged. Treat this as a shared conversion intervention when comparing future lead outcomes. Locally implemented; deployment must be recorded separately.
+
 Status: active implementation
 Start date: 2026-09-17
 Branch: `seo-foundation-implementation`

@@ -6,6 +6,10 @@ This document maps how public traffic becomes data, how soil data is retrieved, 
 
 ## 1. Primary human lead flow
 
+### 2026-10-15 city form expectations
+
+The shared city hero now explains the request sequence beside the form: provide the property concern, discuss evaluation options with a foundation professional who may call or text, and ask about availability, fees, and the visit before arranging an appointment. Sending the form records a request; it does not book a visit or commit the homeowner to repair work. No response deadline, free evaluation, assigned provider, or guaranteed appointment is promised. The existing provider contact consent remains visible and unchanged. This is shared conversion copy on all city pages, including experiment controls; account for that common intervention in subsequent cohort analysis. Submission, validation, data storage, metadata, and homepage form copy are unchanged. Status: locally implemented, pending deployment.
+
 Public entry points such as commercial city pages and soil reports send users toward `/book-analysis`.
 
 The booking form submits through the server action in `app/book-analysis/actions.ts`.

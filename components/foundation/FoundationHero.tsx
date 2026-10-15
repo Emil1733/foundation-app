@@ -70,6 +70,16 @@ export default function FoundationHero({
             <span>Property-Specific Review</span>
             <span>Compare Repair Options</span>
           </div>
+
+          <section aria-labelledby="evaluation-next-steps" className="mt-8 max-w-xl border-t border-slate-700/50 pt-6">
+            <h2 id="evaluation-next-steps" className="text-lg font-semibold text-white">What happens after you send your request?</h2>
+            <ol className="mt-4 space-y-4 text-sm leading-6 text-slate-200 marker:text-blue-200 list-decimal pl-5">
+              <li className="pl-1"><strong className="font-semibold text-white">Tell us what you&apos;ve noticed.</strong> Share the property address and the concern that brought you here.</li>
+              <li className="pl-1"><strong className="font-semibold text-white">Talk through the next step.</strong> A foundation professional may call or text to ask about the problem and discuss evaluation options.</li>
+              <li className="pl-1"><strong className="font-semibold text-white">Decide how to proceed.</strong> Ask about availability, any evaluation fee, and what the visit includes before arranging an appointment.</li>
+            </ol>
+            <p className="mt-4 text-sm leading-6 text-slate-300">Sending a request does not book a visit or commit you to repair work.</p>
+          </section>
         </div>
 
         <div className="relative">
