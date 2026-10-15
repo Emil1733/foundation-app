@@ -8,9 +8,11 @@ The city form explanation shipped in commit `e0cbe9c`. Both hero forms (includin
 
 The nullable `leads.attribution` JSONB column was added with migration `20261015040733_add_lead_attribution.sql`; old rows remain null. Existing permissions and consent records were preserved. The privacy page describes collection. Do not append analytics to homeowner notes or rewrite `source`, which continues to identify the submission form. Qualification and appointment outcomes must be recorded from actual follow-up; all seven recent leads currently remain `new`.
 
-GSC sitemap index resubmitted October 15 at 04:07 UTC; Google reported it pending, with no errors or warnings. Individual indexing requests require the Search Console interface; no generic indexing API is used for these service pages. Attribution application deployment is pending final verification.
+GSC sitemap index resubmitted October 15 at 04:07 UTC; Google reported it pending, with no errors or warnings. Individual indexing requests require the Search Console interface; no generic indexing API is used for these service pages. Attribution shipped to production in `75aff9a`: the deployment status is successful, the live privacy disclosure is present, and the live service sitemap contains the October 15 release date. Local lint, production build, and mocked submission/storage-failure tests passed. No synthetic production lead was submitted; end-to-end attribution on a real submission remains unverified.
 
-Last reviewed: 2026-10-02
+The October 15 policy inspection found public INSERT with `WITH CHECK (true)` and service-role ALL access; there is no public SELECT policy. The existing public-insert policy is a separate spam/validation-bypass hardening item, not a permission introduced by attribution. Do not revoke it without checking every submission client and testing the intended server-only flow.
+
+Last reviewed: 2026-10-15
 
 This document maps how public traffic becomes data, how soil data is retrieved, and where the application currently stores leads. Keep it updated when forms, APIs, tables, consent behavior, or external data sources change.
 
@@ -18,7 +20,7 @@ This document maps how public traffic becomes data, how soil data is retrieved, 
 
 ### 2026-10-15 city form expectations
 
-The shared city hero now explains the request sequence beside the form: provide the property concern, discuss evaluation options with a foundation professional who may call or text, and ask about availability, fees, and the visit before arranging an appointment. Sending the form records a request; it does not book a visit or commit the homeowner to repair work. No response deadline, free evaluation, assigned provider, or guaranteed appointment is promised. The existing provider contact consent remains visible and unchanged. This is shared conversion copy on all city pages, including experiment controls; account for that common intervention in subsequent cohort analysis. Submission, validation, data storage, metadata, and homepage form copy are unchanged. Status: locally implemented, pending deployment.
+The shared city hero now explains the request sequence beside the form: provide the property concern, discuss evaluation options with a foundation professional who may call or text, and ask about availability, fees, and the visit before arranging an appointment. Sending the form records a request; it does not book a visit or commit the homeowner to repair work. No response deadline, free evaluation, assigned provider, or guaranteed appointment is promised. The existing provider contact consent remains visible and unchanged. This is shared conversion copy on all city pages, including experiment controls; account for that common intervention in subsequent cohort analysis. Submission, validation, data storage, metadata, and homepage form copy are unchanged by the copy-only commit. Status: deployed as `e0cbe9c`; production copy verified October 15. Optional attribution was added separately in `75aff9a`.
 
 Public entry points such as commercial city pages and soil reports send users toward `/book-analysis`.
 

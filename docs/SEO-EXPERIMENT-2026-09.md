@@ -2,9 +2,25 @@
 
 ## 2026-10-15 shared form clarification
 
-Deployment: the shared form clarification shipped as `e0cbe9c`. Service sitemap release dates now reflect October 15; soil-report dates remain October 2. First-landing attribution is being introduced for future submissions, with cohort derived from the landing path on the server. Existing leads cannot be retroactively attributed with this system. All future analysis must distinguish referral category from verified organic attribution and consider the common city-form copy change.
+### Recrawl baseline and follow-up
 
-A short request-expectations section was added beside the city hero form across all commercial city pages, including treatments and controls. It explains possible professional follow-up and questions to ask before scheduling, without promising response times, a free evaluation, or an appointment. Titles, H1s, meta descriptions, treatment membership, and consent text remain unchanged. Treat this as a shared conversion intervention when comparing future lead outcomes. Locally implemented; deployment must be recorded separately.
+The sitemap index was resubmitted October 15 at 04:07 UTC; the immediate response was pending with zero errors and warnings. Its index-level indexed count is not a reliable count of indexed child URLs. Inspection API checks found all seven priority URLs already indexed, with self-selected Google canonicals. Their last-crawl timestamps before the requests were:
+
+| City | Last crawl (UTC) |
+| --- | --- |
+| Allen | September 7, 20:49:28 |
+| Cedar Park | October 5, 07:23:10 |
+| Lewisville | September 17, 14:37:19 |
+| Katy | October 10, 11:53:36 |
+| Cypress | October 10, 12:44:51 |
+| Carrollton | August 21, 11:57:45 |
+| Denton | July 27, 02:39:40 |
+
+All dates above are 2026. Google accepted manual indexing requests for all seven cities on October 15. Cypress inspection initially returned a temporary Google error; a later inspection and request succeeded. Acceptance means queued, not recrawled or guaranteed inclusion/ranking. The control cities are included to refresh discovery of shared template changes, not to add them to the treatment registry.
+
+Deployment: the shared form clarification shipped as `e0cbe9c`, and optional first-landing attribution shipped as `75aff9a`; both production deployments are verified. Service sitemap release dates now reflect October 15; soil-report dates remain October 2. Attribution on future submissions has cohort derived from the landing path on the server. Existing leads cannot be retroactively attributed with this system. All future analysis must distinguish referral category from verified organic attribution and consider the common city-form copy change. A real production submission with attribution has not yet been verified; mocked submission tests passed.
+
+A short request-expectations section was added beside the city hero form across all commercial city pages, including treatments and controls. It explains possible professional follow-up and questions to ask before scheduling, without promising response times, a free evaluation, or an appointment. Titles, H1s, meta descriptions, treatment membership, and consent text remain unchanged. Treat this as a shared conversion intervention when comparing future lead outcomes. Production copy verified October 15.
 
 Status: active implementation
 Start date: 2026-09-17
