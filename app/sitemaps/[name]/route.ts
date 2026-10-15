@@ -1,5 +1,6 @@
 import { hasUsableSoilRecord, shouldIndexServicePage } from '@/lib/serviceIndexability';
 import { loadSitemapLocations } from '@/lib/sitemapData';
+import { sitemapLastModified } from '@/lib/sitemapLastModified';
 import { renderUrlSet, sitemapResponse, type SitemapEntry } from '@/lib/sitemapXml';
 
 const BASE_URL = 'https://foundationrisk.org';
@@ -66,7 +67,7 @@ export async function GET(
             .filter((location) => shouldIndexServicePage(location.slug, location.soil_cache))
             .map((location): SitemapEntry => ({
                 url: `${BASE_URL}/services/foundation-repair/${location.slug}`,
-                lastModified: location.created_at,
+                lastModified: sitemapLastModified('service', location.created_at),
                 changeFrequency: 'weekly',
                 priority: 0.9,
             }));
@@ -78,7 +79,7 @@ export async function GET(
         .filter((location) => hasUsableSoilRecord(location.soil_cache))
         .map((location): SitemapEntry => ({
             url: `${BASE_URL}/learn/${location.slug}-soil-analysis`,
-            lastModified: location.created_at,
+            lastModified: sitemapLastModified('soilReport', location.created_at),
             changeFrequency: 'weekly',
             priority: 0.8,
         }));

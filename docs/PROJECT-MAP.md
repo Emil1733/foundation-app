@@ -53,6 +53,8 @@ A soil report without a usable map-unit record should not be promoted as if it c
 
 `app/sitemap.xml/route.ts` publishes the sitemap index. `app/sitemaps/[name]/route.ts` publishes the core, service, and soil-report child sitemaps. Commercial URLs use `shouldIndexServicePage()`, and soil-report URLs require usable soil data.
 
+Sitemap modification dates are maintained in `lib/sitemapLastModified.ts`. Service and soil-report entries use the later of their record creation date and the verified material content release date for that page type (currently October 2, 2026, when both received city/state title changes). Never use request time, build time, or sitemap generation time as a content date. Update the relevant release date only for a material published content change; a city-only edit should receive a scoped override rather than advancing all pages. Existing data queries do not expose a reliable record update timestamp, so later edits to existing database rows require an explicit content-date update until that tracking is implemented. Core entries continue to omit dates where no verified date is maintained.
+
 ### Soil screening semantics
 
 `lib/soilRisk.ts` is the shared application classifier and ZIP-display guard.

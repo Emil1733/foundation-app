@@ -1,5 +1,9 @@
 # FoundationRisk Audit Findings - 2026-09-17
 
+## 2026-10-15 sitemap modification dates
+
+The GSC follow-up found that child sitemaps emitted location creation dates even after material editorial and title changes. Service and soil-report entries now use `sitemapLastModified()` to choose the later of record creation and the verified October 2 content release. Both page types received city/state title changes on that release; treatment content also changed then. Dates remain stable across requests and builds. Invalid or missing record dates fall back to the verified release date. No database schema or indexability rule changed. Later database edits still need explicit date tracking because a reliable update timestamp is not currently selected. This repair is local until separately committed and deployed.
+
 Status: Active implementation audit
 
 This file records concrete findings from the September 17, 2026 code and GSC review. It separates verified code behavior from implemented changes and unresolved follow-up so future work does not have to rediscover the reasoning.
