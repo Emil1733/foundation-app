@@ -1,5 +1,15 @@
 # FoundationRisk Lead and Data Flow
 
+## 2026-10-15 attribution implementation
+
+The city form explanation shipped in commit `e0cbe9c`. Both hero forms (including the homepage) and the full intake now attach optional first-landing attribution. `LandingAttribution` captures the first public path in the browser tab, a coarse referral category, and allow-listed `utm_source`, `utm_medium`, and `utm_campaign` labels. Session storage has a fixed 30-minute lifetime; an in-memory fallback handles blocked storage. Query strings, fragments, full referrer URLs, search terms, and form values are not collected by this feature. Campaign labels allow only 1-80 ASCII letters, digits, underscores, or hyphens.
+
+`normalizeLeadAttribution()` revalidates browser data on the server. Invalid attribution is discarded without rejecting the lead. The server derives the cohort from the landing path and the current treatment registry, so client-supplied cohort labels are ignored. These are descriptive, user-editable measurements, not trusted proof of organic acquisition. A search referral may be paid; use the saved campaign medium to interpret it. Direct visits and missing referrers are combined as `direct_or_unknown`.
+
+The nullable `leads.attribution` JSONB column was added with migration `20261015040733_add_lead_attribution.sql`; old rows remain null. Existing permissions and consent records were preserved. The privacy page describes collection. Do not append analytics to homeowner notes or rewrite `source`, which continues to identify the submission form. Qualification and appointment outcomes must be recorded from actual follow-up; all seven recent leads currently remain `new`.
+
+GSC sitemap index resubmitted October 15 at 04:07 UTC; Google reported it pending, with no errors or warnings. Individual indexing requests require the Search Console interface; no generic indexing API is used for these service pages. Attribution application deployment is pending final verification.
+
 Last reviewed: 2026-10-02
 
 This document maps how public traffic becomes data, how soil data is retrieved, and where the application currently stores leads. Keep it updated when forms, APIs, tables, consent behavior, or external data sources change.

@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 
 import { submitLead } from './actions';
 import { CONTACT_CONSENT_TEXT } from '@/lib/leadConsent';
+import { getLeadAttribution } from '@/lib/browserLeadAttribution';
 import {
     ALLOWED_SYMPTOMS,
     LeadField,
@@ -113,7 +114,7 @@ function IntakeForm() {
         setIsSubmitting(true);
         
         try {
-            const result = await submitLead(formData);
+            const result = await submitLead({ ...formData, attribution: getLeadAttribution() });
             
             if (result.success) {
                 setIsSuccess(true);

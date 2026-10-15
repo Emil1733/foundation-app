@@ -1,6 +1,6 @@
 # FoundationRisk Project Map
 
-Last reviewed: 2026-10-02
+Last reviewed: 2026-10-15
 
 ## Purpose
 
@@ -142,6 +142,8 @@ Do not expand either treatment wave without reviewing fresh GSC data and updatin
 ## Lead flow
 
 Human evaluation requests use `/book-analysis` and shared validation in `lib/leadValidation.ts`, with consent evidence stored alongside the lead.
+
+Both hero and full-intake submissions include optional first-landing attribution through `lib/browserLeadAttribution.ts` and server normalization in `lib/leadAttribution.ts`. The nullable `leads.attribution` column stores the public path, broad referral category, safe campaign labels, and a server-derived cohort. Collection expires after 30 minutes in a browser tab; it does not include full URLs or search terms. See the lead-flow document for limits and deployment status.
 
 AI-agent booking is a separate flow under `app/api/agent/book/route.ts` and should not be treated as equivalent to the human consented lead flow without a deliberate consent/contract decision.
 

@@ -3,6 +3,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { headers } from 'next/headers';
 import { isIP } from 'node:net';
+import { getCommercialSeoTreatment } from '@/lib/commercialSeoTreatments';
 import {
     CONTACT_CONSENT_TEXT,
     CONTACT_CONSENT_VERSION,
@@ -36,6 +37,11 @@ export async function submitLead(
         };
     }
     const lead = validation.data;
+    const attributionSlug = lead.attribution?.landingPath.match(/^\/(?:services\/foundation-repair\/|learn\/)([a-z0-9.-]+)$/)?.[1]?.replace(/-soil-analysis$/, '');
+    const attribution = lead.attribution ? {
+        ...lead.attribution,
+        cohort: attributionSlug ? getCommercialSeoTreatment(attributionSlug)?.cohort || 'standard' : 'other',
+    } : null;
 
     const requestHeaders = await headers();
     const forwardedIp = requestHeaders.get('x-forwarded-for')?.split(',')[0]?.trim();
@@ -67,6 +73,7 @@ export async function submitLead(
                 notes: lead.notes,
                 status: 'new',
                 source: lead.source || 'web_intake',
+                attribution,
                 contact_consent: true,
                 contact_consent_at: new Date().toISOString(),
                 contact_consent_version: CONTACT_CONSENT_VERSION,

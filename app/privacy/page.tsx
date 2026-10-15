@@ -40,7 +40,7 @@ export default function PrivacyPage() {
                         <ArrowLeft className="w-4 h-4" /> Back to Registry
                     </Link>
                     <h1 className="text-4xl font-bold text-white mb-4">Privacy & Data Governance</h1>
-                    <p className="text-slate-600">Last Updated: September 2026</p>
+                    <p className="text-slate-600">Last Updated: October 2026</p>
                 </div>
             </header>
 
@@ -64,6 +64,7 @@ export default function PrivacyPage() {
                     <li><strong>Property information:</strong> Street address, ZIP code, and location context used to organize the request and connect it with relevant mapped soil information.</li>
                     <li><strong>Contact information:</strong> Name, email address, and phone number used to respond to your evaluation request and coordinate relevant follow-up.</li>
                     <li><strong>Request information:</strong> Foundation symptoms and optional notes you submit, plus limited technical metadata such as IP address and browser information for request records, security, and abuse prevention.</li>
+                    <li><strong>How you found us:</strong> We temporarily remember the first page you visit, the type of site you arrived from, and basic campaign labels in this browser tab for up to 30 minutes. If you send an evaluation request, we save those details with it to understand which pages help homeowners get in touch. We do not save full referring URLs or search terms through this feature.</li>
                 </ul>
 
                 <h2>2. USDA Data Integration</h2>

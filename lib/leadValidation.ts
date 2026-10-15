@@ -1,3 +1,5 @@
+import { normalizeLeadAttribution, type LeadAttribution } from './leadAttribution';
+
 export const ALLOWED_SYMPTOMS = [
   "cracks_wall",
   "doors",
@@ -28,6 +30,7 @@ export type LeadSubmissionInput = {
   notes: string;
   tcpaConsent: boolean;
   source?: "web_intake" | "soil_risk_widget" | "hero_form" | "homepage_hero";
+  attribution?: LeadAttribution | null;
 };
 
 export type NormalizedLeadSubmission = Omit<LeadSubmissionInput, "tcpaConsent"> & {
@@ -133,6 +136,7 @@ export function validateLeadSubmission(input: unknown): LeadValidationResult {
       symptoms,
       notes,
       tcpaConsent: true,
+      attribution: normalizeLeadAttribution(source.attribution),
       source: source.source === "soil_risk_widget"
         ? "soil_risk_widget"
         : source.source === "hero_form"

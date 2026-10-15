@@ -3,7 +3,8 @@
 // 2026-10-02: city/state title correction on services and soil reports; reviewed
 // city profiles and descriptions also shipped on this date.
 const CONTENT_RELEASES = {
-    service: '2026-10-02',
+    // 2026-10-15: shared city hero explains evaluation follow-up.
+    service: '2026-10-15',
     soilReport: '2026-10-02',
 } as const;
 

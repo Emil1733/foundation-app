@@ -5,6 +5,7 @@ import { ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { submitLead } from '@/app/book-analysis/actions';
 import { CONTACT_CONSENT_TEXT } from '@/lib/leadConsent';
 import type { LeadSubmissionInput } from '@/lib/leadValidation';
+import { getLeadAttribution } from '@/lib/browserLeadAttribution';
 
 const concerns = [
   { value: 'cracks_wall', label: 'Wall cracks' },
@@ -55,6 +56,7 @@ export default function HeroLeadForm({ city, source = 'hero_form' }: { city: str
       notes: '',
       tcpaConsent: form.consent,
       source,
+      attribution: getLeadAttribution(),
     };
 
     try {

@@ -2,6 +2,8 @@
 
 ## 2026-10-15 shared form clarification
 
+Deployment: the shared form clarification shipped as `e0cbe9c`. Service sitemap release dates now reflect October 15; soil-report dates remain October 2. First-landing attribution is being introduced for future submissions, with cohort derived from the landing path on the server. Existing leads cannot be retroactively attributed with this system. All future analysis must distinguish referral category from verified organic attribution and consider the common city-form copy change.
+
 A short request-expectations section was added beside the city hero form across all commercial city pages, including treatments and controls. It explains possible professional follow-up and questions to ask before scheduling, without promising response times, a free evaluation, or an appointment. Titles, H1s, meta descriptions, treatment membership, and consent text remain unchanged. Treat this as a shared conversion intervention when comparing future lead outcomes. Locally implemented; deployment must be recorded separately.
 
 Status: active implementation
