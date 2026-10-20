@@ -6,6 +6,13 @@ const nextConfig: NextConfig = {
   // committed here.
   async redirects() {
     return [
+      // Verified historical Allen URL. Keep this exact mapping ahead of the
+      // older ZIP-pattern rule; do not guess destinations for other cities.
+      {
+        source: '/services/foundation-repair/allen-tx-75002',
+        destination: '/services/foundation-repair/allen-tx',
+        permanent: true,
+      },
       {
         source: '/services/foundation-repair/:city([\\w-]+)-\\d{5}',
         destination: '/services/foundation-repair/:city',

@@ -1,5 +1,9 @@
 # Commercial SEO Experiment - September 2026
 
+## 2026-10-20 selective follow-up
+
+See `docs/VISIBILITY-FOLLOWUP-2026-10-20.md` for matched-query evidence, live Schertz discovery checks, the scoped Allen legacy redirect repair, and the commercial-intent comparison. Treatment membership and public copy are unchanged. The next content intervention requires actual provider/evaluation/case evidence rather than additional generic prose. The redirect remains local until deployment is explicitly verified.
+
 ## 2026-10-15 shared form clarification
 
 ### Recrawl baseline and follow-up
