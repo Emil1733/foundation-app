@@ -5,6 +5,18 @@ permissions:
 jobs:
   regression:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: test-only-password
+          POSTGRES_DB: lead_integrity_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 10s
+          --health-timeout 5s --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -16,4 +28,8 @@ jobs:
       - run: node scripts/test-legacy-redirects.cjs
       - run: node scripts/test-soil-widget.cjs
       - run: node scripts/test-lookup-routes.cjs
+      - run: node scripts/test-lead-integrity.cjs
+      - run: node scripts/test-lead-database.cjs
+        env:
+          LEAD_TEST_DATABASE_URL: postgresql://postgres:test-only-password@127.0.0.1:5432/lead_integrity_test
       - run: npm run lint

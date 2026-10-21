@@ -1,5 +1,9 @@
 # FoundationRisk Lead and Data Flow
 
+## October 21 submission-integrity rollout
+
+See `docs/LEAD-INTEGRITY-2026-10-21.md` for the additive service-only atomic write function, ten-minute duplicate window, rolling phone/IP quotas, failure semantics and staged permission cutover. The schema is installed; app deployment and public-write revocation remain pending until explicitly verified. Consent, provider assertions and required fields are unchanged.
+
 ## October 20 reliability batch
 
 New soil-widget booking links transfer optional address prefill through read-once tab storage (10-minute TTL), not address query strings. Blocked/expired storage falls back to manual entry; old address-query links are still read and removed from the current history entry after hydration. No lead schema, consent or submission behavior is changed by this batch. Optional lookup failures now offer a direct intake path, and missing measurements remain explicitly missing in both widget and PDF. See `docs/RELIABILITY-2026-10-20.md` for verification and rollout status. Email alert setup was explicitly deferred by the user.
