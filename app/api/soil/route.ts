@@ -24,7 +24,8 @@ export async function POST(request: Request) {
         const res = await fetch(USDA_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query, format: "JSON+COLUMNNAME" })
+            body: JSON.stringify({ query, format: "JSON+COLUMNNAME" }),
+            signal: AbortSignal.timeout(12000),
         });
 
         if (!res.ok) {
@@ -38,6 +39,9 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ error: "No soil data found for this location" }, { status: 404 });
     } catch (error: unknown) {
+        if (error instanceof Error && (error.name === 'TimeoutError' || error.name === 'AbortError')) {
+            return NextResponse.json({ error: "Soil lookup took too long. Please try again." }, { status: 504 });
+        }
         console.error("Soil API error:", error);
         return NextResponse.json({ error: "Unable to process soil lookup" }, { status: 500 });
     }

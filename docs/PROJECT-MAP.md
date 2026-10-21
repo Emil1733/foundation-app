@@ -14,6 +14,7 @@ This document is the maintainer entry point. Detailed implementation decisions b
 - `docs/SEO-EXPERIMENT-2026-09.md` - active Cedar Park-led commercial SEO experiment, controls, baseline, measurement rules
 - `docs/LEAD-AND-DATA-FLOW.md` - lead validation, consent, storage, AI-agent flow, soil lookup, data-flow map
 - `docs/VISIBILITY-FOLLOWUP-2026-10-20.md` - selective visibility diagnosis, Allen legacy redirect, Schertz discovery checks, evidence required before city copy changes
+- `docs/RELIABILITY-2026-10-20.md` - staged widget/privacy hardening, verification and remaining intake/operational dependencies
 
 ## Core architecture
 
