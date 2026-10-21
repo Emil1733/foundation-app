@@ -27,7 +27,7 @@ Duplicates retain the original lead/consent/source/attribution rather than overw
 
 1. Additive migration `20261021035032_add_human_lead_integrity.sql`: applied and privileges verified, leaving the old form path available.
 2. Application rollout: pending full CI concurrency tests and production verification.
-3. Only then apply `20261021035542_restrict_public_human_lead_writes.sql`, removing the old public INSERT policy and all public/anon/authenticated table grants. service_role remains authorized. Do not automatically run this cutover migration before step 2.
+3. Only then apply `20261021035542_restrict_public_human_lead_writes.sql`, adding the foreign-key cleanup index and removing the old public INSERT policy and all public/anon/authenticated table grants. service_role remains authorized. Do not automatically run this cutover migration before step 2.
 
 If the app must roll back, keep server credentials configured: the prior service-role insert path remains authorized. Do not disable RLS or reopen public inserts as a routine rollback. Do not remove the receipt table/function while a deployed app still uses them.
 
