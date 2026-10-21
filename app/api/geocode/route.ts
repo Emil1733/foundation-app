@@ -24,6 +24,7 @@ export async function POST(request: Request) {
         'User-Agent': 'FoundationRisk.org property soil lookup',
       },
       cache: 'no-store',
+      signal: AbortSignal.timeout(12000),
     });
 
     if (!response.ok) {
@@ -42,7 +43,11 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ lat, lon, display_name: match.display_name || address });
   } catch (error) {
-    console.error('Geocoding API error:', error);
+    if (error instanceof Error && (error.name === 'TimeoutError' || error.name === 'AbortError')) {
+      return NextResponse.json({ error: 'Address lookup took too long. Please try again.' }, { status: 504 });
+    }
+    // Avoid logging an upstream request URL containing the property address.
+    console.error('Geocoding API error:', error instanceof Error ? error.name : 'UnknownError');
     return NextResponse.json({ error: 'Unable to process the address lookup.' }, { status: 500 });
   }
 }

@@ -1,5 +1,9 @@
 # FoundationRisk Lead and Data Flow
 
+## October 20 reliability batch
+
+New soil-widget booking links transfer optional address prefill through read-once tab storage (10-minute TTL), not address query strings. Blocked/expired storage falls back to manual entry; old address-query links are still read and removed from the current history entry after hydration. No lead schema, consent or submission behavior is changed by this batch. Optional lookup failures now offer a direct intake path, and missing measurements remain explicitly missing in both widget and PDF. See `docs/RELIABILITY-2026-10-20.md` for verification and rollout status. Email alert setup was explicitly deferred by the user.
+
 ## 2026-10-15 attribution implementation
 
 The city form explanation shipped in commit `e0cbe9c`. Both hero forms (including the homepage) and the full intake now attach optional first-landing attribution. `LandingAttribution` captures the first public path in the browser tab, a coarse referral category, and allow-listed `utm_source`, `utm_medium`, and `utm_campaign` labels. Session storage has a fixed 30-minute lifetime; an in-memory fallback handles blocked storage. Query strings, fragments, full referrer URLs, search terms, and form values are not collected by this feature. Campaign labels allow only 1-80 ASCII letters, digits, underscores, or hyphens.

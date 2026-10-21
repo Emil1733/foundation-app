@@ -8,6 +8,7 @@ import { useSearchParams } from 'next/navigation';
 import { submitLead } from './actions';
 import { CONTACT_CONSENT_TEXT } from '@/lib/leadConsent';
 import { getLeadAttribution } from '@/lib/browserLeadAttribution';
+import { takeEvaluationAddress } from '@/lib/evaluationHandoff';
 import {
     ALLOWED_SYMPTOMS,
     LeadField,
@@ -51,13 +52,21 @@ function IntakeForm() {
         { id: 'pre_purchase', label: 'Buying/Selling Home', icon: '🤝' },
     ];
 
-    // Pre-fill from URL parameters (passed from the Tools)
+    // New widget handoffs use short-lived tab storage, not private URL values.
     useEffect(() => {
-        const addressParam = searchParams.get('address');
+        const handoffAddress = searchParams.get('source') === 'soil_risk_widget' ? takeEvaluationAddress() : null;
+        const addressParam = handoffAddress || searchParams.get('address')?.slice(0, 200);
         const symptomParam = searchParams.get('symptom');
         const sourceParam = searchParams.get('source');
+        // Preserve legacy prefill, then remove the private URL value from the
+        // current history entry. New widget links never include it.
+        if (searchParams.has('address')) {
+            const cleanUrl = new URL(window.location.href);
+            cleanUrl.searchParams.delete('address');
+            window.history.replaceState(null, '', cleanUrl.pathname + cleanUrl.search + cleanUrl.hash);
+        }
         
-        if (addressParam || symptomParam) {
+        if (addressParam || symptomParam || sourceParam === 'soil_risk_widget') {
             setFormData(prev => ({
                 ...prev,
                 address: addressParam || prev.address,

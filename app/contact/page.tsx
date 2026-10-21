@@ -14,7 +14,7 @@ export default function ContactPage() {
             <header className="bg-slate-950 border-b border-white/10 py-16 px-6 text-white">
                 <div className="max-w-4xl mx-auto">
                     <h1 className="text-4xl font-extrabold text-white mb-4">Foundation Risk Support</h1>
-                    <p className="text-lg text-slate-600">
+                    <p className="text-lg text-slate-300">
                         Ask about mapped soil data, report a correction, or request help finding the right next step for a property.
                     </p>
                 </div>
