@@ -3,6 +3,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { headers } from 'next/headers';
 import { isIP } from 'node:net';
+import { leadIntegrityHashes } from '@/lib/leadIntegrity';
 import { getCommercialSeoTreatment } from '@/lib/commercialSeoTreatments';
 import {
     CONTACT_CONSENT_TEXT,
@@ -15,15 +16,8 @@ import {
 } from '@/lib/leadValidation';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-// Use Service Role Key to bypass RLS policies and guarantee write access
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-  console.error('Missing Supabase Credentials');
-  throw new Error('Supabase URL and Key must be defined');
-}
-
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Writes must never silently fall back to a browser/anonymous credential.
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export async function submitLead(
     formData: LeadSubmissionInput,
@@ -37,6 +31,10 @@ export async function submitLead(
         };
     }
     const lead = validation.data;
+    if (!supabaseUrl || !supabaseKey) {
+        console.error('Human lead storage is not configured');
+        return { success: false, error: 'We could not record your request. Your information is still on this page; please try again.' };
+    }
     const attributionSlug = lead.attribution?.landingPath.match(/^\/(?:services\/foundation-repair\/|learn\/)([a-z0-9.-]+)$/)?.[1]?.replace(/-soil-analysis$/, '');
     const attribution = lead.attribution ? {
         ...lead.attribution,
@@ -59,11 +57,14 @@ export async function submitLead(
         }
     }
 
-    // 2. Insert into Supabase
-    const { error } = await supabase
-        .from('leads')
-        .insert([
-            {
+    const digests = leadIntegrityHashes(lead, submissionIp, supabaseKey);
+    try {
+      const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false, autoRefreshToken: false } });
+      const { data, error } = await supabase.rpc('record_human_lead', {
+            p_payload_hash: digests.payload,
+            p_contact_hash: digests.contact,
+            p_ip_hash: digests.ip,
+            p_lead: {
                 name: lead.name,
                 email: lead.email,
                 phone: lead.phone,
@@ -82,16 +83,20 @@ export async function submitLead(
                 submission_user_agent: userAgent,
                 submission_ip: submissionIp,
             },
-        ])
-        .select();
-
-    if (error) {
-        console.error('Supabase Insert Error:', error);
+      }).abortSignal(AbortSignal.timeout(12000));
+      if (error) {
+        // Log only a code: database error details may contain contact data.
+        console.error('Human lead storage failed:', error.code || 'unknown');
+      } else if (data === 'created' || data === 'duplicate') {
+        return { success: true };
+      } else if (data === 'rate_limited') {
+        return { success: false, error: 'We have received several requests recently. Please wait an hour before sending another. Your information is still on this page.' };
+      }
+    } catch {
+        console.error('Human lead storage connection failed');
+    }
         return {
             success: false,
             error: 'We could not record your request. Your information is still on this page; please try again.',
         };
-    }
-
-    return { success: true };
 }

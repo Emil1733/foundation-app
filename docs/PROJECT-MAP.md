@@ -15,6 +15,7 @@ This document is the maintainer entry point. Detailed implementation decisions b
 - `docs/LEAD-AND-DATA-FLOW.md` - lead validation, consent, storage, AI-agent flow, soil lookup, data-flow map
 - `docs/VISIBILITY-FOLLOWUP-2026-10-20.md` - selective visibility diagnosis, Allen legacy redirect, Schertz discovery checks, evidence required before city copy changes
 - `docs/RELIABILITY-2026-10-20.md` - staged widget/privacy hardening, verification and remaining intake/operational dependencies
+- `docs/LEAD-INTEGRITY-2026-10-21.md` - atomic human submissions, duplicate/abuse limits, service-only storage and deployment order
 
 ## Core architecture
 
