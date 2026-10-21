@@ -34,8 +34,9 @@ export function proxy(request: NextRequest) {
     const acceptHeader = request.headers.get('accept') || '';
 
     if (acceptHeader.includes('application/json') || acceptHeader.includes('text/markdown')) {
-      const agentUrl = new URL('/api/agent/soil-data', request.url);
-      agentUrl.searchParams.set('slug', slug || '');
+      // A route parameter survives request-URL normalization in Next 16.4.
+      // Do not rely on adding query values to the internal rewrite URL.
+      const agentUrl = new URL(`/api/agent/soil-data/${encodeURIComponent(slug || '')}`, request.url);
       return NextResponse.rewrite(agentUrl);
     }
 

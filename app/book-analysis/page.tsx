@@ -53,6 +53,10 @@ function IntakeForm() {
     ];
 
     // New widget handoffs use short-lived tab storage, not private URL values.
+    // This intentionally hydrates from read-once browser storage after mount.
+    // Reading it in a render initializer would consume it during render and
+    // cannot provide the same server-rendered initial state.
+    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
         const handoffAddress = searchParams.get('source') === 'soil_risk_widget' ? takeEvaluationAddress() : null;
         const addressParam = handoffAddress || searchParams.get('address')?.slice(0, 200);
@@ -84,6 +88,7 @@ function IntakeForm() {
             }
         }
     }, [searchParams]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     const handleSymptomToggle = (id: string) => {
         clearFieldError('symptoms');

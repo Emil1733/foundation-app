@@ -22,8 +22,13 @@ const identifyBot = (userAgent: string) => {
     return null;
 };
 
-export async function GET(request: NextRequest) {
-    const requestedSlug = request.nextUrl.searchParams.get('slug') || '';
+export async function GET(
+    request: NextRequest,
+    context: { params: Promise<{ slug?: string }> },
+) {
+    // Rewritten city pages use a path parameter; keep the direct query API
+    // compatible. The resolved path wins over any caller-supplied query slug.
+    const requestedSlug = (await context.params)?.slug ?? request.nextUrl.searchParams.get('slug') ?? '';
     const slug = requestedSlug.replace(/-soil-analysis$/, '');
 
     if (slug.length > 100 || !SLUG_PATTERN.test(slug)) {
