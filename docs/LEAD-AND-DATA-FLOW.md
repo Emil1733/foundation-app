@@ -2,7 +2,7 @@
 
 ## October 21 submission-integrity rollout
 
-See `docs/LEAD-INTEGRITY-2026-10-21.md` for the additive service-only atomic write function, ten-minute duplicate window, rolling phone/IP quotas, failure semantics and staged permission cutover. The schema is installed; app deployment and public-write revocation remain pending until explicitly verified. Consent, provider assertions and required fields are unchanged.
+See `docs/LEAD-INTEGRITY-2026-10-21.md` for the service-only atomic write function, ten-minute duplicate window, rolling phone/IP quotas, failure semantics and staged permission cutover. Both migrations and the application are deployed and verified October 21 (production merge `98e578d`). Public table access is revoked; only the server write path remains. Consent, provider assertions and required fields are unchanged.
 
 ## October 20 reliability batch
 
@@ -75,7 +75,7 @@ Current source value: `web_intake`
 
 Current initial status: `new`
 
-The server action prefers `SUPABASE_SERVICE_ROLE_KEY` and falls back to `NEXT_PUBLIC_SUPABASE_ANON_KEY` if the service key is unavailable.
+The server action requires `SUPABASE_SERVICE_ROLE_KEY` and uses `record_human_lead()` for atomic storage, ten-minute duplicate detection and rolling abuse limits. There is no anonymous-key fallback. Missing configuration returns a failure rather than a false success. Public table grants were removed after the protected application was deployed.
 
 Security note: The service-role key must remain server-only. Never expose it to a client component or browser bundle.
 
