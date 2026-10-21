@@ -16,6 +16,7 @@ This document is the maintainer entry point. Detailed implementation decisions b
 - `docs/VISIBILITY-FOLLOWUP-2026-10-20.md` - selective visibility diagnosis, Allen legacy redirect, Schertz discovery checks, evidence required before city copy changes
 - `docs/RELIABILITY-2026-10-20.md` - staged widget/privacy hardening, verification and remaining intake/operational dependencies
 - `docs/LEAD-INTEGRITY-2026-10-21.md` - atomic human submissions, duplicate/abuse limits, service-only storage and deployment order
+- `docs/DEPENDENCY-SECURITY-2026-10-21.md` - compatibility-tested dependency patches, audit baseline and rollout evidence
 
 ## Core architecture
 
@@ -99,7 +100,7 @@ City and soil-report data loaders use React request memoization where metadata a
 
 ### Machine-readable city representations
 
-`proxy.ts` negotiates JSON or Markdown only for exact individual commercial and soil-report URLs. It rewrites those requests internally to `app/api/agent/soil-data/route.ts` with a validated city slug. Directory URLs are explicitly excluded.
+`proxy.ts` negotiates JSON or Markdown only for exact individual commercial and soil-report URLs. It rewrites those requests internally to `app/api/agent/soil-data/[slug]/route.ts`, which shares the validated handler with the direct `?slug=` API. The path parameter survives Next.js request-URL normalization; it takes precedence over a conflicting query slug. Directory URLs are explicitly excluded. See the dependency-security document for the October 21 compatibility repair and its rollout status.
 
 Normal HTML remains ISR-cached. JSON and Markdown responses are `private, no-store` so an alternate representation cannot contaminate the HTML cache. Public location data is read with the anonymous Supabase client. The service-role client is used only for server-side analytics inserts and must never enter a browser bundle.
 
