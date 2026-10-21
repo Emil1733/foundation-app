@@ -27,7 +27,7 @@ Status: deployed October 21 through PR #3, production merge `dd9e34a`. Both GitH
 
 ## Remaining sequence (not silently skipped)
 
-1. Human lead integrity: verify all writers and server credential availability, add atomic idempotency and durable rate limiting, then remove public insert bypasses with a migration and explicit failure-path tests. Do not revoke access first and break enquiries.
+1. Human lead integrity: completed October 21; see `docs/LEAD-INTEGRITY-2026-10-21.md`. Human submissions now use a service-only atomic function with a ten-minute duplicate window and rolling quotas. Public table access was removed only after the new application deployment was verified.
 2. Agent intake: align validation, input bounds, error handling, consent/authorization evidence, and atomic limits before treating its records as equivalent to human-consented requests.
 3. Operational alerts: recipient was supplied, but the user explicitly asked to skip email-service setup. No alert sender, provider or fabricated delivery promise is enabled.
 4. Address provider: confirm an appropriate contracted/self-hosted service and privacy/usage terms. Do not add public Nominatim autocomplete or assume a per-instance timer enforces the provider's application-wide rate cap.
