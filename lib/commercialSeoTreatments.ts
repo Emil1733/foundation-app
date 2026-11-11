@@ -28,6 +28,7 @@ export type CityFoundationProfile = {
  */
 export const COMMERCIAL_SEO_TREATMENTS: Record<string, CommercialSeoTreatment> = {
   "cedar-park-tx": createTreatment({
+    title: (city, state) => `${city}, ${state} Foundation Repair | Evaluation & Options`,
     description: (city, state) => `Foundation repair in ${city}, ${state}: review warning signs, sloped-site drainage, mapped Eckrant clay, evaluation steps, and repair options for your home.`,
     localFocus: (city) => `For ${city} homeowners, the useful comparison is not simply pier type or advertised price. A repair proposal should connect the observed movement pattern, drainage conditions, floor elevations, and affected area to the recommended scope.`,
     profile: {
@@ -46,6 +47,7 @@ export const COMMERCIAL_SEO_TREATMENTS: Record<string, CommercialSeoTreatment> =
     },
   }),
   "allen-tx": createTreatment({
+    title: (city, state) => `${city}, ${state} Foundation Repair | Evaluation & Options`,
     description: (city, state) => `Foundation repair in ${city}, ${state}: review warning signs, mapped Houston Black clay, drainage evidence, evaluation steps, and repair options for your home.`,
     localFocus: (city) => `In ${city}, compare foundation repair proposals against measured movement and water conditions at the property. Ask which areas are actually out of tolerance, what evidence shows ongoing movement, and why each proposed support is needed.`,
     profile: {
@@ -64,6 +66,7 @@ export const COMMERCIAL_SEO_TREATMENTS: Record<string, CommercialSeoTreatment> =
     },
   }),
   "schertz-tx": createTreatment({
+    title: (city, state) => `${city}, ${state} Foundation Repair | Evaluation & Options`,
     description: (city, state) => `Foundation repair in ${city}, ${state}: understand warning signs, mapped Eddy clay loam, site drainage, evaluation steps, and repair options for your home.`,
     localFocus: (city) => `${city} sits in a part of Central Texas where mapped ground conditions can change over relatively short distances. Use the local soil record as context, then make the repair decision from property measurements, drainage, and the actual symptom pattern.`,
     profile: {
@@ -82,6 +85,7 @@ export const COMMERCIAL_SEO_TREATMENTS: Record<string, CommercialSeoTreatment> =
     },
   }),
   "boerne-tx": createTreatment({
+    title: (city, state) => `${city}, ${state} Foundation Repair | Evaluation & Options`,
     description: (city, state) => `Foundation repair in ${city}, ${state}: review warning signs, mapped Tarpley clay, Hill Country drainage, evaluation steps, and repair options for your home.`,
     localFocus: (city) => `Around ${city}, slope, shallow rock, fill, drainage paths, and soil conditions can all matter. A useful repair evaluation should identify the likely movement mechanism before recommending piers, leveling, drainage work, or monitoring.`,
     profile: {
@@ -100,6 +104,7 @@ export const COMMERCIAL_SEO_TREATMENTS: Record<string, CommercialSeoTreatment> =
     },
   }),
   "lewisville-tx": createTreatment({
+    title: (city, state) => `${city}, ${state} Foundation Repair | Evaluation & Options`,
     description: (city, state) => `Foundation repair in ${city}, ${state}: review warning signs, mapped sandy loam, drainage evidence, evaluation steps, and repair options for your home.`,
     localFocus: (city) => `For a ${city} home with cracks, sticking doors, or floor variation, compare dated symptoms with floor elevations and drainage before selecting a repair. The mapped soil record can strengthen that review, but it should not determine the repair by itself.`,
     profile: {
@@ -257,10 +262,14 @@ function createTreatment({
   description,
   localFocus,
   profile,
-}: Pick<CommercialSeoTreatment, "description" | "localFocus" | "profile"> & { cohort?: CommercialSeoTreatment["cohort"] }): CommercialSeoTreatment {
+  title,
+}: Pick<CommercialSeoTreatment, "description" | "localFocus" | "profile"> & {
+  cohort?: CommercialSeoTreatment["cohort"];
+  title?: CommercialSeoTreatment["title"];
+}): CommercialSeoTreatment {
   return {
     cohort,
-    title: (city, state) => `Foundation Repair ${city}, ${state} | Evaluation & Options`,
+    title: title ?? ((city, state) => `Foundation Repair ${city}, ${state} | Evaluation & Options`),
     description,
     eyebrow: (city, state) => `Foundation Repair in ${city}, ${state}`,
     h1Lead: "Foundation Repair",

@@ -282,6 +282,16 @@ A separate seven-city cohort was selected from finalized September 1-30 GSC data
 
 Each page has a usable stored soil record. Its description and property-context section were written individually from the recorded map-unit name, slope range, drainage class, and Plasticity Index. Map-unit-symbol guards prevent that editorial copy from rendering if the underlying record changes.
 
+### 2026-11-11 initial-cohort title CTR test
+
+Fresh finalized GSC data through November 9 was compared in matched 20-day windows (October 21-November 9 versus October 1-20). Sitewide clicks increased from 94 to 122 (+29.8%) and impressions from 9,970 to 14,900 (+49.4%), while CTR moved slightly lower (0.9% to 0.8%) and average position improved slightly (10.2 to 10.0).
+
+The original five treatment pages gained visibility and improved weighted average position, but still recorded no clicks in the page-filtered comparison. Their combined impressions increased from 798 to 1,317 (+65.0%) and weighted average position improved from about 12.6 to 10.0. Allen and Lewisville showed the clearest visibility gains; Cedar Park also grew but remained around page two. The untouched controls improved by a similar amount, so the data does not prove that the earlier copy changes caused the lift.
+
+The next intervention is intentionally limited to the five existing initial treatments: Cedar Park, Allen, Schertz, Boerne, and Lewisville. Their title order changes from `Foundation Repair [City], [State] | Evaluation & Options` to `[City], [State] Foundation Repair | Evaluation & Options`, matching the city-first pattern already used by the untouched control titles and the dominant local query wording. Descriptions, H1s, body copy, controls, second-wave pages, canonicals, and URLs remain unchanged so any CTR movement can be attributed more cleanly to title presentation.
+
+This is a measurement test, not a conclusion. No further copy expansion is planned until at least two to four weeks of post-deployment GSC data are available and the pages have enough impressions to compare CTR fairly. Sugar Land, Katy, and Cypress remain separate second-wave observations; their weaker or declining positions do not justify changing the initial cohort in this test. The discovered-but-not-indexed backlog (2,144 URLs) is also a separate crawl/indexing workstream and is not being altered by this title test.
+
 The following high-impression pages were deliberately excluded:
 
 - Fort Worth has no usable soil record and remains indexable only through its documented GSC exception.
